@@ -1,60 +1,83 @@
 <template>
-  <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-    >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
-
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
-    </v-app-bar>
-
+  <v-app id="app">
     <v-content>
-      <HelloWorld/>
+      <div class="custom-wrap">
+        <v-card elevation="2" width="300" style="margin-left: 1vw; margin-top: 2vh;">
+          <v-text-field
+            placeholder="Search..."
+            single-line
+            hide-details
+            color="grey"
+            background-color="white"
+            rounded
+            clearable
+            append-icon="mdi-magnify"
+            full-width
+          ></v-text-field>
+        </v-card>
+        <v-card elevation="2" width="200" style="margin-left: 1vw; margin-top: 2vh;">
+          <v-navigation-drawer floating permanent>
+            <v-card-actions class="justify-center">
+              <v-btn color="#4bbd6a">Join Transit</v-btn>
+            </v-card-actions>
+            <v-list dense rounded color="white">
+              <v-list-item v-for="item in items" :key="item.title" link>
+                <v-list-item-icon>
+                  <v-icon>{{ item.icon }}</v-icon>
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title>{{ item.text }}</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+          </v-navigation-drawer>
+        </v-card>
+      </div>
+      <div class="map-wrapper">
+       <hello-world />
+      </div>
     </v-content>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
-
+import HelloWorld from "./components/HelloWorld";
+/* eslint-disable */
 export default {
-  name: 'App',
-
+  name: "App",
   components: {
-    HelloWorld,
+    HelloWorld
   },
+  data() {
+    return {
+    drawer: 0,
+    items: [
+      // { icon: 'mdi-account-circle' , text: 'My Account' },
+      { icon: "mdi-subway", text: "Stations" },
+      { icon: "mdi-credit-card-scan", text: "Tickets" },
+      { icon: "mdi-credit-card-outline", text: "Payments" }
+      // { icon: 'mdi-settings' , text: 'Settings' },
+      // { icon: 'mdi-logout' , text: 'Sign Out' },
+    ]
+    }
+  },
+  computed () {
 
-  data: () => ({
-    //
-  }),
+  },
+  methods () {
+
+  }
 };
 </script>
+
+<style scoped>
+.custom-wrap {
+  position: fixed;
+  z-index: 100;
+}
+.map-wrapper {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+</style>
