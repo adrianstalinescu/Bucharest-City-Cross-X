@@ -2,7 +2,7 @@
   <v-app id="app">
     <v-content>
       <div class="custom-wrap">
-        <v-card elevation="2" width="450" style="margin-left: 1vw; margin-top: 2vh;">
+        <v-card elevation="2" class="search-card-custom">
           <v-text-field
             placeholder="Search..."
             single-line
@@ -15,7 +15,7 @@
             full-width
           ></v-text-field>
         </v-card>
-        <v-card elevation="2" width="270" style="margin-left: 1vw; margin-top: 1.5vh; padding-left:5px; padding-bottom:10px">
+        <v-card elevation="2" class="service-status-card-custom">
           <v-navigation-drawer floating permanent>
             <v-list dense rounded color="white">
               <h1>M1</h1>
@@ -29,7 +29,7 @@
             </v-list>
           </v-navigation-drawer>
         </v-card>
-        <v-card elevation="2" width="270" style="margin-left: 1vw; margin-top: 1.5vh;">
+        <v-card elevation="2" class="navigation-buttons-card-custom">
           <v-navigation-drawer floating permanent style="margin-left:auto; margin-right:auto;">
             <v-card-actions class="justify-center" style="margin-top:5px;">
               <v-btn color="#4bbd6a"><v-icon style="margin-right:7px;">mdi-tram-side</v-icon>Join Transit</v-btn>
@@ -37,7 +37,7 @@
             <v-list dense rounded color="white" style="padding-left:15px;">
               <v-list-item v-for="item in items" :key="item.title" link style="margin-bottom:10px;">
                 <v-list-item-icon>
-                  <v-icon style="font-size:30px;">{{ item.icon }}</v-icon>
+                  <v-icon style="font-size:2em;">{{ item.icon }}</v-icon>
                 </v-list-item-icon>
                 <v-list-item-content>
                   <v-list-item-title style="font-size:16px;">{{ item.text }}</v-list-item-title>
@@ -68,7 +68,8 @@ export default {
     items: [
       { icon: 'mdi-account-circle' , text: 'My Account' },
       { icon: "mdi-subway", text: "Stations" },
-      { icon: "mdi-credit-card-scan", text: "Tickets" },
+      { icon: "mdi-map-marker-distance", text: "Lines"},
+      { icon: "mdi-credit-card-scan", text: "Wallet" },
       { icon: "mdi-credit-card-outline", text: "Payments" },
       { icon: 'mdi-settings' , text: 'Settings' },
       { icon: 'mdi-logout' , text: 'Sign Out' }
@@ -94,5 +95,22 @@ export default {
   position: fixed;
   width: 100%;
   height: 100%;
+}
+.search-card-custom {
+  width: 450px;
+  margin-left: 1vw;
+  margin-top: 2vh;
+}
+.service-status-card-custom {
+  width: 270px;
+  margin-left: 1vw;
+  margin-top: 1.5vh;
+  padding-left:5px;
+  padding-bottom:10px;
+}
+.navigation-buttons-card-custom {
+  width: 270px; 
+  margin-left: 1vw; 
+  margin-top: 1.5vh;
 }
 </style>

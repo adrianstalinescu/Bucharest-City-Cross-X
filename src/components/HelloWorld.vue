@@ -1,16 +1,16 @@
 <template>
  <div>
     <gmap-map
-      :center="center"
-      :zoom="15"
+      :center="defaultLocation"
+      :zoom="mapZoom"  
       :options="mapOptions"
-      style="width:100vw;  height: 100vh;"
+      class="homepage-google-maps"
     >
       <gmap-marker
         :key="index"
-        v-for="(m, index) in markers"
-        :position="m.position"
-        @click="center=m.position"
+        v-for="(marker, index) in markers"
+        :position="marker.position"
+        @click="center=marker.position"
       ></gmap-marker>
     </gmap-map>
   </div>
@@ -21,7 +21,8 @@ export default {
  name: "GoogleMap",
   data() {
     return {
-      center: { lat: 45.508, lng: -73.587 },
+      defaultLocation: { lat: 45.508, lng: -73.587 },
+      mapZoom: 15,
       mapOptions: { 
       disableDefaultUI: true,
       styles: [
@@ -247,3 +248,9 @@ export default {
   }
 };
 </script>
+<style>
+.homepage-google-maps {
+  width: 100vw;  
+  height: 100vh;
+}
+</style>
