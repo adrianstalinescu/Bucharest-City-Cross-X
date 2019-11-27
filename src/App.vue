@@ -5,6 +5,7 @@
         <v-card elevation="2" class="search-card-custom">
           <v-text-field
             placeholder="Search..."
+            v-model="searchInput"
             single-line
             hide-details
             rounded
@@ -152,6 +153,7 @@ export default {
     drawer: 0,
     dialogLogin: false,
     dialogRegister: false,  
+    searchInput: "",
     items: [
       { icon: 'mdi-account-circle' , text: 'My Account' },
       { icon: "mdi-subway", text: "Stations" },
