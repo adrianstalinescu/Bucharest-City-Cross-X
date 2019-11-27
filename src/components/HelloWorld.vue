@@ -21,7 +21,7 @@ export default {
  name: "GoogleMap",
   data() {
     return {
-      defaultLocation: { lat: 45.508, lng: -73.587 },
+      defaultLocation: { lat: 44.4476361, lng: 26.0680047 },
       mapZoom: 15,
       mapOptions: { 
       disableDefaultUI: true,
