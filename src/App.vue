@@ -20,43 +20,51 @@
             <v-list dense rounded color="white">
               <h3>Service Status</h3>
               <v-row style="margin-bottom: -1.5vh;">
-                <v-col cols="6" md="4">
-                  <v-progress-linear value="valueDeterminate" color="#ffce00" class="custom">
+                <v-col cols="6" md="3">
+                  <v-progress-linear value="valueDeterminate" color="#ffce00" class="service-status-line">
                     <h1>M1</h1>
                   </v-progress-linear>
                 </v-col>
                 <v-col cols="12" md="8">
-                  <h3>Good service</h3>
+                  <div class="service-status-info">
+                    <h3>Good service</h3>
+                  </div>
                 </v-col>
               </v-row>
               <v-row style="margin-bottom: -1.5vh;">
-                <v-col cols="6" md="4">
-                  <v-progress-linear value="valueDeterminate" color="blue" class="custom">
+                <v-col cols="6" md="3">
+                  <v-progress-linear value="valueDeterminate" color="blue" class="service-status-line">
                     <h1>M2</h1>
                   </v-progress-linear>
                 </v-col>
                 <v-col cols="12" md="8">
-                  <h3>Severe delays</h3>
+                  <div class="service-status-info">
+                    <h3>Severe delays</h3>
+                  </div>
                 </v-col>
               </v-row>
               <v-row style="margin-bottom: -1.5vh;">
-                <v-col cols="6" md="4">
-                  <v-progress-linear value="valueDeterminate" color="red" class="custom">
+                <v-col cols="6" md="3">
+                  <v-progress-linear value="valueDeterminate" color="red" class="service-status-line">
                     <h1>M3</h1>
                   </v-progress-linear>
                 </v-col>
                 <v-col cols="12" md="8">
-                  <h3>Part suspended</h3>
+                  <div class="service-status-info">
+                    <h3>Part suspended</h3>
+                  </div>
                 </v-col>
               </v-row>
               <v-row>
-                <v-col cols="6" md="4">
-                  <v-progress-linear value="valueDeterminate" color="#05a841" class="custom">
+                <v-col cols="6" md="3">
+                  <v-progress-linear value="valueDeterminate" color="#05a841" class="service-status-line">
                     <h1>M4</h1>
                   </v-progress-linear>
                 </v-col>
                 <v-col cols="12" md="8">
-                  <h3>Closed</h3>
+                  <div class="service-status-info">
+                    <h3>Suspended</h3>
+                  </div>
                 </v-col>
               </v-row>
             </v-list>
@@ -166,12 +174,85 @@
             </v-list>
           </v-navigation-drawer>
         </v-card>
-        <v-dialog v-model="dialogStations" persistent max-width="40vw">
+        <!--Navigation Drawer-->
+        <v-dialog v-model="dialogStations" persistent max-width="25vw">
           <v-card>
             <v-card-title>
               <span class="headline">Stations</span>
             </v-card-title>
-            <!-- wip -->
+              <div>  
+                <v-col cols="10" class="center">
+                  <v-select
+                    :items="stations"
+                    label="Station"
+                    outlined
+                  ></v-select>
+                </v-col>
+              </div>
+              <div style="height: 40vh;">
+              <div style="max-height: 100%; position:relative; overflow:auto;">
+              <div style="height: 12vh; margin-bottom:1vh;">
+                <v-card 
+                class="mx-auto"
+                max-width="380"
+                outlined 
+                style="margin-bottom:1vh;"
+                >
+                  <v-list-item three-line>
+                    <v-list-item-content>
+                      <v-list-item-title class="headline mb-1">Tram 41</v-list-item-title>
+                      <v-list-item-subtitle style="font-size:1em;">Piata Presei - Ghencea</v-list-item-subtitle>
+                      <v-list-item-subtitle style="font-size:1.4em; color: #29a11b;">3 min<sup><v-icon size="18  " color="#f5a02a">mdi-rss</v-icon></sup></v-list-item-subtitle>
+                    </v-list-item-content>
+              
+                    <v-list-item-avatar
+                      size="80"
+                    ><v-icon size="70" color="red">mdi-tram</v-icon>
+                    </v-list-item-avatar>
+                  </v-list-item>
+                </v-card>
+                </div>
+                <div style="height: 12vh; margin-bottom:1vh;">
+                <v-card 
+                class="mx-auto"
+                max-width="380"
+                outlined 
+                >
+                  <v-list-item three-line>
+                    <v-list-item-content>
+                      <v-list-item-title class="headline mb-1">Bus 335</v-list-item-title>
+                      <v-list-item-subtitle style="font-size:1em;">Baneasa - Faur</v-list-item-subtitle>
+                      <v-list-item-subtitle style="font-size:1.4em; color: #29a11b;">1 min<sup><v-icon size="18  " color="#f5a02a">mdi-rss</v-icon></sup></v-list-item-subtitle>
+                    </v-list-item-content>
+                    <v-list-item-avatar
+                      size="80"
+                    ><v-icon size="70" color="red">mdi-bus</v-icon>
+                    </v-list-item-avatar>
+                  </v-list-item>
+                </v-card>
+                </div>
+                <div style="height: 12vh; margin-bottom:1vh;">
+                <v-card 
+                class="mx-auto"
+                max-width="380"
+                outlined 
+                >
+                  <v-list-item three-line>
+                    <v-list-item-content>
+                      <v-list-item-title class="headline mb-1">Trolleybus 69</v-list-item-title>
+                      <v-list-item-subtitle style="font-size:1em;">Gara de Nord - Vatra Luminoasa</v-list-item-subtitle>
+                      <v-list-item-subtitle style="font-size:1.4em; color: #29a11b;">10 min<sup><v-icon size="18  " color="#f5a02a">mdi-rss</v-icon></sup></v-list-item-subtitle>
+                    </v-list-item-content>
+              
+                    <v-list-item-avatar
+                      size="80"
+                    ><v-icon size="70" color="red">mdi-bus</v-icon>
+                    </v-list-item-avatar>
+                  </v-list-item>
+                </v-card>
+              </div>
+              </div>
+              </div>
             <v-card-actions>
               <v-btn color="blue darken-1" width="5vw" @click="dialogStations = false">Close</v-btn>
             </v-card-actions>
@@ -218,6 +299,17 @@ export default {
       dialogLines: false,
       searchInput: "",
       valueDeterminate: 100,
+      stations: [
+        {
+          text: "Piata Unirii"
+        },
+        {
+          text: "Piata Victoriei"
+        },
+        {
+          text: "Piata Romana"
+        }
+        ],
       items: [
         {
           icon: "mdi-account-circle",
@@ -287,14 +379,25 @@ export default {
 .search-field-custom {
   font-size: 1.2em;
 }
-.custom {
+.service-status-line {
   width: auto;
-  height: 4vh !important;
+  height: 3vh !important;
   border: 1px solid white;
+}
+.service-status-info {
+  font-size:1em;
+  padding-top: 0.1em;
 }
 .gps-custom-button {
   position:absolute;
   right: 0.5vw;
   bottom: 3vh;
+}
+.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+.stations-information-wrapper {
+  height: 35vh;
 }
 </style>
