@@ -5,6 +5,7 @@ import VueRouter from 'vue-router'
 import vuetify from './plugins/vuetify'
 import HelloWorld from "./components/HelloWorld"
 import * as VueGoogleMaps from "vue2-google-maps"
+import * as firebase from './firebase'
 
 Vue.use(VueRouter);
 
@@ -27,5 +28,6 @@ const router = new VueRouter({
 new Vue({
   router,
   vuetify,
+  firebase,
   render: h => h(App)
 }).$mount('#app')
