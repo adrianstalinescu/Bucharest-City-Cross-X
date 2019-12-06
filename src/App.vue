@@ -22,7 +22,6 @@
               <v-row style="margin-bottom: -1.6vh;">
                 <v-col cols="6" md="3">
                    <v-avatar
-                      left
                       size="35"
                       color="#ffce00"
                     >
@@ -40,7 +39,6 @@
               <v-row style="margin-bottom: -1.6vh;">
                 <v-col cols="6" md="3">
                   <v-avatar
-                      left
                       size="35"
                       color="blue"
                     >
@@ -58,7 +56,6 @@
               <v-row style="margin-bottom: -1.6vh;">
                 <v-col cols="6" md="3">
                   <v-avatar
-                      left
                       size="35"
                       color="red"
                     >
@@ -76,7 +73,6 @@
               <v-row>
                 <v-col cols="6" md="3">
                   <v-avatar
-                      left
                       size="35"
                       color="#05a841"
                     >

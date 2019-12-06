@@ -21,7 +21,7 @@ export default {
  name: "GoogleMap",
   data() {
     return {
-      defaultLocation: { lat: 44.4476361, lng: 26.0680047 },
+      defaultLocation: {},
       mapZoom: 15,
       mapOptions: { 
       disableDefaultUI: true,
@@ -239,7 +239,7 @@ export default {
     },
     geolocate: function() {
       navigator.geolocation.getCurrentPosition(position => {
-        this.center = {
+        this.defaultLocation = {
           lat: position.coords.latitude,
           lng: position.coords.longitude
         };
