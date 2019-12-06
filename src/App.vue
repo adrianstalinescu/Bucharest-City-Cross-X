@@ -11,59 +11,83 @@
             rounded
             clearable
             append-icon="mdi-magnify"
+            color="green"
             full-width
             class="search-field-custom"
           ></v-text-field>
         </v-card>
         <v-card elevation="2" class="service-status-card-custom">
           <v-navigation-drawer floating permanent>
-            <v-list dense rounded color="white">
-              <h3>Service Status</h3>
-              <v-row style="margin-bottom: -1.5vh;">
+            <v-list dense rounded color="white" class="service-status">
+              <v-row style="margin-bottom: -1.6vh;">
                 <v-col cols="6" md="3">
-                  <v-progress-linear value="valueDeterminate" color="#ffce00" class="service-status-line">
-                    <h1>M1</h1>
-                  </v-progress-linear>
+                   <v-avatar
+                      left
+                      size="35"
+                      color="#ffce00"
+                    >
+                      <strong>M1</strong>
+                    </v-avatar>
                 </v-col>
                 <v-col cols="12" md="8">
                   <div class="service-status-info">
-                    <h3>Good service</h3>
+                    <v-chip color="success" outlined>
+                      <h4>Good service</h4>
+                    </v-chip>
                   </div>
                 </v-col>
               </v-row>
-              <v-row style="margin-bottom: -1.5vh;">
+              <v-row style="margin-bottom: -1.6vh;">
                 <v-col cols="6" md="3">
-                  <v-progress-linear value="valueDeterminate" color="blue" class="service-status-line">
-                    <h1>M2</h1>
-                  </v-progress-linear>
+                  <v-avatar
+                      left
+                      size="35"
+                      color="blue"
+                    >
+                     <strong>M2</strong>
+                    </v-avatar>
                 </v-col>
                 <v-col cols="12" md="8">
                   <div class="service-status-info">
-                    <h3>Severe delays</h3>
+                    <v-chip color="warning" outlined>
+                      <h4>Severe delays</h4>
+                    </v-chip>
                   </div>
                 </v-col>
               </v-row>
-              <v-row style="margin-bottom: -1.5vh;">
+              <v-row style="margin-bottom: -1.6vh;">
                 <v-col cols="6" md="3">
-                  <v-progress-linear value="valueDeterminate" color="red" class="service-status-line">
-                    <h1>M3</h1>
-                  </v-progress-linear>
+                  <v-avatar
+                      left
+                      size="35"
+                      color="red"
+                    >
+                     <strong>M3</strong>
+                    </v-avatar>
                 </v-col>
                 <v-col cols="12" md="8">
                   <div class="service-status-info">
-                    <h3>Part suspended</h3>
+                    <v-chip color="error" outlined>
+                      <h4>Part suspended</h4>
+                    </v-chip>
                   </div>
                 </v-col>
               </v-row>
               <v-row>
                 <v-col cols="6" md="3">
-                  <v-progress-linear value="valueDeterminate" color="#05a841" class="service-status-line">
-                    <h1>M4</h1>
-                  </v-progress-linear>
+                  <v-avatar
+                      left
+                      size="35"
+                      color="#05a841"
+                    >
+                    <strong>M4</strong>
+                    </v-avatar>
                 </v-col>
                 <v-col cols="12" md="8">
                   <div class="service-status-info">
-                    <h3>Suspended</h3>
+                    <v-chip color="error" outlined>
+                      <h4>Suspended</h4>
+                    </v-chip>
                   </div>
                 </v-col>
               </v-row>
@@ -81,17 +105,17 @@
                 </v-card-actions>
               </template>
               <v-card>
-                <v-card-title>
-                  <span class="headline">Join Transit</span>
+                <v-card-title class="justify-center" style="color:green;">
+                  <span class="headline" centered>Let's Transit The City</span>
                 </v-card-title>
                 <v-card-text>
                   <v-container>
                     <v-row>
                       <v-col cols="12">
-                        <v-text-field label="Email*" required></v-text-field>
+                        <v-text-field label="Email*" required color="green"></v-text-field>
                       </v-col>
                       <v-col cols="12">
-                        <v-text-field label="Password*" type="password" required></v-text-field>
+                        <v-text-field label="Password*" type="password" required color="green"></v-text-field>
                       </v-col>
                     </v-row>
                     <v-row class="justify-center">
@@ -102,29 +126,71 @@
                               color="#4bbd6a"
                               @click=" dialogRegister = true, dialogLogin = false"
                             >
-                              <v-icon style="margin-right:7px;">mdi-account-plus</v-icon>Register
+                              <v-icon style="margin-right:7px;">mdi-account-plus</v-icon>Create Account
                             </v-btn>
                           </v-card-actions>
                         </template>
                         <v-card>
-                          <v-card-title>
-                            <span class="headline">Join Transit</span>
+                          <v-card-title class="justify-center" style="color:green;">
+                            <span class="headline">Let's create a new account</span>
                           </v-card-title>
                           <v-card-text>
                             <v-container>
                               <v-row>
                                 <v-col cols="12">
-                                  <v-text-field label="Email*" required></v-text-field>
+                                  <v-text-field label="Email*" type="email" required prepend-icon="mdi-email" color="green"></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
-                                  <v-text-field label="Password*" type="password" required></v-text-field>
+                                  <v-text-field label="Password*" type="password" required prepend-icon="mdi-key" color="green"></v-text-field>
+                                </v-col>
+                                <v-col cols="12">
+                                  <v-text-field label="Name" type="text" required prepend-icon="mdi-account-card-details-outline" color="green"></v-text-field>
+                                </v-col>
+                                <v-col cols="12">
+                                  <v-text-field label="Surname" type="text" required prepend-icon="mdi-account-card-details-outline" color="green"></v-text-field>
+                                </v-col>
+                                <v-col cols="12">
+                                  <v-text-field label="Gender" type="text" prepend-icon="mdi-account-card-details-outline" color="green"></v-text-field>
+                                </v-col>
+                                <v-col cols="12">
+                                  <v-text-field label="Phone" type="text" required prepend-icon="mdi-phone" color="green"></v-text-field>
+                                </v-col>
+                                <v-col cols="12">
+                                  <v-menu
+                                    ref="menu"
+                                    v-model="menu"
+                                    :close-on-content-click="false"
+                                    transition="scale-transition"
+                                    offset-y
+                                    full-width
+                                    min-width="290px"
+                                  >
+                                  <template v-slot:activator="{ on }">
+                                    <v-text-field
+                                      v-model="date"
+                                      label="Birthday date"
+                                      readonly
+                                      prepend-icon="mdi-calendar"
+                                      v-on="on"
+                                      color="green"
+                                    ></v-text-field>
+                                  </template>
+                                  <v-date-picker
+                                    ref="picker"
+                                    v-model="date"
+                                    :max="new Date().toISOString().substr(0, 10)"
+                                    min="1950-01-01"
+                                    color="green lighten-1"
+                                    @change="save"
+                                  ></v-date-picker>
+                                  </v-menu>
                                 </v-col>
                               </v-row>
                             </v-container>
                           </v-card-text>
                           <v-card-actions>
                             <v-btn
-                              color="blue darken-1"
+                              color="red"
                               width="5vw"
                               @click="dialogRegister = false"
                             >Close</v-btn>
@@ -141,14 +207,14 @@
                   </v-container>
                 </v-card-text>
                 <v-card-actions>
-                  <v-btn color="blue darken-1" width="5vw" @click="dialogLogin = false">Close</v-btn>
+                  <v-btn color="red" width="5vw" @click="dialogLogin = false">Close</v-btn>
                   <v-spacer></v-spacer>
                   <v-btn color="#4bbd6a" width="5vw" @click="dialogLogin = false">Login</v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
             <v-list dense rounded color="white">
-              <div v-for="item in items" :key="item.title">
+              <div v-for="item in items" :key="item.title" class="text-center">
                 <v-btn
                   v-if="!item.isUserLoggedIn"
                   rounded
@@ -156,17 +222,16 @@
                   depressed
                   text
                   color="#8fc9b0"
-                  min-width="12vw"
-                  max-width="12vw"
+                  width="10vw"
                   style="padding-top:0.2vh; margin-bottom: 1vh;"
                   @click="navigationDrawer(item)"
                 >
-                  <v-list-item style="margin-bottom:10px;">
+                  <v-list-item style="margin-left:-10px;">
                     <v-list-item-icon>
-                      <v-icon style="font-size:2em;">{{ item.icon }}</v-icon>
+                      <v-icon style="font-size:2.2em;">{{ item.icon }}</v-icon>
                     </v-list-item-icon>
                     <v-list-item-content style="text-align: left">
-                      <v-list-item-title style="font-size:16px;">{{ item.text }}</v-list-item-title>
+                      <v-list-item-title>{{ item.text }}</v-list-item-title>
                     </v-list-item-content>
                   </v-list-item>
                 </v-btn>
@@ -254,7 +319,7 @@
               </div>
               </div>
             <v-card-actions>
-              <v-btn color="blue darken-1" width="5vw" @click="dialogStations = false">Close</v-btn>
+              <v-btn color="red" width="5vw" @click="dialogStations = false">Close</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -265,7 +330,7 @@
             </v-card-title>
             <!-- wip -->
             <v-card-actions>
-              <v-btn color="blue darken-1" width="5vw" @click="dialogLines = false">Close</v-btn>
+              <v-btn color="red" width="5vw" @click="dialogLines = false">Close</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -330,8 +395,15 @@ export default {
         },
         // { icon: 'mdi-settings' , text: 'Settings' },
         { icon: "mdi-logout", text: "Sign Out", isUserLoggedIn: true }
-      ]
+      ],
+      date: null,
+      menu: false,
     };
+  },
+  watch: {
+    menu (val) {
+      val && setTimeout(() => (this.$refs.picker.activePicker = 'YEAR'))
+    },
   },
   computed: {},
   methods: {
@@ -344,6 +416,9 @@ export default {
           this.dialogLines = true;
           break;
       }
+    },
+    save (date) {
+      this.$refs.menu.save(date)
     },
   }
 };
@@ -365,24 +440,20 @@ export default {
   margin-top: 2vh;
 }
 .service-status-card-custom {
-  width: 270px;
+  width: 220px;
   margin-left: 1vw;
   margin-top: 1.5vh;
-  padding-left: 5px;
-  padding-bottom: 10px;
+}
+.service-status {
+  margin-left: 0.4vw;
 }
 .navigation-buttons-card-custom {
-  width: 270px;
+  width: 220px;
   margin-left: 1vw;
   margin-top: 1.5vh;
 }
 .search-field-custom {
   font-size: 1.2em;
-}
-.service-status-line {
-  width: auto;
-  height: 3vh !important;
-  border: 1px solid white;
 }
 .service-status-info {
   font-size:1em;
