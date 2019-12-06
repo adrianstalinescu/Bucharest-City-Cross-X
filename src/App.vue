@@ -102,7 +102,7 @@
               </template>
               <v-card>
                 <v-card-title class="justify-center" style="color:green;">
-                  <span class="headline" centered>Let's Transit The City</span>
+                  <span class="headline" centered>Transit the City</span>
                 </v-card-title>
                 <v-card-text>
                   <v-container>
@@ -146,7 +146,12 @@
                                   <v-text-field label="Surname" type="text" required prepend-icon="mdi-account-card-details-outline" color="green"></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
-                                  <v-text-field label="Gender" type="text" prepend-icon="mdi-account-card-details-outline" color="green"></v-text-field>
+                                  <v-select
+                                    :items="gender"
+                                    label="Gender"
+                                    outlined
+                                    prepend-icon="mdi-account-card-details-outline"
+                                  ></v-select>
                                 </v-col>
                                 <v-col cols="12">
                                   <v-text-field label="Phone" type="text" required prepend-icon="mdi-phone" color="green"></v-text-field>
@@ -198,7 +203,28 @@
                     </v-row>
                     <br />
                     <v-row class="justify-center">
-                      <a href="#" style="font-size:1.1em;">Forgot your password?</a>
+                      <a href="#" style="font-size:1.1em;" @click="dialogResetPassword = true, dialogLogin = false">Forgot your password?</a>
+                      <v-dialog v-model="dialogResetPassword" persistent max-width="40vw">
+                        <v-card>
+                            <v-card-title class="justify-center" style="color:green;">
+                              <span class="headline">Lost midway transit? Let's fix this</span>
+                            </v-card-title>
+                            <v-card-text>
+                              <v-container>
+                                <v-row>
+                                  <v-col cols="12">
+                                    <v-text-field label="Email*" type="email" required prepend-icon="mdi-email" color="green"></v-text-field>
+                                  </v-col>
+                                </v-row>
+                              </v-container>
+                            </v-card-text>
+                            <v-card-actions>
+                              <v-btn color="red" width="5vw" @click="dialogResetPassword = false, dialogLogin = true">Close</v-btn>
+                              <v-spacer></v-spacer>
+                              <v-btn color="#4bbd6a" width="5vw" @click="dialogResetPassword = false">Login</v-btn>
+                            </v-card-actions>
+                          </v-card>
+                        </v-dialog>
                     </v-row>
                   </v-container>
                 </v-card-text>
@@ -358,6 +384,7 @@ export default {
       dialogRegister: false,
       dialogStations: false,
       dialogLines: false,
+      dialogResetPassword: false,
       searchInput: "",
       valueDeterminate: 100,
       stations: [
@@ -370,6 +397,14 @@ export default {
         {
           text: "Piata Romana"
         }
+        ],
+        gender: [
+          {
+            text: "Male"
+          },
+          {
+            text: "Female"
+          }
         ],
       items: [
         {
