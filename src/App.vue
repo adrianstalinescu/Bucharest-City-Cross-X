@@ -114,6 +114,8 @@
                         <v-text-field label="Password*" type="password" required color="green"></v-text-field>
                       </v-col>
                     </v-row>
+                  </v-container>
+                  <v-container>
                     <v-row class="justify-center">
                       <v-dialog v-model="dialogRegister" persistent max-width="40vw">
                         <template v-slot:activator="{ on }">
@@ -150,6 +152,7 @@
                                     :items="gender"
                                     label="Gender"
                                     outlined
+                                    color="green"
                                     prepend-icon="mdi-account-card-details-outline"
                                   ></v-select>
                                 </v-col>
@@ -191,17 +194,18 @@
                           </v-card-text>
                           <v-card-actions>
                             <v-btn
-                              color="red"
+                              color="grey"
                               width="5vw"
-                              @click="dialogRegister = false"
+                              @click="dialogRegister = false, dialogLogin = true"
                             >Close</v-btn>
                             <v-spacer></v-spacer>
-                            <v-btn color="#4bbd6a" width="5vw" @click="dialogRegister = false">Login</v-btn>
+                            <v-btn color="#4bbd6a" width="5vw" @click="dialogRegister = false">Sign up</v-btn>
                           </v-card-actions>
                         </v-card>
                       </v-dialog>
                     </v-row>
-                    <br />
+                  </v-container>
+                  <v-container>
                     <v-row class="justify-center">
                       <a href="#" style="font-size:1.1em;" @click="dialogResetPassword = true, dialogLogin = false">Forgot your password?</a>
                       <v-dialog v-model="dialogResetPassword" persistent max-width="40vw">
@@ -219,7 +223,7 @@
                               </v-container>
                             </v-card-text>
                             <v-card-actions>
-                              <v-btn color="red" width="5vw" @click="dialogResetPassword = false, dialogLogin = true">Close</v-btn>
+                              <v-btn color="grey" width="5vw" @click="dialogResetPassword = false, dialogLogin = true">Close</v-btn>
                               <v-spacer></v-spacer>
                               <v-btn color="#4bbd6a" width="5vw" @click="dialogResetPassword = false">Login</v-btn>
                             </v-card-actions>
@@ -229,7 +233,7 @@
                   </v-container>
                 </v-card-text>
                 <v-card-actions>
-                  <v-btn color="red" width="5vw" @click="dialogLogin = false">Close</v-btn>
+                  <v-btn color="grey" width="5vw" @click="dialogLogin = false">Close</v-btn>
                   <v-spacer></v-spacer>
                   <v-btn color="#4bbd6a" width="5vw" @click="dialogLogin = false">Login</v-btn>
                 </v-card-actions>
@@ -341,7 +345,7 @@
               </div>
               </div>
             <v-card-actions>
-              <v-btn color="red" width="5vw" @click="dialogStations = false">Close</v-btn>
+              <v-btn color="grey" width="5vw" @click="dialogStations = false">Close</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -352,15 +356,13 @@
             </v-card-title>
             <!-- wip -->
             <v-card-actions>
-              <v-btn color="red" width="5vw" @click="dialogLines = false">Close</v-btn>
+              <v-btn color="grey" width="5vw" @click="dialogLines = false">Close</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
       </div>
-      <div class="map-wrapper">
-        <hello-world />
-      </div>
-      <div class="gps-custom-button">
+      <div id="map"></div>
+      <div class="gps-custom-button" @click="geolocate()">
         <v-btn class="mx-2" fab dark color="#269e46">
           <v-icon dark>mdi-crosshairs-gps</v-icon>
         </v-btn>
@@ -370,15 +372,12 @@
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld";
 /* eslint-disable */
 export default {
   name: "App",
-  components: {
-    HelloWorld
-  },
   data() {
     return {
+      defaultLocation: {},
       drawer: 0,
       dialogLogin: false,
       dialogRegister: false,
@@ -431,13 +430,35 @@ export default {
       menu: false,
     };
   },
+  created() {
+  },
   watch: {
     menu (val) {
       val && setTimeout(() => (this.$refs.picker.activePicker = 'YEAR'))
     },
+    defaultLocation: {
+        deep: true,
+        immediate: true,
+        handler (newLocation) {
+          if (newLocation && this.defaultLocation) {
+            this.createMap();
+          }
+        }
+    }
   },
-  computed: {},
+  computed: {
+  },
+  mounted () {
+    this.geolocate();
+    this.createMap();
+  },
   methods: {
+     initialize(data) {
+        this.map = data.map
+        this.google = data.google
+
+        this.askGeolocation()
+      },
     navigationDrawer(item) {
       switch (item.text) {
         case "Stations":
@@ -451,19 +472,221 @@ export default {
     save (date) {
       this.$refs.menu.save(date)
     },
+     geolocate: function() {
+      navigator.geolocation.getCurrentPosition(position => {
+        this.defaultLocation = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+      });
+     },
+     createMap: function(){
+      let map;
+      map = new window.google.maps.Map(document.getElementById('map'), {
+        center: {lat: this.defaultLocation.lat, lng: this.defaultLocation.lng},
+        zoom: 16,
+        options: { 
+      disableDefaultUI: true,
+      enableHighAccuracy: true,
+      styles: [
+      {
+        "elementType": "geometry",
+        "stylers": [
+          {
+            "color": "#212121"
+          }
+        ]
+      },
+      {
+        "elementType": "labels.icon",
+        "stylers": [
+          {
+            "visibility": "off"
+          }
+        ]
+      },
+      {
+        "elementType": "labels.text.fill",
+        "stylers": [
+          {
+            "color": "#757575"
+          }
+        ]
+      },
+      {
+        "elementType": "labels.text.stroke",
+        "stylers": [
+          {
+            "color": "#212121"
+          }
+        ]
+      },
+      {
+        "featureType": "administrative",
+        "elementType": "geometry",
+        "stylers": [
+          {
+            "color": "#757575"
+          }
+        ]
+      },
+      {
+        "featureType": "administrative.country",
+        "elementType": "labels.text.fill",
+        "stylers": [
+          {
+            "color": "#9e9e9e"
+          }
+        ]
+      },
+      {
+        "featureType": "administrative.land_parcel",
+        "stylers": [
+          {
+            "visibility": "off"
+          }
+        ]
+      },
+      {
+        "featureType": "administrative.locality",
+        "elementType": "labels.text.fill",
+        "stylers": [
+          {
+            "color": "#bdbdbd"
+          }
+        ]
+      },
+      {
+        "featureType": "poi",
+        "elementType": "labels.text.fill",
+        "stylers": [
+          {
+            "color": "#757575"
+          }
+        ]
+      },
+      {
+        "featureType": "poi.park",
+        "elementType": "geometry",
+        "stylers": [
+          {
+            "color": "#181818"
+          }
+        ]
+      },
+      {
+        "featureType": "poi.park",
+        "elementType": "labels.text.fill",
+        "stylers": [
+          {
+            "color": "#616161"
+          }
+        ]
+      },
+      {
+        "featureType": "poi.park",
+        "elementType": "labels.text.stroke",
+        "stylers": [
+          {
+            "color": "#1b1b1b"
+          }
+        ]
+      },
+      {
+        "featureType": "road",
+        "elementType": "geometry.fill",
+        "stylers": [
+          {
+            "color": "#2c2c2c"
+          }
+        ]
+      },
+      {
+        "featureType": "road",
+        "elementType": "labels.text.fill",
+        "stylers": [
+          {
+            "color": "#8a8a8a"
+          }
+        ]
+      },
+      {
+        "featureType": "road.arterial",
+        "elementType": "geometry",
+        "stylers": [
+          {
+            "color": "#373737"
+          }
+        ]
+      },
+      {
+        "featureType": "road.highway",
+        "elementType": "geometry",
+        "stylers": [
+          {
+            "color": "#3c3c3c"
+          }
+        ]
+      },
+      {
+        "featureType": "road.highway.controlled_access",
+        "elementType": "geometry",
+        "stylers": [
+          {
+            "color": "#4e4e4e"
+          }
+        ]
+      },
+      {
+        "featureType": "road.local",
+        "elementType": "labels.text.fill",
+        "stylers": [
+          {
+            "color": "#616161"
+          }
+        ]
+      },
+      {
+        "featureType": "transit",
+        "elementType": "labels.text.fill",
+        "stylers": [
+          {
+            "color": "#757575"
+          }
+        ]
+      },
+      {
+        "featureType": "water",
+        "elementType": "geometry",
+        "stylers": [
+          {
+            "color": "#000000"
+          }
+        ]
+      },
+      {
+        "featureType": "water",
+        "elementType": "labels.text.fill",
+        "stylers": [
+          {
+            "color": "#3d3d3d"
+          }
+        ]
+      }
+     ]}
+    })
   }
-};
+  }
+}
 </script>
-
 <style scoped>
 .custom-wrap {
   position: fixed;
   z-index: 100;
 }
-.map-wrapper {
-  position: fixed;
-  width: 100%;
+#map {
   height: 100%;
+  width: 100%;
 }
 .search-card-custom {
   width: 450px;
