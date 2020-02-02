@@ -1,5 +1,5 @@
 <template>
-    <div class="travel-plans-wrapper">
+    <div class="wallet-wrapper">
         <div class="text-center" style="height:100%;">
             <v-card 
             flat
@@ -7,7 +7,7 @@
             height="100%"
             >
                 <v-card-title
-                class="travel-plans-top-bar ma-3 text-center"
+                class="wallet-top-bar ma-3 text-center"
                 >
                     <div>
                         <router-link to="/menu" class="router-link-transparency">
@@ -36,7 +36,7 @@
 <script>
 /* eslint-disable */
 export default {
-    name: "TravelPlans",
+    name: "Wallet",
     data() {
         return {
         }
@@ -62,15 +62,11 @@ export default {
 
 <style scoped>
 
-.scroll {
-    overflow-y: auto;
-}
-
 .router-link-transparency {
   color: transparent;
 }
 
-.travel-plans-wrapper {
+.wallet-wrapper {
     background-color:white; 
     width:100%; 
     height: 100%; 
@@ -79,7 +75,7 @@ export default {
     z-index: 10;
 }
 
-.travel-plans-top-bar {
+.wallet-top-bar {
     padding:0;
 }
 </style>

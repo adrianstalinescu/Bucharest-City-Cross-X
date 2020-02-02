@@ -197,24 +197,26 @@
                     align="start"
                     justify="center"
                     >
-                        <v-avatar 
-                        size="100"
-                        >
-                            <v-btn
-                            width="100%"
-                            height="100%"
-                            color="green lighten-1"
-                            fab
-                            elevation="0"
+                        <router-link to="/wallet" class="router-link-transparency">
+                            <v-avatar 
+                            size="100"
                             >
-                                <v-icon 
-                                color="white"
-                                size="70"
+                                <v-btn
+                                width="100%"
+                                height="100%"
+                                color="green lighten-1"
+                                fab
+                                elevation="0"
                                 >
-                                    mdi-wallet
-                                </v-icon>
-                            </v-btn>
-                        </v-avatar>
+                                    <v-icon 
+                                    color="white"
+                                    size="70"
+                                    >
+                                        mdi-wallet
+                                    </v-icon>
+                                </v-btn>
+                            </v-avatar>
+                        </router-link>
                     </v-row>
                     <v-row
                     align="start"
@@ -230,24 +232,26 @@
                     align="start"
                     justify="center"
                     >
-                        <v-avatar 
-                        size="100"
-                        >
-                            <v-btn
-                            width="100%"
-                            height="100%"
-                            color="green lighten-1"
-                            fab
-                            elevation="0"
+                        <router-link to="/history" class="router-link-transparency">
+                            <v-avatar 
+                            size="100"
                             >
-                                <v-icon 
-                                color="white"
-                                size="70"
+                                <v-btn
+                                width="100%"
+                                height="100%"
+                                color="green lighten-1"
+                                fab
+                                elevation="0"
                                 >
-                                    mdi-format-list-bulleted-square
-                                </v-icon>
-                            </v-btn>
-                        </v-avatar>
+                                    <v-icon 
+                                    color="white"
+                                    size="70"
+                                    >
+                                        mdi-format-list-bulleted-square
+                                    </v-icon>
+                                </v-btn>
+                            </v-avatar>
+                        </router-link>
                     </v-row>
                     <v-row
                     align="start"
@@ -269,6 +273,7 @@
                     align="start"
                     justify="center"
                     >
+                    <router-link to="/buses" class="router-link-transparency">
                         <v-avatar 
                         size="100"
                         >
@@ -287,6 +292,7 @@
                                 </v-icon>
                             </v-btn>
                         </v-avatar>
+                    </router-link>
                     </v-row>
                     <v-row
                     align="start"
@@ -302,24 +308,26 @@
                     align="start"
                     justify="center"
                     >
-                        <v-avatar 
-                        size="100"
-                        >
-                            <v-btn
-                            width="100%"
-                            height="100%"
-                            color="green lighten-1"
-                            fab
-                            elevation="0"
+                        <router-link to="/trams" class="router-link-transparency">
+                            <v-avatar 
+                            size="100"
                             >
-                                <v-icon 
-                                color="white"
-                                size="70"
+                                <v-btn
+                                width="100%"
+                                height="100%"
+                                color="green lighten-1"
+                                fab
+                                elevation="0"
                                 >
-                                    mdi-tram
-                                </v-icon>
-                            </v-btn>
-                        </v-avatar>
+                                    <v-icon 
+                                    color="white"
+                                    size="70"
+                                    >
+                                        mdi-tram
+                                    </v-icon>
+                                </v-btn>
+                            </v-avatar>
+                        </router-link>
                     </v-row>
                     <v-row
                     align="start"
@@ -335,24 +343,26 @@
                     align="start"
                     justify="center"
                     >
-                        <v-avatar 
-                        size="100"
-                        >
-                            <v-btn
-                            width="100%"
-                            height="100%"
-                            color="green lighten-1"
-                            fab
-                            elevation="0"
+                        <router-link to="/metro" class="router-link-transparency">
+                            <v-avatar 
+                            size="100"
                             >
-                                <v-icon 
-                                color="white"
-                                size="70"
+                                <v-btn
+                                width="100%"
+                                height="100%"
+                                color="green lighten-1"
+                                fab
+                                elevation="0"
                                 >
-                                    mdi-subway
-                                </v-icon>
-                            </v-btn>
-                        </v-avatar>
+                                    <v-icon 
+                                    color="white"
+                                    size="70"
+                                    >
+                                        mdi-subway
+                                    </v-icon>
+                                </v-btn>
+                            </v-avatar>
+                        </router-link>
                     </v-row>
                     <v-row
                     align="start"
@@ -368,24 +378,26 @@
                     align="start"
                     justify="center"
                     >
-                        <v-avatar 
-                        size="100"
-                        >
-                            <v-btn
-                            width="100%"
-                            height="100%"
-                            color="green lighten-1"
-                            fab
-                            elevation="0"
+                        <router-link to="/stations" class="router-link-transparency">
+                            <v-avatar 
+                            size="100"
                             >
-                                <v-icon 
-                                color="white"
-                                size="70"
+                                <v-btn
+                                width="100%"
+                                height="100%"
+                                color="green lighten-1"
+                                fab
+                                elevation="0"
                                 >
-                                    mdi-bus-stop-covered
-                                </v-icon>
-                            </v-btn>
-                        </v-avatar>
+                                    <v-icon 
+                                    color="white"
+                                    size="70"
+                                    >
+                                        mdi-bus-stop-covered
+                                    </v-icon>
+                                </v-btn>
+                            </v-avatar>
+                        </router-link>
                     </v-row>
                     <v-row
                     align="start"
