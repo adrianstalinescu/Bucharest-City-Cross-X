@@ -410,30 +410,29 @@
                 </v-col>
             </v-row>
         </v-container>
-        <v-container class="mt-10">
-            <v-row
-            no-gutters
-            >
-                <v-col>
-                    <v-row
-                    align="start"
-                    justify="center"
+        <v-row
+        no-gutters
+        class="menu-log-out-wrapper"
+        >
+            <v-col>
+                <v-row
+                align="start"
+                justify="center"
+                >
+                    <v-btn 
+                    x-large 
+                    rounded 
+                    elevation="0"
+                    color="error"
                     >
-                        <v-btn 
-                        x-large 
-                        rounded 
-                        elevation="0"
-                        color="error"
-                        >
-                            <v-icon left>
-                                mdi-logout
-                            </v-icon>
-                            Log Out
-                        </v-btn>
-                    </v-row>
-                </v-col>
-            </v-row>
-        </v-container>
+                        <v-icon left>
+                            mdi-logout
+                        </v-icon>
+                        Log Out
+                    </v-btn>
+                </v-row>
+            </v-col>
+        </v-row>
     </div>
 </template>
 
@@ -469,6 +468,12 @@ export default {
 .menu-content-title {
     font-size: 20px;
     font-weight: bold;
+}
+
+.menu-log-out-wrapper {
+    position: absolute;
+    bottom: 2vh;
+    width: 100%;
 }
 
 </style>

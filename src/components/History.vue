@@ -6,8 +6,9 @@
             width="100%" 
             height="100%"
             >
-                <v-card-title
-                class="history-top-bar ma-3 text-center"
+                <v-toolbar
+                flat
+                class="travel-plans-top-bar ma-3 text-center"
                 >
                     <div>
                         <router-link to="/menu" class="router-link-transparency">
@@ -27,7 +28,12 @@
                             </v-btn>
                         </router-link>
                     </div>
-                </v-card-title>
+                    <v-toolbar-title 
+                    class="margin-L-R"
+                    >
+                        History
+                    </v-toolbar-title>
+                </v-toolbar>
             </v-card>
         </div>
     </div>
@@ -77,5 +83,12 @@ export default {
 
 .history-top-bar {
     padding:0;
+}
+
+.margin-L-R {
+    margin-right: auto;
+    margin-left: auto;
+    font-weight: 400;
+    font-size: 1.7em;
 }
 </style>

@@ -94,7 +94,12 @@
           </v-card>
         </v-row>
       </v-col>
-      <router-view></router-view>
+      <transition 
+      name="fade" 
+      mode="in-out"
+      >
+        <router-view></router-view>
+      </transition>
     </v-content>
   </v-app>
 </template>
@@ -145,6 +150,19 @@ export default {
 
 .cols-padding {
   padding: 0px !important;
+}
+
+.fade-enter {
+  opacity: 0;
+}
+
+.fade-enter-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+  opacity: 0;
 }
 
 .main-app-search {
