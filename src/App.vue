@@ -1,60 +1,157 @@
 <template>
   <v-app id="app">
+    <v-app-bar app color="#424242" dense flat dark >
+      <v-tabs fixed-tabs>
+        <v-tab>
+          Transit
+          <router-link to="/map" class="router-link-transparency">
+            <v-icon color="white" size="20" class="ma-2">mdi-map</v-icon>
+          </router-link>
+        </v-tab>
+        <v-tab>
+          Travel Plans
+          <router-link to="/plans" class="router-link-transparency">
+            <v-icon color="white" size="20" class="ma-2">mdi-ticket</v-icon>
+          </router-link>
+        </v-tab>
+        <v-tab>
+          Wallet
+          <router-link to="/wallet" class="router-link-transparency">
+            <v-icon color="white" size="20" class="ma-2">mdi-wallet</v-icon>
+          </router-link>
+        </v-tab>
+        <v-tab>
+          History
+          <router-link to="/history" class="router-link-transparency">
+            <v-icon color="white" size="20" class="ma-2">mdi-history</v-icon>
+          </router-link>
+        </v-tab>
+        <v-tab>
+          Lines
+          <router-link to="/lines" class="router-link-transparency">
+            <v-icon color="white" size="20" class="ma-2">mdi-transit-connection-variant</v-icon>
+          </router-link>
+        </v-tab>
+        <v-tab>
+          Stations
+          <router-link to="/stations" class="router-link-transparency">
+            <v-icon color="white" size="20" class="ma-2">mdi-bus-stop-covered</v-icon>
+          </router-link>
+        </v-tab>
+      </v-tabs>
+      <div class="custom-state-badges">
+        <v-chip color="rgba(255, 255, 255, 0.7)" text-color="black" class="mr-1 ml-1">
+          <v-avatar left>
+            <v-icon color="black">mdi-weather-partly-cloudy</v-icon>
+          </v-avatar>24°C
+        </v-chip>
+        <v-chip class="ma-2" color="rgba(255, 255, 255, 0.7)" text-color="black">
+          <v-avatar left >
+            <v-btn fab dark :color="notificationColor" elevation="0" width="100%" height="100%" @click="notifications = true">
+              <v-icon size="18" color="grey lighten-3">mdi-bell-ring</v-icon>
+            </v-btn>
+          </v-avatar>
+          {{ messages }}
+        </v-chip>
+        <v-avatar color="green" @click="profile = true" class="mr-1 ml-2" size="31">
+          <v-btn fab dark color="green" elevation="0" width="100%" height="100%" @click="profile = true">
+            <v-avatar size="31" >
+                <img
+                  src="https://sunrift.com/wp-content/uploads/2014/12/Blake-profile-photo-square.jpg"
+                />
+            </v-avatar>
+          </v-btn>
+        </v-avatar>
+      </div>
+
+    </v-app-bar>
     <v-content>
-      <v-col cols="12" class="cols-padding">
-        <v-row align="start" justify="space-around">
-          <v-card class="main-app-search">
-            <v-chip class="ma-2" color="rgba(255, 255, 255, 0.7)" text-color="black">
-              <v-avatar left>
-                <v-icon color="#f2da1f">mdi-weather-sunny</v-icon>
-              </v-avatar>24°C
-            </v-chip>
-          </v-card>
-          <div class="custom-search-wrap">
-            <v-card class="search-card" elevation="0">
-              <vue-google-autocomplete
-                ref="address"
-                id="search"
-                class="form-control"
-                placeholder="Search..."
-                v-on:placechanged="getAddressData"
-              ></vue-google-autocomplete>
-              <div class="custom-search-icons">
-                <v-icon v-if="address" @click="eraseData()" class="custom-search-erase">mdi-close</v-icon>
-                <v-icon color="green" @click="ceva()">mdi-magnify</v-icon>
-              </div>
+      <v-dialog v-model="notifications" scrollable persistent max-width="50vw">
+        <v-card>
+          <v-toolbar flat dense class="travel-plans-top-bar ma-1 text-center">
+            <div class="component-back-button">
+              <v-btn
+                small
+                fab
+                dark
+                color="blue-grey lighten-1"
+                elevation="0"
+                @click="notifications=false"
+              >
+                <v-icon dark size="25">mdi-close</v-icon>
+              </v-btn>
+            </div>
+            <v-toolbar-title class="margin-L-R">Notifications</v-toolbar-title>
+          </v-toolbar>
+          <v-divider></v-divider>
+          <v-card-text style="height: 500px;">
+            <v-card class="ma-2" width="50vw" outlined>
+              <v-list-item three-line>
+                <div style="width:45vw;">
+                  <div class="overline mb-2">12-02-2020 13:54</div>
+                  <v-list-item-subtitle>Suspendarea liniilor de autobuz 105 si 870</v-list-item-subtitle>
+                </div>
+                <div style="width: 5vw;">
+                  <v-row align="center" justify="end" class="notification">
+                    <v-btn icon class="notification-icon">
+                      <v-icon color="error">mdi-delete</v-icon>
+                    </v-btn>
+                    <v-btn icon>
+                      <v-icon color="grey darken-3">mdi-fullscreen</v-icon>
+                    </v-btn>
+                  </v-row>
+                </div>
+              </v-list-item>
             </v-card>
-            <v-card class="main-app-menu">
-              <router-link to="/menu" class="router-link-transparency">
-                <v-btn
-                  text
-                  icon
-                  :ripple="false"
-                  color="transparent"
-                  width="100%"
-                  class="main-app-menu-drawer"
-                >
-                  <v-icon size="30" color="success">mdi-menu</v-icon>
-                </v-btn>
-              </router-link>
-            </v-card>
-          </div>
-          <v-card class="main-app-search">
-            <v-chip class="ma-2" color="rgba(255, 255, 255, 0.7)" text-color="black">
-              <v-avatar left color="green">
-                <v-btn fab dark color="green" elevation="0" width="100%" height="100%">
-                  <v-icon size="15" color="white">mdi-bell-ring</v-icon>
-                </v-btn>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+      <v-dialog persistent scrollable v-model="profile" width="40vw">
+        <v-card>
+          <v-card-title class="headline">Profile</v-card-title>
+          <v-card-text style="height: 70vh;">
+            <v-row justify="space-around">
+              <v-avatar width="150px" height="150px" color="teal">
+                <img
+                  src="https://sunrift.com/wp-content/uploads/2014/12/Blake-profile-photo-square.jpg"
+                />
               </v-avatar>
-              {{ notifications }}
-            </v-chip>
-          </v-card>
-        </v-row>
-      </v-col>
-      {{ getUserData }}
-      <transition name="fade" mode="in-out">
-        <router-view></router-view>
-      </transition>
+            </v-row>
+            <v-row justify="space-around">
+              <v-btn color="blue-grey" class="ma-2 white--text">
+                Upload
+                <v-icon right dark>mdi-cloud-upload</v-icon>
+              </v-btn>
+            </v-row>
+            <v-row justify="space-around" class="ml-3 mr-3 mt-3">
+              <v-text-field value label="Name" outlined disabled></v-text-field>
+            </v-row>
+            <v-row justify="space-around" class="ml-3 mr-3">
+              <v-text-field value label="Email" outlined disabled></v-text-field>
+            </v-row>
+            <v-row justify="space-around" class="ml-3 mr-3">
+              <v-text-field value label="Phone" outlined disabled></v-text-field>
+            </v-row>
+          </v-card-text>
+          <v-card-actions class="ma-2">
+            <v-btn
+              fab
+              small
+              dark
+              color="blue-grey lighten-1"
+              elevation="0"
+              @click="profile = false"
+            >
+              <v-icon dark size="25">mdi-close</v-icon>
+            </v-btn>
+            <v-spacer></v-spacer>
+            <v-btn fab small dark color="success" elevation="0" @click="profileDlg = false">
+              <v-icon dark size="25">mdi-arrow-right</v-icon>
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <v-container fluid fill-height></v-container>
     </v-content>
   </v-app>
 </template>
@@ -74,8 +171,11 @@ export default {
 
   data() {
     return {
-      address: "",
-      notifications: "3"
+      notificationColor: "error",
+      messages: 23,
+      show: false,
+      notifications: false,
+      profile: false
     };
   },
 
@@ -83,125 +183,63 @@ export default {
 
   watch: {},
 
-  computed: {
-    getUserData() {
-      this.$store.getters.getUser;
-    }
-  },
+  computed: {},
 
   mounted() {},
 
-  methods: {
-    getAddressData(addressData, placeResultData, id) {
-      this.address = addressData;
-      this.$store.dispatch("actionUser", "someData");
-    },
-
-    eraseData() {
-      this.address = "";
-      document.getElementById("search").value = "";
-    }
-  }
+  methods: {}
 };
 </script>
+
 <style scoped>
-.form-control {
-  width: -webkit-fill-available;
-  caret-color: lightgray;
-  outline: none;
-  margin-right: 10px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.form-control::placeholder {
-  color: rgb(169, 169, 169);
-  font-weight: 350;
-}
-
-.custom-search-wrap {
-  display: flex;
-  flex-flow: column;
-  align-items: center;
-}
-
-.custom-search-icons {
-  display: flex;
-}
-
-.custom-search-erase {
-  margin-right: 10px;
-}
-
-.custom-search-erase:hover {
-  transition: 0.4s ease;
-  color: red;
-}
 
 .router-link-transparency {
   color: transparent;
 }
 
-.cols-padding {
-  padding: 0px !important;
-}
-
-.fade-enter {
-  opacity: 0;
-}
-
-.fade-enter-active {
-  transition: opacity 0.2s ease;
-}
-
-.fade-leave-active {
-  transition: opacity 0.2s ease;
-  opacity: 0;
+.margin-top-bottom {
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .main-app-search {
-  margin-left: 100px;
-  margin-right: 100px;
-  margin-top: 1vh;
+  margin-left: 1vw;
   width: 80px;
   background-color: transparent !important;
   z-index: 1 !important;
   box-shadow: none;
 }
 
-.search-card {
+.margin-L-R {
+    margin-right: auto;
+    margin-left: auto;
+    font-weight: 400;
+    font-size: 1.7em;
+}
+
+.component-back-button {
+    position: absolute;
+}
+
+.notification-icon {
+  margin-right: 0.3vw;
+}
+
+.custom-state-badges {
   display: flex;
-  justify-content: space-between;
-  z-index: 1;
-  width: 450px;
-  height: 40px;
-  margin-top: 1.7vh;
-  margin-left: 100px;
-  margin-right: 100px;
-  padding-right: 15px;
-  padding-left: 20px;
-  font-size: 1em;
-  appearance: none;
-  border: none;
-  border-radius: 21px !important;
-  background: none;
-  background-color: rgba(255, 255, 255, 0.9);
+  align-items: center;
 }
 
-.main-app-menu {
-  box-shadow: none !important;
-  background-color: rgba(255, 255, 255, 0.9) !important;
-  width: 100px !important;
-  height: 32px !important;
-  margin-top: 0.5vh;
-  border-radius: 50% / 100% !important;
-  border-bottom-left-radius: 0 !important;
-  border-bottom-right-radius: 0 !important;
-  transform: rotate(180deg) !important;
-  z-index: 1 !important;
+.custom-notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 1.5vw;
+  height: 3vh;
+  color: red;
+  font-size: 11px;
+  background-color: #cc3939 !important;
+  border-radius: 50px;
 }
 
-.main-app-menu-drawer {
-  transform: rotate(180deg) !important;
-}
 </style>
