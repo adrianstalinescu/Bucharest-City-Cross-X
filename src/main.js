@@ -13,10 +13,13 @@ import Stations from './components/Stations'
 import VueRouter from 'vue-router'
 import vuetify from './plugins/vuetify'
 import * as firebase from './firebase'
+import Vuex from 'vuex'
+import store from './store'
+import VueGoogleAutocomplete from 'vue-google-autocomplete'
 
-Vue.config.productionTip = false
-
-Vue.use(VueRouter);
+Vue.use(Vuex)
+Vue.use(VueRouter)
+Vue.use(VueGoogleAutocomplete)
 
 Vue.config.productionTip = false;
 
@@ -63,6 +66,7 @@ const router = new VueRouter({
 })
 new Vue({
   router,
+  store,
   vuetify,
   firebase,
   render: h => h(App)

@@ -10,7 +10,9 @@
                 flat
                 class="travel-plans-top-bar ma-3 text-center"
                 >
-                    <div>
+                    <div
+                    class="component-back-button"
+                    >
                         <router-link to="/menu" class="router-link-transparency">
                             <v-btn 
                             small
@@ -70,6 +72,10 @@ export default {
 
 .router-link-transparency {
   color: transparent;
+}
+
+.component-back-button {
+    position: absolute;
 }
 
 .wallet-wrapper {
