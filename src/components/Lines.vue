@@ -1,5 +1,5 @@
 <template>
-    <div class="tram-wrapper">
+    <div class="buses-wrapper">
         <div class="text-center" style="height:100%;">
             <v-card 
             flat
@@ -7,7 +7,7 @@
             height="100%"
             >
                 <v-card-title
-                class="tram-top-bar ma-3 text-center"
+                class="buses-top-bar ma-3 text-center"
                 >
                     <div>
                         <router-link to="/menu" class="router-link-transparency">
@@ -36,7 +36,7 @@
 <script>
 /* eslint-disable */
 export default {
-    name: "Tram",
+    name: "Lines",
     data() {
         return {
         }
@@ -66,7 +66,7 @@ export default {
   color: transparent;
 }
 
-.tram-wrapper {
+.buses-wrapper {
     background-color:white; 
     width:100%; 
     height: 100%; 
@@ -75,7 +75,7 @@ export default {
     z-index: 10;
 }
 
-.tram-top-bar {
+.buses-top-bar {
     padding:0;
 }
 </style>

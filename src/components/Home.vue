@@ -36,7 +36,7 @@
 <script>
 /* eslint-disable */
 export default {
-    name: "Buses",
+    name: "Home",
     data() {
         return {
         }
