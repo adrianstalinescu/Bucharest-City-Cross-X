@@ -103,6 +103,8 @@ export default {
 .home-wrapper {
   width: 100%;
   height: 100%;
+  position: absolute;
+  top: 0;
   background: url("https://picsum.photos/1920/1080?random");
 }
 
@@ -144,7 +146,6 @@ export default {
 }
 
 .custom-metro-card {
-  margin-top: 5vh;
   margin-left: auto;
   margin-right: auto;
   height: auto;
