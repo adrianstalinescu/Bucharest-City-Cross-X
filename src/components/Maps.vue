@@ -14,7 +14,7 @@
           v-on:placechanged="getAddressData"
         ></vue-google-autocomplete>
         <div class="custom-search-icons">
-          <v-icon v-if="address" @click="clearSearch()" class="custom-search-erase">mdi-close</v-icon>
+          <v-icon @click="clearSearch()" class="custom-search-erase">mdi-close</v-icon>
           <v-icon color="green" @click="search()">mdi-magnify</v-icon>
         </div>
       </v-card>
@@ -37,10 +37,18 @@ export default {
   },
   data() {
     return {
-      address: "",
+      address: {},
       defaultLocation: {
         lat: 44.4268006,
         lng: 26.1025036
+      },
+      destination: null,
+      map: null,
+      directions: {
+        service: null,
+        display: null,
+        start: null,
+        end: null
       }
     };
   },
@@ -88,7 +96,9 @@ export default {
         this.defaultLocation.lat,
         this.defaultLocation.lng
       );
-      let map = new window.google.maps.Map(document.getElementById("map"), {
+      this.directions.service = new google.maps.DirectionsService();
+      this.directions.display = new google.maps.DirectionsRenderer();
+      this.map = new window.google.maps.Map(document.getElementById("map"), {
         center: myLatLng,
         zoom: 16,
         options: {
@@ -282,21 +292,39 @@ export default {
           ]
         }
       });
+      this.directions.display.setMap(this.map);
+      this.search();
       var marker = new google.maps.Marker({
         position: myLatLng,
-        map: map,
+        map: this.map,
         title: "Your Position"
       });
     },
     getAddressData(addressData, placeResultData, id) {
       this.address = addressData;
+      this.destination = placeResultData;
     },
     clearSearch() {
       this.address = "";
       document.getElementById("search").value = "";
     },
     search() {
-      console.log(this.address.latitude + " - " + this.address.longitude);
+      this.destination;
+      if (this.destination) {
+        const request = {
+          origin: this.defaultLocation,
+          destination: this.destination.geometry.location,
+          travelMode: "DRIVING"
+        };
+
+        this.directions.service.route(request, (response, status) => {
+          if (status === "OK") {
+            this.directions.display.setDirections(response);
+          } else {
+            window.alert("Directions request failed due to " + status);
+          }
+        });
+      }
     }
   }
 };

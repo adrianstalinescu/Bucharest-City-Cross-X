@@ -1,6 +1,13 @@
 <template>
+  <div>
     <div class="home-wrapper">
-      <v-card class="custom-notification-card" width="55vw" min-height="65px" outlined elevation="1">
+      <v-card
+        class="custom-notification-card"
+        width="55vw"
+        min-height="65px"
+        outlined
+        elevation="1"
+      >
         <div class="custom-metro-card mt-2 metro-status-wrapper">
           <v-chip class="ma-2 metro-status-icon" color="amber accent-4" text-color="black">
             <span class="mr-2">M1</span>
@@ -15,12 +22,14 @@
                 <span>Good Service</span>
               </v-chip>
             </div>
-          </v-chip><v-chip class="ma-2 metro-status-icon" color="#ff2b1c" text-color="black">
+          </v-chip>
+          <v-chip class="ma-2 metro-status-icon" color="#ff2b1c" text-color="black">
             <span class="mr-2">M3</span>
             <v-chip color="white" outlined class="metro-status-text">
               <span>Partly Suspended</span>
             </v-chip>
-          </v-chip><v-chip class="ma-2 metro-status-icon" color="green darken-3" text-color="black">
+          </v-chip>
+          <v-chip class="ma-2 metro-status-icon" color="green darken-3" text-color="black">
             <span class="mr-2">M4</span>
             <v-chip color="white" outlined class="metro-status-text">
               <span>Good Service</span>
@@ -28,77 +37,102 @@
           </v-chip>
         </div>
       </v-card>
-      <v-card class="custom-notification-card" width="50vw" min-height="80px" outlined elevation="1">
+      <v-card
+        class="custom-notification-card"
+        width="50vw"
+        min-height="80px"
+        outlined
+        elevation="1"
+      >
         <div class="custom-notification-card-wrap mt-2">
           <v-avatar elevation="0" color="orange lighten-1" class="custom-notification-button ml-4">
-            <v-icon color="orange darken-4" size="30">
-              mdi-alert-outline
-            </v-icon>
-          </v-avatar>
-          <input 
-          value="Suspendarea liniilor 105 si 780 din motive de accident Suspendarea liniilor 105 si 780 din motive de accident" 
-          class="custom-notification-title ml-3 mr-3" disabled>
-          <v-btn fab small elevation="0" color="transparent" class="custom-notification-button mr-4">
-            <v-icon color="red" size="30">
-              mdi-close
-            </v-icon>
-          </v-btn>
-        </div>
-        <div class="custom-notification-card-wrap ma-3">
-          Suspendarea liniilor 105 si 780 din motive de accident
-        </div>
-      </v-card>
-      <v-card class="custom-notification-card" width="50vw" min-height="80px" outlined elevation="1">
-        <div class="custom-notification-card-wrap mt-2">
-          <v-avatar elevation="0" color="light-blue lighten-3" class="custom-notification-button ml-4">
-            <v-icon color="light-blue darken-1" size="30">
-              mdi-exclamation-thick
-            </v-icon>
+            <v-icon color="orange darken-4" size="30">mdi-alert-outline</v-icon>
           </v-avatar>
           <input
             value="Suspendarea liniilor 105 si 780 din motive de accident Suspendarea liniilor 105 si 780 din motive de accident"
-            class="custom-notification-title ml-3 mr-3" disabled>
-          <v-btn fab small elevation="0" color="transparent" class="custom-notification-button mr-4">
-            <v-icon color="red" size="30">
-              mdi-close
-            </v-icon>
+            class="custom-notification-title ml-3 mr-3"
+            disabled
+          />
+          <v-btn
+            fab
+            small
+            elevation="0"
+            color="transparent"
+            class="custom-notification-button mr-4"
+          >
+            <v-icon color="red" size="30">mdi-close</v-icon>
           </v-btn>
         </div>
-        <div class="custom-notification-card-wrap ma-3">
-          Suspendarea liniilor 105 si 780 din motive de accident
+        <div
+          class="custom-notification-card-wrap ma-3"
+        >Suspendarea liniilor 105 si 780 din motive de accident</div>
+      </v-card>
+      <v-card
+        class="custom-notification-card"
+        width="50vw"
+        min-height="80px"
+        outlined
+        elevation="1"
+      >
+        <div class="custom-notification-card-wrap mt-2">
+          <v-avatar
+            elevation="0"
+            color="light-blue lighten-3"
+            class="custom-notification-button ml-4"
+          >
+            <v-icon color="light-blue darken-1" size="30">mdi-exclamation-thick</v-icon>
+          </v-avatar>
+          <input
+            value="Suspendarea liniilor 105 si 780 din motive de accident Suspendarea liniilor 105 si 780 din motive de accident"
+            class="custom-notification-title ml-3 mr-3"
+            disabled
+          />
+          <v-btn
+            fab
+            small
+            elevation="0"
+            color="transparent"
+            class="custom-notification-button mr-4"
+          >
+            <v-icon color="red" size="30">mdi-close</v-icon>
+          </v-btn>
         </div>
+        <div
+          class="custom-notification-card-wrap ma-3"
+        >Suspendarea liniilor 105 si 780 din motive de accident</div>
       </v-card>
     </div>
+  </div>
 </template>
 
 <script>
 /* eslint-disable */
 export default {
-    name: "Home",
-    data() {
-        return {
-        }
-    },
+  name: "Home",
+  data() {
+    return {};
+  },
 
-    created() {
-    },
+  created() {},
 
-    watch: {
-    },
-    
-    computed: {
-    },
+  watch: {},
 
-    mounted () {
-    },
+  computed: {},
 
-    methods: {
-    }
-}
+  mounted() {},
 
+  methods: {}
+};
 </script>
 
 <style scoped>
+.hide-scroll {
+  -ms-overflow-style: none;
+}
+
+.hide-scroll::-webkit-scrollbar {
+  display: none;
+}
 
 .home-wrapper {
   width: 100%;
@@ -152,5 +186,4 @@ export default {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
 }
-
 </style>
