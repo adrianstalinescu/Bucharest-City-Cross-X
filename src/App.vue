@@ -71,7 +71,7 @@
               <v-icon dark size="25">mdi-close</v-icon>
             </v-btn>
             <v-spacer></v-spacer>
-            <v-btn rounded dark color="error" elevation="0" @click="onSignOut()">
+            <v-btn rounded dark color="error" elevation="0" class="justify-center" @click="onSignOut()">
               Log Out
               <v-icon dark right size="20">mdi-logout</v-icon>
             </v-btn>
@@ -95,48 +95,12 @@
               <v-col cols="12">
                 <v-text-field label="Email" type="email" prepend-icon="mdi-email" color="green"></v-text-field>
                 <v-text-field label="Name" type="text" prepend-icon="mdi-account" color="green"></v-text-field>
-                <v-select
-                  v-model="gender"
-                  label="Gender"
-                  :items="genderSelect"
-                  type="text"
-                  prepend-icon="mdi-account-card-details-outline"
-                  color="green"
-                ></v-select>
                 <v-text-field
                   label="Phone"
                   type="text"
-                  required
                   prepend-icon="mdi-phone"
                   color="green"
                 ></v-text-field>
-                <v-menu
-                  ref="menu"
-                  v-model="menu"
-                  :close-on-content-click="false"
-                  transition="scale-transition"
-                  offset-y
-                  min-width="290px"
-                >
-                  <template v-slot:activator="{ on }">
-                    <v-text-field
-                      v-model="date"
-                      label="Birthday date"
-                      prepend-icon="mdi-calendar"
-                      readonly
-                      v-on="on"
-                      color="green"
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker
-                    ref="picker"
-                    v-model="date"
-                    :max="new Date().toISOString().substr(0, 10)"
-                    min="1950-01-01"
-                    color="green"
-                    @change="save"
-                  ></v-date-picker>
-                </v-menu>
               </v-col>
             </v-row>
             <v-row justify="space-around">
@@ -251,14 +215,14 @@
         </v-card>
       </div>
       <div v-if="register" class="register-wrapper">
-        <v-card width="70vw" height="80vh" elevation="0" class="margin-L-R register-card-wrapper">
+        <v-card width="70vw" height="90vh" elevation="0" class="margin-L-R register-card-wrapper">
           <v-card-title>
             <div class="margin-L-R">
               Join
               <v-icon>mdi-plus-circle-outline</v-icon>
             </div>
           </v-card-title>
-          <v-container grid-list-sm class="pa-4">
+          <v-container grid-list-sm>
             <v-layout wrap>
               <v-flex xs12 align-center justify-space-between>
                 <v-text-field
@@ -332,7 +296,23 @@
                   :rules="[comparePasswords]"
                 ></v-text-field>
               </v-flex>
-            </v-layout>I agree to the terms and conditions of using the app
+              <v-btn
+                elevation="0"
+                color="grey darken-1"
+                @click="gdprRegister = true"
+                class="white--text justify-center margin-L-R mt-2"
+              >
+                GDPR and Privacy Policy
+                <v-icon right dark>mdi-library-books</v-icon>
+              </v-btn>
+              <v-flex xs12>
+                <v-checkbox
+                  class="justify-center margin-L-R mt-2"
+                  label="I agree to the terms and conditions"
+                  color="success"
+                ></v-checkbox>
+              </v-flex>
+            </v-layout>
           </v-container>
           <v-card-actions>
             <v-btn fab color="success" elevation="0" @click="entranceBack()">
@@ -343,6 +323,24 @@
               <v-icon>mdi-plus-circle-outline</v-icon>
             </v-btn>
           </v-card-actions>
+          <v-dialog persistent scrollable v-model="gdprRegister" width="40vw">
+            <v-card>
+              <v-row justify="space-around" class="ma-1">
+                <v-btn
+                  fab
+                  small
+                  dark
+                  color="blue-grey lighten-1"
+                  elevation="0"
+                  @click="gdprRegister = false"
+                >
+                  <v-icon dark size="25">mdi-close</v-icon>
+                </v-btn>
+              </v-row>
+              <v-divider></v-divider>
+              <v-card-text style="height: 70vh;">Lorem ipsum dolor sit amet</v-card-text>
+            </v-card>
+          </v-dialog>
         </v-card>
       </div>
     </v-dialog>
@@ -358,8 +356,14 @@ export default {
   data() {
     return {
       profile: false,
+      name: null,
+      email: null,
       date: null,
+      phone: null,
+      password: null,
+      confirmPassword: null,
       menu: false,
+      gdprRegister: false,
       gdpr: false,
       genderSelect: ["Male", "Female"],
       gender: null,
@@ -367,9 +371,6 @@ export default {
       entranceWrap: true,
       login: false,
       register: false,
-      password: "",
-      email: "",
-      confirmPassword: "",
       e1: true,
       rules: {
         required: value => !!value || "Required.",
@@ -395,9 +396,11 @@ export default {
     user() {
       return this.$store.getters.user;
     },
-    comparePasswords () {
-      return this.password !== this.confirmPassword ? 'Passwords do not match' : ''
-    },
+    comparePasswords() {
+      return this.password !== this.confirmPassword
+        ? "Passwords do not match"
+        : "";
+    }
   },
 
   mounted() {},
