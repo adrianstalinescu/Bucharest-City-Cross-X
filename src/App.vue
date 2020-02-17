@@ -71,7 +71,14 @@
               <v-icon dark size="25">mdi-close</v-icon>
             </v-btn>
             <v-spacer></v-spacer>
-            <v-btn rounded dark color="error" elevation="0" class="justify-center" @click="onSignOut()">
+            <v-btn
+              rounded
+              dark
+              color="error"
+              elevation="0"
+              class="justify-center"
+              @click="onSignOut()"
+            >
               Log Out
               <v-icon dark right size="20">mdi-logout</v-icon>
             </v-btn>
@@ -95,12 +102,7 @@
               <v-col cols="12">
                 <v-text-field label="Email" type="email" prepend-icon="mdi-email" color="green"></v-text-field>
                 <v-text-field label="Name" type="text" prepend-icon="mdi-account" color="green"></v-text-field>
-                <v-text-field
-                  label="Phone"
-                  type="text"
-                  prepend-icon="mdi-phone"
-                  color="green"
-                ></v-text-field>
+                <v-text-field label="Phone" type="text" prepend-icon="mdi-phone" color="green"></v-text-field>
               </v-col>
             </v-row>
             <v-row justify="space-around">
@@ -421,6 +423,7 @@ export default {
     },
     entranceBack() {
       this.login = false;
+      this.register = false;
       this.entranceWrap = true;
     },
     onSignOut() {
@@ -467,22 +470,29 @@ export default {
   display: flex;
   width: 100%;
   height: 100%;
+  position: absolute;
+  overflow-y: auto;
+  top: 0;
 }
 
 .login-wrapper {
-  display: none;
   background: white;
   display: flex;
   width: 100%;
   height: 100%;
+  position: absolute;
+  overflow-y: auto;
+  top: 0;
 }
 
 .register-wrapper {
-  display: none;
   background: white;
   display: flex;
   width: 100%;
   height: 100%;
+  position: absolute;
+  overflow-y: auto;
+  top: 0;
 }
 
 .entrance-buttons {

@@ -126,24 +126,18 @@ export default {
 </script>
 
 <style scoped>
-.hide-scroll {
-  -ms-overflow-style: none;
-}
-
-.hide-scroll::-webkit-scrollbar {
-  display: none;
-}
-
 .home-wrapper {
   width: 100%;
   height: 100%;
   position: absolute;
+  overflow-y: auto;
   top: 0;
   background: url("https://picsum.photos/1920/1080?random");
 }
 
 .custom-notification-card {
-  margin-top: 5vh;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
   margin-left: auto;
   margin-right: auto;
   height: auto;
