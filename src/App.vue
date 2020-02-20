@@ -166,14 +166,14 @@
         </v-card>
       </div>
       <div v-if="login" class="login-wrapper">
-        <v-card width="30vw" height="50vh" elevation="0" class="margin-L-R login-card-wrapper">
-          <v-card-title>
+        <v-card width="35vw" height="70vh" elevation="0" class="margin-L-R login-card-wrapper">
+          <v-card-title class="pa-0 justify-align-center">
             <div class="margin-L-R">
               TRANSIT
               <v-icon>mdi-tram-side</v-icon>
             </div>
           </v-card-title>
-          <v-container grid-list-sm class="pa-4">
+          <v-container grid-list-sm class="pa-0 justify-align-center">
             <v-layout row wrap>
               <v-flex xs12 align-center justify-space-between>
                 <v-text-field
@@ -196,7 +196,7 @@
               </v-flex>
             </v-layout>
           </v-container>
-          <v-card-actions>
+          <v-card-actions justify-align-center>
             <v-btn fab color="success" elevation="0" @click="entranceBack()">
               <v-icon>mdi-arrow-left</v-icon>
             </v-btn>
@@ -205,7 +205,7 @@
               <v-icon>mdi-location-enter</v-icon>
             </v-btn>
           </v-card-actions>
-          <v-card-actions>
+          <v-card-actions justify-align-center>
             <v-btn
               rounded
               color="success"
@@ -450,6 +450,11 @@ export default {
 <style scoped>
 .router-link-transparency {
   color: transparent;
+}
+
+.justify-align-center {
+  align-self: center;
+  justify-self: center;
 }
 
 .margin-top-bottom {

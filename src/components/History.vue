@@ -1,100 +1,162 @@
 <template>
+  <div class="history-wrapper">
     <div class="history-wrapper">
-        <div class="text-center" style="height:100%;">
-            <v-card 
-            flat
-            width="100%" 
-            height="100%"
-            >
-                <v-toolbar
-                flat
-                class="travel-plans-top-bar ma-3 text-center"
-                >
-                    <div
-                    class="component-back-button"
-                    >
-                        <router-link to="/menu" class="router-link-transparency">
-                            <v-btn 
-                            small
-                            fab 
-                            dark 
-                            color="blue-grey lighten-1"
-                            elevation="0"
-                            >
-                                <v-icon 
-                                dark
-                                size="25"
-                                >
-                                    mdi-arrow-left
-                                </v-icon>
-                            </v-btn>
-                        </router-link>
-                    </div>
-                    <v-toolbar-title 
-                    class="margin-L-R"
-                    >
-                        History
-                    </v-toolbar-title>
-                </v-toolbar>
-            </v-card>
+      <v-card class="custom-card-wrapper" outlined elevation="0">
+        <div class="custom-history-title-wrap ma-2">
+          <v-card-title class="custom-history-title">
+            <v-icon left color="green" size="30">mdi-progress-clock</v-icon>Purchased
+          </v-card-title>
         </div>
+        <div class="custom-history-table-wrap ma-3">
+          <v-data-table
+            :footer-props="footer_props"
+            :headers="headerPurchased"
+            :items="purchased"
+            class="custom-history-table"
+            disable-sort
+          ></v-data-table>
+        </div>
+      </v-card>
+      <v-card class="custom-card-wrapper" outlined elevation="0">
+        <div class="custom-history-title-wrap ma-2">
+          <v-card-title class="custom-history-title">
+            <v-icon left color="green" size="30">mdi-map-clock</v-icon>Searched
+          </v-card-title>
+        </div>
+        <div class="custom-history-table-wrap ma-3">
+          <v-data-table
+            :footer-props="footer_props"
+            :headers="headerSearched"
+            :items="searched"
+            class="custom-history-table"
+            disable-sort
+          ></v-data-table>
+        </div>
+      </v-card>
     </div>
+  </div>
 </template>
 
 <script>
 /* eslint-disable */
 export default {
-    name: "History",
-    data() {
-        return {
+  name: "History",
+  data() {
+    return {
+      footer_props: {
+        "items-per-page-options": [5],
+        "items-per-page-text": null,
+        "disable-items-per-page": true
+      },
+      headerPurchased: [
+        {
+          text: "Title",
+          align: "left",
+          sortable: false,
+          value: "name"
+        },
+        { text: "Date", sortable: false, value: "date" },
+        { text: "Amount", sortable: false, value: "amount" }
+      ],
+      purchased: [
+        {
+          name: "Bus 335",
+          date: "02-02-2020",
+          amount: 1.3
+        },
+        {
+          name: "Metro Dristor 2",
+          date: "15-02-2020",
+          amount: 2.5
+        },
+        {
+          name: "Tram 44",
+          date: "12-02-2020",
+          amount: 1.3
         }
-    },
+      ],
+      headerSearched: [
+        {
+          text: "Title",
+          align: "left",
+          sortable: false,
+          value: "title"
+        },
+        { text: "Date", sortable: false, value: "date" }
+      ],
+      searched: [
+        {
+          title: "Piata Unirii",
+          date: "02-02-2020"
+        },
+        {
+          title: "Universitatea Romano Americana",
+          date: "15-02-2020"
+        },
+        {
+          title: "Preciziei",
+          date: "12-02-2020"
+        }
+      ]
+    };
+  },
 
-    created() {
-    },
+  created() {},
 
-    watch: {
-    },
-    
-    computed: {
-    },
+  watch: {},
 
-    mounted () {
-    },
+  computed: {},
 
-    methods: {
-    }
-}
+  mounted() {},
 
+  methods: {}
+};
 </script>
 
 <style scoped>
-
-.router-link-transparency {
-  color: transparent;
-}
-
-.component-back-button {
-    position: absolute;
-}
-
 .history-wrapper {
-    background-color:white; 
-    width:100%; 
-    height: 100%; 
-    position: absolute; 
-    top: 0; 
-    z-index: 10;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  overflow-y: auto;
+  top: 0;
+  background: url("https://picsum.photos/1920/1080?random");
 }
 
-.history-top-bar {
-    padding:0;
+.custom-card-wrapper {
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+  margin-left: auto;
+  margin-right: auto;
+  align-self: center;
+  width: 40vw;
+  height: auto;
 }
 
-.margin-L-R {
-    margin-right: auto;
-    margin-left: auto;
-    font-weight: 400;
-    font-size: 1.7em;
+.custom-history-title-wrap {
+  display: flex;
+  height: auto;
+}
+
+.custom-history-table-wrap {
+  display: flex;
+  height: auto;
+}
+
+.custom-history-title {
+  padding: 0px;
+  margin-bottom: 0px !important;
+  margin-left: auto;
+  margin-right: auto;
+  align-self: center;
+  justify-content: start;
+  text-overflow: ellipsis;
+  font-weight: 600;
+}
+
+.custom-history-table {
+  width: 100%;
+  height: 100%;
 }
 </style>
