@@ -314,7 +314,7 @@ export default {
         const request = {
           origin: this.defaultLocation,
           destination: this.destination.geometry.location,
-          travelMode: "DRIVING"
+          travelMode: "TRANSIT"
         };
 
         this.directions.service.route(request, (response, status) => {
