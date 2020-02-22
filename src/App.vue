@@ -130,7 +130,9 @@
           <v-card-text style="height: 70vh;">Lorem ipsum dolor sit amet</v-card-text>
         </v-card>
       </v-dialog>
-      <router-view></router-view>
+      <transition name="fade">
+        <router-view></router-view>
+      </transition>
     </v-content>
     <v-dialog persistent color="white" v-model="entrance" v-if="!user" fullscreen>
       <div class="entrance-wrapper" v-if="entranceWrap" style="background: white">
@@ -450,6 +452,15 @@ export default {
 <style scoped>
 .router-link-transparency {
   color: transparent;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.6s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 
 .justify-align-center {

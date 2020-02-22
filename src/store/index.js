@@ -15,7 +15,9 @@ export default new Vuex.Store({
         }
     },
     actions: {
-        AuthChange({ commit }) {
+        AuthChange({
+            commit
+        }) {
             firebase.auth().onAuthStateChanged((user) => {
                 if (user) {
                     commit('setUser', user)
@@ -31,7 +33,9 @@ export default new Vuex.Store({
                 }
             })
         },
-        signIn({ commit }, payload) {
+        signIn({
+            commit
+        }, payload) {
             firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
                 .then(
                     authData => {
@@ -49,14 +53,16 @@ export default new Vuex.Store({
                     }
                 )
         },
-        signOut ({commit}) {
+        signOut({
+            commit
+        }) {
             firebase.auth().signOut().then(function () {
-              commit('setUser', null)
+                commit('setUser', null)
             }).catch(
-              error => {
-                window.alert(error.message)
-              })
-          },
+                error => {
+                    window.alert(error.message)
+                })
+        },
     },
     getters: {
         user: state => state.user,
