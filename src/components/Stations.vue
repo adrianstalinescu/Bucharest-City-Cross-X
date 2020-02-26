@@ -1,35 +1,58 @@
 <template>
     <div class="stations-wrapper">
-        <div class="text-center" style="height:100%;">
-            <v-card 
-            flat
-            width="100%" 
-            height="100%"
-            >
-                <v-card-title
-                class="stations-top-bar ma-3 text-center"
-                >
-                    <div>
-                        <router-link to="/menu" class="router-link-transparency">
-                            <v-btn 
-                            small
-                            fab 
-                            dark 
-                            color="blue-grey lighten-1"
-                            elevation="0"
-                            >
-                                <v-icon 
-                                dark
-                                size="25"
-                                >
-                                    mdi-arrow-left
-                                </v-icon>
-                            </v-btn>
-                        </router-link>
-                    </div>
-                </v-card-title>
-            </v-card>
-        </div>
+      <v-card class="custom-select-wrapper pa-2">
+        <v-select v-model="e1" :items="states" label="Select Station" hide-details color="green"
+          prepend-icon="mdi-bus-stop-covered">
+        </v-select>
+      </v-card>
+      <div class="custom-info-wrapper">
+        <v-card class="custom-station-info">
+          <div class="custom-card-grid">
+            <v-icon size="40" color="success">mdi-bus</v-icon>
+            <span class="card-info-line">
+              105 <v-icon>mdi-arrow-right</v-icon> Aeroportul Henri Coanda Plecari
+            </span>
+            <v-chip color="success" class="card-info-time">
+              3 min
+              <svg width="0.9em" height="0.9em" viewBox="0 0 20 20" class="feed-animation ml-1 mb-3">
+                <g fill="#FBD42A">
+                  <path
+                    d="M15.9840916,8.88301685 C17.0973425,8.88301685 18,9.78539134 18,10.8988915 C18,12.0123916 17.0973425,12.9147661 15.9840916,12.9147661 C14.2915753,12.9147661 12.9149488,14.2916374 12.9149488,15.9838575 C12.9149488,17.0970897 12.0122913,18 10.8987725,18 C9.78552171,18 8.88286418,17.0970897 8.88286418,15.9838575 C8.88286418,12.0683881 12.0685567,8.88301685 15.9840916,8.88301685"
+                    style="animation: 5000ms ease-in-out 1200ms infinite normal none running animation_197bdt9;">
+
+                  </path>
+                  <path
+                    d="M10.5402817,3.0998359 C12.2654855,2.37000569 14.0970578,2 15.9840916,2 C17.0973425,2 18,2.90264242 18,4.01614254 C18,5.12937473 17.0973425,6.03201715 15.9840916,6.03201715 C13.3256862,6.03201715 10.8264313,7.0672829 8.94689954,8.94678321 C7.06709982,10.8265515 6.03181674,13.3254965 6.03181674,15.9838575 C6.03181674,17.0970897 5.12942713,18 4.01590837,18 C2.90265753,18 2,17.0970897 2,15.9838575 C2,14.0971231 2.37001189,12.2653136 3.09985431,10.5401387 C3.80424335,8.87471114 4.81219753,7.37941659 6.0958521,6.09578352 C7.37950667,4.81215044 8.87482626,3.80421314 10.5402817,3.0998359 Z"
+                    style="animation: 5000ms ease-in-out 1300ms infinite normal none running animation_197bdt9;"></path>
+                </g>
+              </svg>
+            </v-chip>
+          </div>
+        </v-card>
+        <v-card class="custom-station-info">
+          <div class="custom-card-grid">
+            <v-icon size="40" color="success">mdi-bus</v-icon>
+            <span class="card-info-line">
+              105 <v-icon>mdi-arrow-right</v-icon> Aeroportul Henri Coanda Plecari
+            </span>
+            <v-chip color="success" class="card-info-time">
+              3 min
+              <svg width="0.9em" height="0.9em" viewBox="0 0 20 20" class="feed-animation ml-1 mb-3">
+                <g fill="#FBD42A">
+                  <path
+                    d="M15.9840916,8.88301685 C17.0973425,8.88301685 18,9.78539134 18,10.8988915 C18,12.0123916 17.0973425,12.9147661 15.9840916,12.9147661 C14.2915753,12.9147661 12.9149488,14.2916374 12.9149488,15.9838575 C12.9149488,17.0970897 12.0122913,18 10.8987725,18 C9.78552171,18 8.88286418,17.0970897 8.88286418,15.9838575 C8.88286418,12.0683881 12.0685567,8.88301685 15.9840916,8.88301685"
+                    style="animation: 5000ms ease-in-out 1200ms infinite normal none running animation_197bdt9;">
+
+                  </path>
+                  <path
+                    d="M10.5402817,3.0998359 C12.2654855,2.37000569 14.0970578,2 15.9840916,2 C17.0973425,2 18,2.90264242 18,4.01614254 C18,5.12937473 17.0973425,6.03201715 15.9840916,6.03201715 C13.3256862,6.03201715 10.8264313,7.0672829 8.94689954,8.94678321 C7.06709982,10.8265515 6.03181674,13.3254965 6.03181674,15.9838575 C6.03181674,17.0970897 5.12942713,18 4.01590837,18 C2.90265753,18 2,17.0970897 2,15.9838575 C2,14.0971231 2.37001189,12.2653136 3.09985431,10.5401387 C3.80424335,8.87471114 4.81219753,7.37941659 6.0958521,6.09578352 C7.37950667,4.81215044 8.87482626,3.80421314 10.5402817,3.0998359 Z"
+                    style="animation: 5000ms ease-in-out 1300ms infinite normal none running animation_197bdt9;"></path>
+                </g>
+              </svg>
+            </v-chip>
+          </div>
+        </v-card>
+      </div>
     </div>
 </template>
 
@@ -39,7 +62,15 @@ export default {
     name: "Stations",
     data() {
         return {
-        }
+      e1: 'Florida',
+      items: [
+        { text: 'State 1' },
+        { text: 'State 2' },
+      ],
+      states: [
+        'Alabama', 'Alaska', 'American Samoa',
+      ],
+    }
     },
 
     created() {
@@ -61,21 +92,61 @@ export default {
 </script>
 
 <style scoped>
-
-.router-link-transparency {
-  color: transparent;
-}
-
 .stations-wrapper {
-    background-color:white; 
-    width:100%; 
-    height: 100%; 
-    position: absolute; 
-    top: 0; 
-    z-index: 10;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  overflow-y: auto;
+  top: 0;
+  background: url("https://picsum.photos/1920/1080?random");
 }
 
-.stations-top-bar {
-    padding:0;
+.custom-select-wrapper {
+  width: 42vw;
+  height: auto;
+  margin-top: 2vh;
+  margin-bottom: 4vh;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.custom-info-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.custom-station-info {
+  width: 40vw;
+  height: 10vh;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 5vh;
+}
+
+.custom-card-grid {
+  margin-left: auto;
+  margin-right: auto;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 5fr 1.5fr;
+}
+
+.card-info-line {
+  font-weight: 600;
+  font-size: 1.1rem;
+  align-self: center;
+  justify-self: start;
+}
+
+.card-info-time {
+  font-weight: 500;
+  font-size: 1rem;
+  align-self: center;
+  justify-self: center;
+}
+
+.feed-animation {
+   -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
 }
 </style>
