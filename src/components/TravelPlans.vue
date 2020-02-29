@@ -3,8 +3,8 @@
     <v-card v-if="card" class="custom-card-wrapper" width="53vw" outlined elevation="0">
       <div class="custom-card-grid">
         <v-icon size="40">mdi-credit-card-outline</v-icon>
-        <span class="card-info">Card number **** **** **** 1234</span>
-        <span class="card-info">Exp 07/21</span>
+        <span class="card-info">Card number **** **** **** {{cardLastDigits}}</span>
+        <span class="card-info">Exp {{cardExpiry}}</span>
         <v-btn
           rounded
           dark
@@ -35,10 +35,11 @@
         </v-btn>
       </div>
     </v-card>
+    <h4 style="display:none">{{ plans }}</h4>
     <v-card class="custom-card-wrapper" width="40vw" outlined elevation="0">
-      <div class="custom-plan-card-wrap ma-2">
+      <div class="custom-plan-card-wrap ma-1">
         <v-card-title class="custom-plan-title ml-3 mr-3" disabled>
-          <v-icon left color="amber darken-4" size="30">mdi-ticket-outline</v-icon>Daily Plan
+          <v-icon left color="amber darken-4" size="30">mdi-ticket-outline</v-icon>{{plan1}} Plan
         </v-card-title>
         <v-btn
           rounded
@@ -53,16 +54,23 @@
           <v-icon dark right size="20">mdi-cart-outline</v-icon>
         </v-btn>
       </div>
+      <div class="custom-plan-card-wrap ml-3">
+        <v-chip color="success" outlined>
+        <span
+          class="plan-info"
+        >Cost: {{planCost1}}</span>
+        </v-chip>
+      </div>
       <div class="custom-plan-card-wrap ma-3">
         <span
           class="plan-info"
-        >This plan is valid from the moment it is activated until the end of the day it was activated</span>
+        >{{planDescription1}}</span>
       </div>
     </v-card>
     <v-card class="custom-card-wrapper" width="40vw" outlined elevation="0">
-      <div class="custom-plan-card-wrap ma-2">
+      <div class="custom-plan-card-wrap ma-1">
         <v-card-title class="custom-plan-title ml-3 mr-3" disabled>
-          <v-icon left color="amber darken-4" size="30">mdi-ticket-outline</v-icon>Weekly Plan
+          <v-icon left color="amber darken-4" size="30">mdi-ticket-outline</v-icon>{{plan2}} Plan
         </v-card-title>
         <v-btn
           rounded
@@ -77,16 +85,23 @@
           <v-icon dark right size="20">mdi-cart-outline</v-icon>
         </v-btn>
       </div>
+      <div class="custom-plan-card-wrap ml-3">
+        <v-chip color="success" outlined>
+        <span
+          class="plan-info"
+        >Cost: {{planCost2}}</span>
+        </v-chip>
+      </div>
       <div class="custom-plan-card-wrap ma-3">
         <span
           class="plan-info"
-        >This plan is valid from the moment it is activated until the end of the week it was activated</span>
+        >{{planDescription2}}</span>
       </div>
     </v-card>
     <v-card class="custom-card-wrapper" width="40vw" outlined elevation="0">
-      <div class="custom-plan-card-wrap ma-2">
+      <div class="custom-plan-card-wrap ma-1">
         <v-card-title class="custom-plan-title ml-3 mr-3" disabled>
-          <v-icon left color="amber darken-4" size="30">mdi-ticket-outline</v-icon>Monthly Plan
+          <v-icon left color="amber darken-4" size="30">mdi-ticket-outline</v-icon>{{plan3}} Plan
         </v-card-title>
         <v-btn
           rounded
@@ -101,17 +116,23 @@
           <v-icon dark right size="20">mdi-cart-outline</v-icon>
         </v-btn>
       </div>
+      <div class="custom-plan-card-wrap ml-3">
+        <v-chip color="success" outlined>
+        <span
+          class="plan-info"
+        >Cost: {{planCost3}}</span>
+        </v-chip>
+      </div>
       <div class="custom-plan-card-wrap ma-3">
         <span
           class="plan-info"
-        >This plan is valid from the moment it is activated until the end of the month it was activated</span>
+        >{{planDescription3}}</span>
       </div>
     </v-card>
     <v-card class="custom-card-wrapper" width="40vw" outlined elevation="0">
-      <div class="custom-plan-card-wrap ma-2">
+      <div class="custom-plan-card-wrap ma-1">
         <v-card-title class="custom-plan-title ml-3 mr-3" disabled>
-          <v-icon left color="amber darken-4" size="30">mdi-ticket-outline</v-icon>
-          <v-icon left color="amber darken-4" size="30">mdi-currency-usd-off</v-icon>Monthly Student Plan
+          <v-icon left color="amber darken-4" size="30">mdi-ticket-percent</v-icon>{{plan4}} Plan
         </v-card-title>
         <v-btn
           rounded
@@ -126,10 +147,16 @@
           <v-icon dark right size="20">mdi-cart-outline</v-icon>
         </v-btn>
       </div>
+      <div class="custom-plan-card-wrap ml-3">
+        <v-chip color="success" outlined>
+        <span
+          class="plan-info"
+        >Cost: {{planCost4}}</span>
+        </v-chip>
+      </div>
       <div class="custom-plan-card-wrap ma-3">
         <span class="plan-info">
-          This plan is dedicated only to students that are eligible for a discount.
-          The plan is valid from the moment it is activated until the end of the month it was activated
+          {{planDescription4}}
         </span>
       </div>
     </v-card>
@@ -174,12 +201,27 @@
 </template>
 
 <script>
+import firebase from "@/firebase";
 /* eslint-disable */
 export default {
   name: "TravelPlans",
   data() {
     return {
-      card: true,
+      cardLastDigits: null,
+      cardExpiry: null,
+      plan1: null,
+      planCost1: null,
+      planDescription1: null,
+      plan2: null,
+      planCost2: null,
+      planDescription2: null,
+      plan3: null,
+      planCost3: null,
+      planDescription3: null,
+      plan4: null,
+      planCost4: null,
+      planDescription4: null,
+      card: false,
       cardChange: false,
       student: false
     };
@@ -189,7 +231,60 @@ export default {
 
   watch: {},
 
-  computed: {},
+  computed: {
+    plans() {
+      firebase
+        .database()
+        .ref("TravelPlans")
+        .on("value", snap => {
+          let myObj = snap.val();
+          let keys = Object.keys(snap.val());
+          keys.forEach(key => {
+            switch (key) {
+              case "Daily":
+                this.plan1 = key;
+                this.planCost1 = myObj[key].Cost;
+                this.planDescription1 = myObj[key].Description;
+                break;
+              case "Weekly":
+                this.plan2 = key;
+                this.planCost2 = myObj[key].Cost;
+                this.planDescription2 = myObj[key].Description;
+                break;
+              case "Monthly":
+                this.plan3 = key;
+                this.planCost3 = myObj[key].Cost;
+                this.planDescription3 = myObj[key].Description;
+                break;
+              case "Monthly Student":
+                this.plan4 = key;
+                this.planCost4 = myObj[key].Cost;
+                this.planDescription4 = myObj[key].Description;
+            }
+          });
+        });
+    },
+    cardDetail() {
+      firebase
+        .database()
+        .ref("CardDetails/" + this.$store.getters.user.uid)
+        .on("value", snap => {
+          this.card = true
+          let myObj = snap.val()
+          let keys = Object.keys(snap.val())
+          keys.forEach(key => {
+            switch (key) {
+              case "CardNumber":
+                let digits = myObj[key].toString()
+                this.cardLastDigits = digits.substr(digits.length -4)
+                break;
+              case "Expiry":
+                this.cardExpiry = myObj[key]
+            }
+          });
+        });
+    },
+  },
 
   mounted() {},
 
@@ -220,7 +315,7 @@ export default {
   margin-right: auto;
   height: auto;
   display: grid;
-  grid-template-columns: 1fr 7fr 2.5fr;
+  grid-template-columns: 1fr 8fr 3.5fr;
 }
 
 .custom-card-wrapper {

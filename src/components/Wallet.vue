@@ -157,8 +157,8 @@ export default {
 }
 
 .custom-card-wrapper {
-  margin-top: 5vh;
-  margin-bottom: 5vh;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
   margin-left: auto;
   margin-right: auto;
   height: auto;

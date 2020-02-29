@@ -439,8 +439,6 @@ export default {
         email: this.email,
         password: this.password
       });
-      this.entrance = false;
-      this.entranceWrap = false;
     },
     ceva() {
       this.gdpr = true;

@@ -12,30 +12,29 @@
           <v-chip class="ma-2 metro-status-icon" color="amber accent-4" text-color="black">
             <span class="mr-2">M1</span>
             <v-chip color="white" outlined class="metro-status-text">
-              <span>Suspended</span>
+              <span>{{metroStatus1}}</span>
             </v-chip>
           </v-chip>
           <v-chip class="ma-2 metro-status-icon" color="blue darken-4" text-color="black">
             <span class="mr-2">M2</span>
-            <div>
-              <v-chip color="white" outlined class="metro-status-text">
-                <span>Good Service</span>
-              </v-chip>
-            </div>
+            <v-chip color="white" outlined class="metro-status-text">
+              <span>{{metroStatus2}}</span>
+            </v-chip>
           </v-chip>
           <v-chip class="ma-2 metro-status-icon" color="#ff2b1c" text-color="black">
             <span class="mr-2">M3</span>
             <v-chip color="white" outlined class="metro-status-text">
-              <span>Partly Suspended</span>
+              <span>{{metroStatus3}}</span>
             </v-chip>
           </v-chip>
           <v-chip class="ma-2 metro-status-icon" color="green darken-3" text-color="black">
             <span class="mr-2">M4</span>
             <v-chip color="white" outlined class="metro-status-text">
-              <span>Good Service</span>
+              <span>{{metroStatus4}}</span>
             </v-chip>
           </v-chip>
         </div>
+        <h4 style="display:none">{{ metroStatus }}</h4>
       </v-card>
       <v-card
         class="custom-notification-card"
@@ -106,18 +105,49 @@
 </template>
 
 <script>
+import firebase from "@/firebase";
 /* eslint-disable */
 export default {
   name: "Home",
   data() {
-    return {};
+    return {
+      metroStatus1: null,
+      metroStatus2: null,
+      metroStatus3: null,
+      metroStatus4: null
+    };
   },
 
   created() {},
 
   watch: {},
 
-  computed: {},
+  computed: {
+    metroStatus() {
+      firebase
+        .database()
+        .ref("MetroLine")
+        .on("value", snap => {
+          let myObj = snap.val();
+          let keys = Object.keys(snap.val());
+          keys.forEach(key => {
+            switch (key) {
+              case "M1":
+                this.metroStatus1 = myObj[key].Status;
+                break;
+              case "M2":
+                this.metroStatus2 = myObj[key].Status;
+                break;
+              case "M3":
+                this.metroStatus3 = myObj[key].Status;
+                break;
+              case "M4":
+                this.metroStatus4 = myObj[key].Status;
+            }
+          });
+        });
+    }
+  },
 
   mounted() {},
 
