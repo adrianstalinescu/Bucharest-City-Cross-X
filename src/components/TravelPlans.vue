@@ -36,6 +36,7 @@
       </div>
     </v-card>
     <h4 style="display:none">{{ plans }}</h4>
+    <h4 style="display:none">{{ cardDetail }}</h4>
     <v-card class="custom-card-wrapper" width="40vw" outlined elevation="0">
       <div class="custom-plan-card-wrap ma-1">
         <v-card-title class="custom-plan-title ml-3 mr-3" disabled>

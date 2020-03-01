@@ -36,7 +36,10 @@
         </div>
         <h4 style="display:none">{{ metroStatus }}</h4>
       </v-card>
+      <h4 style="display:none">{{ notification }}</h4>
       <v-card
+        v-for="n in notifications"
+        :key="n"
         class="custom-notification-card"
         width="50vw"
         min-height="80px"
@@ -44,14 +47,23 @@
         elevation="1"
       >
         <div class="custom-notification-card-wrap mt-2">
-          <v-avatar elevation="0" color="orange lighten-1" class="custom-notification-button ml-4">
+          <v-avatar
+            v-if="n.Type === 'alert'"
+            elevation="0"
+            color="orange lighten-1"
+            class="custom-notification-button ml-4"
+          >
             <v-icon color="orange darken-4" size="30">mdi-alert-outline</v-icon>
           </v-avatar>
-          <input
-            value="Suspendarea liniilor 105 si 780 din motive de accident Suspendarea liniilor 105 si 780 din motive de accident"
-            class="custom-notification-title ml-3 mr-3"
-            disabled
-          />
+          <v-avatar
+            v-if="n.Type === 'info'"
+            elevation="0"
+            color="light-blue lighten-3"
+            class="custom-notification-button ml-4"
+          >
+            <v-icon color="light-blue darken-1" size="30">mdi-exclamation-thick</v-icon>
+          </v-avatar>
+          <input :value="n.Title" class="custom-notification-title ml-3 mr-3"/>
           <v-btn
             fab
             small
@@ -62,11 +74,9 @@
             <v-icon color="red" size="30">mdi-close</v-icon>
           </v-btn>
         </div>
-        <div
-          class="custom-notification-card-wrap ma-3"
-        >Suspendarea liniilor 105 si 780 din motive de accident</div>
+        <div class="custom-notification-card-wrap ma-3">{{n.Content}}</div>
       </v-card>
-      <v-card
+      <!-- <v-card
         class="custom-notification-card"
         width="50vw"
         min-height="80px"
@@ -99,7 +109,7 @@
         <div
           class="custom-notification-card-wrap ma-3"
         >Suspendarea liniilor 105 si 780 din motive de accident</div>
-      </v-card>
+      </v-card>-->
     </div>
   </div>
 </template>
@@ -114,7 +124,8 @@ export default {
       metroStatus1: null,
       metroStatus2: null,
       metroStatus3: null,
-      metroStatus4: null
+      metroStatus4: null,
+      notifications: []
     };
   },
 
@@ -123,6 +134,15 @@ export default {
   watch: {},
 
   computed: {
+    notification() {
+      firebase
+        .database()
+        .ref("Users/" + this.$store.getters.user.uid + "/Notifications")
+        .on("value", snap => {
+          let myObj = snap.val();
+          this.notifications = myObj;
+        });
+    },
     metroStatus() {
       firebase
         .database()
