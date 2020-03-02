@@ -7,12 +7,20 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        user: null
+        user: null,
+        notifications: null,
+        notificationsCount: null
     },
     mutations: {
         setUser(state, payload) {
             state.user = payload
-        }
+        },
+        setNotifications(state, payload) {
+            state.notifications = payload
+        },
+        setNotificationsCount(state, payload) {
+            state.notificationsCount = payload
+        },
     },
     actions: {
         AuthChange({
@@ -24,7 +32,13 @@ export default new Vuex.Store({
                     firebase.database().ref('Users/' + this.state.user.uid)
                         .on('value', snap => {
                             const myObj = snap.val()
-                            console.log(myObj)
+                            if(myObj.Notifications) {
+                            commit('setNotificationsCount', Object.keys(myObj.Notifications))
+                            commit('setNotifications', myObj.Notifications)
+                            } else {
+                            commit('setNotificationsCount', null)
+                            commit('setNotifications', null)
+                            }
                         }, function (error) {
                             console.log('Error: ' + error.message)
                         })
@@ -66,5 +80,7 @@ export default new Vuex.Store({
     },
     getters: {
         user: state => state.user,
+        notifications: state => state.notifications,
+        notificationsCount: state => state.notificationsCount
     },
 })
