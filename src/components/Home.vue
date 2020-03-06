@@ -2,28 +2,28 @@
   <div class="home-wrapper">
     <v-card class="custom-notification-card" width="55vw" min-height="65px" outlined elevation="1">
       <div class="custom-metro-card mt-2 metro-status-wrapper">
-        <v-chip class="ma-2 metro-status-icon" color="amber accent-4" text-color="black">
-          <span class="mr-2">M1</span>
-          <v-chip color="white" outlined class="metro-status-text">
-            <span>{{metroStatus1}}</span>
+        <v-chip class="ma-2 metro-status-icon" color="amber accent-4" outlined>
+          <span class="mr-2 metro-line-text">M1</span>
+          <v-chip color="amber accent-4" outlined class="metro-status-text">
+            <span class="metro-status-text-info">{{metroStatus1}}</span>
           </v-chip>
         </v-chip>
-        <v-chip class="ma-2 metro-status-icon" color="blue darken-4" text-color="black">
-          <span class="mr-2">M2</span>
-          <v-chip color="white" outlined class="metro-status-text">
-            <span>{{metroStatus2}}</span>
+        <v-chip class="ma-2 metro-status-icon" color="blue darken-4" outlined>
+          <span class="mr-2 metro-line-text">M2</span>
+          <v-chip color="blue darken-4" outlined class="metro-status-text">
+            <span class="metro-status-text-info">{{metroStatus2}}</span>
           </v-chip>
         </v-chip>
-        <v-chip class="ma-2 metro-status-icon" color="#ff2b1c" text-color="black">
-          <span class="mr-2">M3</span>
-          <v-chip color="white" outlined class="metro-status-text">
-            <span>{{metroStatus3}}</span>
+        <v-chip class="ma-2 metro-status-icon" color="#ff2b1c" outlined>
+          <span class="mr-2 metro-line-text">M3</span>
+          <v-chip color="#ff2b1c" outlined class="metro-status-text">
+            <span class="metro-status-text-info">{{metroStatus3}}</span>
           </v-chip>
         </v-chip>
-        <v-chip class="ma-2 metro-status-icon" color="green darken-3" text-color="black">
-          <span class="mr-2">M4</span>
-          <v-chip color="white" outlined class="metro-status-text">
-            <span>{{metroStatus4}}</span>
+        <v-chip class="ma-2 metro-status-icon" color="green darken-3" outlined>
+          <span class="mr-2 metro-line-text">M4</span>
+          <v-chip color="green darken-3" outlined class="metro-status-text">
+            <span class="metro-status-text-info">{{metroStatus4}}</span>
           </v-chip>
         </v-chip>
       </div>
@@ -33,6 +33,11 @@
         <v-switch inset v-model="switcher" class="custom-switcher"></v-switch>
         <span class="custom-capacity-switch">Capacity Indicator</span>
       </div>
+      <v-card v-if="switcher === true" elevation="0" class="custom-select-wrapper">
+        <v-select v-model="subwaySelect" :items="stations" label="Select Station" hide-details color="rgb(60, 187, 214)"
+            prepend-icon="mdi-subway">
+        </v-select>
+      </v-card>
     </v-card>
     <div v-if="switcher === false">
       <h4 style="display:none">{{ notificationsKeys }}</h4>
@@ -100,11 +105,6 @@
       </v-snackbar>
     </div>
     <div v-if="switcher === true">
-      <v-card class="custom-select-wrapper mt-2 pa-2">
-        <v-select v-model="subwaySelect" :items="stations" label="Select Station" hide-details color="green"
-          prepend-icon="mdi-subway">
-        </v-select>
-      </v-card>
       <v-card class="custom-capacity-indicator-card">
         <div class="custom-capacity-indicator-title-grid">
           <v-chip color="#ffab00" class="capacity-indicator-line">M1<v-icon>mdi-chevron-right</v-icon>
@@ -294,10 +294,17 @@ export default {
   padding-right: 0px;
 }
 
+.metro-line-text {
+  font-size: 1rem;
+}
+
 .metro-status-text {
   width: 30vw;
-  font-weight: 400;
-  color: grey;
+}
+
+.metro-status-text-info {
+  font-weight: 600;
+  color: black !important;
 }
 
 .custom-metro-card {
@@ -412,7 +419,8 @@ export default {
 }
 
 .custom-select-wrapper {
-  width: 42vw;
+  width: 95%;
+  margin-bottom: 2vh;
   margin-left: auto;
   margin-right: auto;
 }
