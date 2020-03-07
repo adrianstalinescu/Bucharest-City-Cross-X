@@ -34,9 +34,15 @@
         <span class="custom-capacity-switch">Capacity Indicator</span>
       </div>
       <v-card v-if="switcher === true" elevation="0" class="custom-select-wrapper">
-        <v-select v-model="subwaySelect" :items="stations" label="Select Station" hide-details color="rgb(60, 187, 214)"
-            prepend-icon="mdi-subway">
-        </v-select>
+        <h4 style="display:none">{{ metroStations }}</h4>
+        <v-select
+          v-model="stationSelect"
+          :items="stations"
+          label="Select Station"
+          hide-details
+          color="#7595a6"
+          prepend-icon="mdi-subway"
+        ></v-select>
       </v-card>
     </v-card>
     <div v-if="switcher === false">
@@ -98,6 +104,10 @@
             <v-icon color="red" size="30">mdi-close</v-icon>
           </v-btn>
         </div>
+        <div class="custom-notification-card-wrap ma-1">
+          <v-chip class="ma-1" color="#7595a6" outlined style="font-weight: 700">{{notifications[n].Date}}</v-chip>
+          <v-chip class="ma-1" color="#7595a6" outlined style="font-weight: 700">{{notifications[n].Time}}</v-chip>
+        </div>
         <div class="custom-notification-card-wrap ma-3">{{notifications[n].Content}}</div>
       </v-card>
       <v-snackbar v-model="snackbar" :timeout="2000" color="success">
@@ -105,29 +115,47 @@
       </v-snackbar>
     </div>
     <div v-if="switcher === true">
-      <v-card class="custom-capacity-indicator-card">
+      <v-card 
+        v-for="s in stationKeys"
+        :key="s"
+        class="custom-capacity-indicator-card">
         <div class="custom-capacity-indicator-title-grid">
-          <v-chip color="#ffab00" class="capacity-indicator-line">M1<v-icon>mdi-chevron-right</v-icon>
-            <v-chip color="white" outlined><span class="capacity-indicator-direction">Republica</span></v-chip>
+          <v-chip :color="stationsData[stationSelect][s].Color" class="capacity-indicator-line">
+            {{stationsData[stationSelect][s].Line}}
+            <v-icon>mdi-chevron-right</v-icon>
+            <v-chip color="white" outlined>
+              <span class="capacity-indicator-direction">{{s}}</span>
+            </v-chip>
           </v-chip>
-          <v-chip color="#3cbbd6" outlined class="capacity-indicator-arrival-wrapper"><span class="capacity-indicator-arrival">Arrival</span>
-            <v-chip color="#3cbbd6" outlined><span class="capacity-indicator-arrival-time">2 min</span></v-chip>
+          <v-chip color="rgb(117, 149, 166)" outlined class="capacity-indicator-arrival-wrapper">
+            <span class="capacity-indicator-arrival">Arrival</span>
+            <v-chip color="rgb(117, 149, 166)" outlined>
+              <span class="capacity-indicator-arrival-time">{{stationsData[stationSelect][s].Arrival}} min</span>
+            </v-chip>
           </v-chip>
         </div>
         <div class="custom-capacity-indicator-content-wrapper">
           <div class="capacity">
-            <img class="carriage low"
-              src="http://shoreditch.opencapacity.co/components/dashboard-page/capacity-low.svg">
-            <img class="carriage medium"
-              src="http://shoreditch.opencapacity.co/components/dashboard-page/capacity-medium.svg">
-            <img class="carriage high"
-              src="http://shoreditch.opencapacity.co/components/dashboard-page/capacity-high.svg">
-            <img class="carriage low"
-              src="http://shoreditch.opencapacity.co/components/dashboard-page/capacity-low.svg">
-            <img class="carriage low"
-              src="http://shoreditch.opencapacity.co/components/dashboard-page/capacity-low.svg">
-            <img class="carriage low"
-              src="http://shoreditch.opencapacity.co/components/dashboard-page/capacity-low.svg">
+            <span
+            v-for="c in Object.keys(stationsData[stationSelect][s].Capacity)"
+            :key="c"
+            >
+              <img
+                v-if="stationsData[stationSelect][s].Capacity[c] === 'low'"
+                class="carriage low"
+                src="http://shoreditch.opencapacity.co/components/dashboard-page/capacity-low.svg"
+              />
+              <img
+                v-if="stationsData[stationSelect][s].Capacity[c] === 'medium'"
+                class="carriage medium"
+                src="http://shoreditch.opencapacity.co/components/dashboard-page/capacity-medium.svg"
+              />
+              <img
+                v-if="stationsData[stationSelect][s].Capacity[c] === 'high'"
+                class="carriage high"
+                src="http://shoreditch.opencapacity.co/components/dashboard-page/capacity-high.svg"
+              />
+            </span>
           </div>
         </div>
       </v-card>
@@ -148,16 +176,22 @@ export default {
       metroStatus4: null,
       snackbar: false,
       switcher: false,
-      subwaySelect: '',
-      stations: [
-        'Timpuri Noi', 'Anghel Saligny',
-      ],
-    };
+      stationSelect: "",
+      stations: [],
+      stationKeys: [],
+      stationsData: null
+      };
   },
 
   created() {},
 
-  watch: {},
+  watch: {
+    stationSelect: {
+      handler(stationSelect) {
+        this.stationKeys = Object.keys(this.stationsData[stationSelect]);
+      }
+    }
+  },
 
   computed: {
     notificationsKeys() {
@@ -188,6 +222,17 @@ export default {
                 this.metroStatus4 = myObj[key].Status;
             }
           });
+        });
+    },
+    metroStations() {
+      firebase
+        .database()
+        .ref("MetroStation")
+        .on("value", snap => {
+          let myObj = snap.val();
+          let keys = Object.keys(snap.val());
+          this.stations = keys;
+          this.stationsData = myObj;
         });
     }
   },
@@ -323,8 +368,6 @@ export default {
   grid-template-columns: 5fr 1fr 5fr;
 }
 
-
-
 .custom-capacity-indicator-card {
   width: 60vw;
   height: auto;
@@ -364,7 +407,7 @@ export default {
 .capacity-indicator-direction {
   font-weight: 700;
   font-size: 1rem !important;
-  color: rgba(0,0,0,.87);
+  color: rgba(0, 0, 0, 0.87);
 }
 
 .capacity-indicator-arrival-wrapper {
@@ -389,7 +432,9 @@ export default {
 
 .capacity {
   height: 80%;
-  background: url(http://shoreditch.opencapacity.co/components/dashboard-page/train.svg) -1px -1px no-repeat, #23282d;
+  background: url(http://shoreditch.opencapacity.co/components/dashboard-page/train.svg) -1px -1px
+      no-repeat,
+    #23282d;
   background-size: auto calc(100% + 2px);
   text-align: right;
   animation: slide 2s 0s linear 1;
@@ -424,5 +469,4 @@ export default {
   margin-left: auto;
   margin-right: auto;
 }
-
 </style>
