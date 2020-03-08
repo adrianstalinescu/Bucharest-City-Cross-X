@@ -29,9 +29,11 @@
       </div>
       <h4 style="display:none">{{ metroStatus }}</h4>
       <div class="custom-notification-capacity-switch mb-1">
-        <span class="custom-notification-switch">Notifications</span>
-        <v-switch inset v-model="switcher" class="custom-switcher"></v-switch>
-        <span class="custom-capacity-switch">Capacity Indicator</span>
+        <div class="custom-capacity-wrapper">
+          <span class="custom-notification-switch mr-3">Notifications</span>
+          <v-switch inset v-model="switcher" class="custom-switcher"></v-switch>
+          <span class="custom-capacity-switch ml-3">Capacity Indicator</span>
+        </div>
       </div>
       <v-card v-if="switcher === true" elevation="0" class="custom-select-wrapper">
         <h4 style="display:none">{{ metroStations }}</h4>
@@ -105,8 +107,18 @@
           </v-btn>
         </div>
         <div class="custom-notification-card-wrap ma-1">
-          <v-chip class="ma-1" color="#7595a6" outlined style="font-weight: 700">{{notifications[n].Date}}</v-chip>
-          <v-chip class="ma-1" color="#7595a6" outlined style="font-weight: 700">{{notifications[n].Time}}</v-chip>
+          <v-chip
+            class="ma-1"
+            color="#7595a6"
+            outlined
+            style="font-weight: 700"
+          >{{notifications[n].Date}}</v-chip>
+          <v-chip
+            class="ma-1"
+            color="#7595a6"
+            outlined
+            style="font-weight: 700"
+          >{{notifications[n].Time}}</v-chip>
         </div>
         <div class="custom-notification-card-wrap ma-3">{{notifications[n].Content}}</div>
       </v-card>
@@ -115,10 +127,7 @@
       </v-snackbar>
     </div>
     <div v-if="switcher === true">
-      <v-card 
-        v-for="s in stationKeys"
-        :key="s"
-        class="custom-capacity-indicator-card">
+      <v-card v-for="s in stationKeys" :key="s" class="custom-capacity-indicator-card">
         <div class="custom-capacity-indicator-title-grid">
           <v-chip :color="stationsData[stationSelect][s].Color" class="capacity-indicator-line">
             {{stationsData[stationSelect][s].Line}}
@@ -130,16 +139,15 @@
           <v-chip color="rgb(117, 149, 166)" outlined class="capacity-indicator-arrival-wrapper">
             <span class="capacity-indicator-arrival">Arrival</span>
             <v-chip color="rgb(117, 149, 166)" outlined>
-              <span class="capacity-indicator-arrival-time">{{stationsData[stationSelect][s].Arrival}} min</span>
+              <span
+                class="capacity-indicator-arrival-time"
+              >{{stationsData[stationSelect][s].Arrival}} min</span>
             </v-chip>
           </v-chip>
         </div>
         <div class="custom-capacity-indicator-content-wrapper">
           <div class="capacity">
-            <span
-            v-for="c in Object.keys(stationsData[stationSelect][s].Capacity)"
-            :key="c"
-            >
+            <span v-for="c in Object.keys(stationsData[stationSelect][s].Capacity)" :key="c">
               <img
                 v-if="stationsData[stationSelect][s].Capacity[c] === 'low'"
                 class="carriage low"
@@ -180,7 +188,7 @@ export default {
       stations: [],
       stationKeys: [],
       stationsData: null
-      };
+    };
   },
 
   created() {},
@@ -318,11 +326,9 @@ export default {
 }
 
 .custom-switcher {
-  margin-left: 17px;
-  justify-self: flex-end;
+  width: 40px;
   height: 35px;
   margin-top: 0px;
-  align-self: center;
 }
 
 .custom-capacity-switch {
@@ -361,11 +367,16 @@ export default {
 }
 
 .custom-notification-capacity-switch {
-  margin-left: auto;
-  margin-right: auto;
-  height: auto;
-  display: grid;
-  grid-template-columns: 5fr 1fr 5fr;
+  justify-content: center;
+  display: flex;
+}
+
+.custom-capacity-wrapper {
+  width: 100%;
+  height: 100%;
+  padding-left: 40px;
+  display: flex;
+  justify-content: center;
 }
 
 .custom-capacity-indicator-card {
@@ -373,7 +384,7 @@ export default {
   height: auto;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 2vh;
+  margin-bottom: 2vh;
 }
 
 .custom-capacity-indicator-title-grid {
