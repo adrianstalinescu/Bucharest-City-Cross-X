@@ -435,7 +435,7 @@ export default {
       const vremea = new XMLHttpRequest();
       vremea.open(
         "GET",
-        "http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=" +
+        "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=" +
           apikey +
           "&q=" +
           latlong +
@@ -448,7 +448,7 @@ export default {
         const vremeaStatus = new XMLHttpRequest();
         vremeaStatus.open(
           "GET",
-          "http://dataservice.accuweather.com/currentconditions/v1/" +
+          "https://dataservice.accuweather.com/currentconditions/v1/" +
             key1 +
             "?apikey=" +
             apikey +
@@ -759,5 +759,6 @@ export default {
 .custom-weather-temperature {
   margin-right: 10px;
   font-weight: 500;
+  font-size: 1rem;
 }
 </style>

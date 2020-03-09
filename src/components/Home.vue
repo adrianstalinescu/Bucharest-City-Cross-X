@@ -151,17 +151,17 @@
               <img
                 v-if="stationsData[stationSelect][s].Capacity[c] === 'low'"
                 class="carriage low"
-                src="http://shoreditch.opencapacity.co/components/dashboard-page/capacity-low.svg"
+                src="../assets/capacityIndicator/capacity-low.svg"
               />
               <img
                 v-if="stationsData[stationSelect][s].Capacity[c] === 'medium'"
                 class="carriage medium"
-                src="http://shoreditch.opencapacity.co/components/dashboard-page/capacity-medium.svg"
+                src="../assets/capacityIndicator/capacity-medium.svg"
               />
               <img
                 v-if="stationsData[stationSelect][s].Capacity[c] === 'high'"
                 class="carriage high"
-                src="http://shoreditch.opencapacity.co/components/dashboard-page/capacity-high.svg"
+                src="../assets/capacityIndicator/capacity-high.svg"
               />
             </span>
           </div>
@@ -443,7 +443,7 @@ export default {
 
 .capacity {
   height: 80%;
-  background: url(http://shoreditch.opencapacity.co/components/dashboard-page/train.svg) -1px -1px
+  background: url('../assets/capacityIndicator/train.svg') -1px -1px
       no-repeat,
     #23282d;
   background-size: auto calc(100% + 2px);

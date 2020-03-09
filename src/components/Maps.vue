@@ -69,11 +69,8 @@ export default {
 
   computed: {},
 
-  async mounted() {
-    this.createMap();
-  },
-
   mounted() {
+    this.createMap();
     this.geolocate();
   },
 
@@ -92,12 +89,12 @@ export default {
       });
     },
     createMap() {
-      let myLatLng = new google.maps.LatLng(
+      let myLatLng = new window.google.maps.LatLng(
         this.defaultLocation.lat,
         this.defaultLocation.lng
       );
-      this.directions.service = new google.maps.DirectionsService();
-      this.directions.display = new google.maps.DirectionsRenderer();
+      this.directions.service = new window.google.maps.DirectionsService();
+      this.directions.display = new window.google.maps.DirectionsRenderer();
       this.map = new window.google.maps.Map(document.getElementById("map"), {
         center: myLatLng,
         zoom: 16,
@@ -294,7 +291,7 @@ export default {
       });
       this.directions.display.setMap(this.map);
       this.search();
-      var marker = new google.maps.Marker({
+      var marker = new window.google.maps.Marker({
         position: myLatLng,
         map: this.map,
         title: "Your Position"
