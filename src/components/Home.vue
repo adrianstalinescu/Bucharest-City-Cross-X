@@ -452,6 +452,11 @@ export default {
   margin-left: 1rem;
 }
 
+@keyframes slide{   
+  0%{transform: translate(100%, 0);}   
+  100%{transform: translate(0, 0);} 
+  }
+
 .carriage {
   display: inline;
   width: 14%;

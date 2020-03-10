@@ -3,7 +3,7 @@
     <div class="plans-wrapper">
       <v-card class="custom-card-wrapper" width="53vw" outlined elevation="0">
         <div class="custom-card-grid">
-          <v-icon size="40" color="amber darken-4">mdi-ticket-outline</v-icon>
+          <v-icon size="36" color="deep-orange lighten-2">mdi-ticket-percent</v-icon>
           <span class="card-info">Monthly Student Plan</span>
           <span class="card-info">Valid untill 11/04</span>
           <v-btn
@@ -11,7 +11,7 @@
             disabled
             color="teal darken-4"
             elevation="0"
-            class="justify-center ma-3 white--text"
+            class="justify-center ma-1 mr-2 white--text"
             @click="planActive = true"
           >
             Active
@@ -21,14 +21,14 @@
       </v-card>
       <v-card class="custom-card-wrapper" width="53vw" outlined elevation="0">
         <div class="custom-card-grid">
-          <v-icon size="40" color="amber darken-4">mdi-ticket-outline</v-icon>
+          <v-icon size="36" color="deep-orange lighten-2">mdi-ticket</v-icon>
           <span class="card-info">Monthly Plan</span>
           <span class="card-info">Inactive</span>
           <v-btn
             rounded
             color="teal darken-4"
             elevation="0"
-            class="justify-center ma-3 white--text"
+            class="justify-center ma-1 mr-2 white--text"
             @click="cardChange = true"
           >
             Activate
@@ -39,7 +39,7 @@
       <v-card class="custom-card-wrapper" width="40vw" outlined elevation="0">
         <div class="custom-plan-card-wrap ma-2">
           <v-card-title class="custom-plan-title ml-3 mr-3">
-            <v-icon left color="amber darken-4" size="30">mdi-ticket</v-icon>Single Use Tickets (SUT)
+            <v-icon left color="deep-orange lighten-2" size="30">mdi-ticket</v-icon>Single Use Ticket (SUT) history
           </v-card-title>
         </div>
         <div class="custom-plan-card-wrap ma-3">
@@ -166,7 +166,7 @@ export default {
 
 .card-info {
   font-weight: 600;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   align-self: center;
   justify-self: start;
 }

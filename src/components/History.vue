@@ -4,7 +4,7 @@
       <v-card class="custom-card-wrapper" outlined elevation="0">
         <div class="custom-history-title-wrap ma-2">
           <v-card-title class="custom-history-title">
-            <v-icon left color="green" size="30">mdi-progress-clock</v-icon>Purchased
+            <v-icon left color="rgb(117, 149, 166)" size="30">mdi-progress-clock</v-icon>Purchased
           </v-card-title>
         </div>
         <div class="custom-history-table-wrap ma-3">
@@ -20,7 +20,7 @@
       <v-card class="custom-card-wrapper" outlined elevation="0">
         <div class="custom-history-title-wrap ma-2">
           <v-card-title class="custom-history-title">
-            <v-icon left color="green" size="30">mdi-map-clock</v-icon>Searched
+            <v-icon left color="rgb(117, 149, 166)" size="30">mdi-map-clock</v-icon>Searched
           </v-card-title>
         </div>
         <div class="custom-history-table-wrap ma-3">

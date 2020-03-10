@@ -18,7 +18,7 @@
     </v-expansion-panels>
     <v-card v-if="card" class="custom-card-wrapper" width="53vw" outlined elevation="0">
       <div class="custom-card-grid">
-        <v-icon size="40">mdi-credit-card-outline</v-icon>
+        <v-icon color="rgb(117, 149, 166)" size="40">mdi-credit-card-outline</v-icon>
         <span class="card-info">Card number **** **** **** {{cardLastDigits}}</span>
         <span class="card-info">Exp {{cardExpiry}}</span>
         <v-btn
@@ -26,7 +26,7 @@
           dark
           color="teal darken-4"
           elevation="0"
-          class="justify-center ma-1 custom-card-button"
+          class="justify-center ma-1 mr-2 custom-card-button"
           @click="cardChange = true"
         >
           Change Card
@@ -36,14 +36,14 @@
     </v-card>
     <v-card v-if="!card" class="custom-card-wrapper" width="53vw" outlined elevation="0">
       <div class="custom-card-add-grid">
-        <v-icon size="40">mdi-credit-card-outline</v-icon>
+        <v-icon color="rgb(117, 149, 166)" size="40">mdi-credit-card-outline</v-icon>
         <span class="card-info">To buy a plan you must first add a Debit/Credit Card</span>
         <v-btn
           rounded
           dark
           color="teal darken-4"
           elevation="0"
-          class="justify-center ma-1 custom-card-button"
+          class="justify-center ma-1 mr-2 custom-card-button"
           @click="cardAdd = true"
         >
           Add Card
@@ -53,15 +53,15 @@
     </v-card>
     <h4 style="display:none">{{ studentData }}</h4>
     <v-card
-      v-if="isStudent === false"
+      v-if="isStudent === 'false'"
       class="custom-card-wrapper"
       width="53vw"
       outlined
       elevation="0"
     >
       <div class="custom-student-card-grid">
-        <v-avatar elevation="0" color="light-blue lighten-3" size="40" class="center-item">
-          <v-icon color="light-blue darken-1" size="30">mdi-exclamation-thick</v-icon>
+        <v-avatar elevation="0" color="light-blue lighten-3" size="34" class="center-item">
+          <v-icon color="light-blue darken-1" size="28">mdi-exclamation-thick</v-icon>
         </v-avatar>
         <span class="student-card-info">No Student ID</span>
         <v-btn
@@ -69,7 +69,7 @@
           dark
           color="teal darken-4"
           elevation="0"
-          class="justify-center ma-1"
+          class="justify-center ma-1 mr-2"
           @click="student = true"
         >
           Add ID
@@ -110,77 +110,99 @@
       </div>
     </v-card>
     <h4 style="display:none">{{ plansRegular }}</h4>
-    <v-card
+    <v-expansion-panels
       v-for="pr in planRegularKeys"
       :key="pr"
       class="custom-card-wrapper"
-      width="40vw"
-      outlined
-      elevation="0"
-    >
-      <div class="custom-plan-card-wrap ma-1">
-        <v-card-title class="custom-plan-title mx-2" disabled>
-          <v-icon left color="amber darken-4" size="30">mdi-ticket-outline</v-icon>
-          {{pr}} Plan
-        </v-card-title>
-        <v-btn
-          rounded
-          outlined
-          color="amber darken-4"
-          elevation="0"
-          class="justify-center ma-1"
-          @click="onSignOut()"
-          :disabled="card == false"
-        >
-          Purchase
-          <v-icon dark right size="20">mdi-cart-outline</v-icon>
-        </v-btn>
-      </div>
-      <div class="custom-plan-card-wrap ml-3">
-        <v-chip color="rgb(117, 149, 166)" outlined>
-          <span class="plan-info">Cost: {{planRegularDetails[pr].Cost}}</span>
-        </v-chip>
-      </div>
-      <div class="custom-plan-card-wrap ma-3">
-        <span class="plan-info">{{planRegularDetails[pr].Description}}</span>
-      </div>
-    </v-card>
+      >
+      <v-expansion-panel>
+        <v-expansion-panel-header class="custom-plan-header">
+          <div class="mt-1 mb-2">
+            <div class="custom-plan-title-wrap">
+              <v-card-title class="custom-plan-title" disabled>
+                <v-icon left color="deep-orange lighten-2" size="30">mdi-ticket</v-icon>
+                {{pr}} Plan
+              </v-card-title>
+            </div>
+            <div class="custom-plan-chip-wrap">
+              <v-chip color="rgb(117, 149, 166)" outlined>
+                <span class="plan-info">Cost: {{planRegularDetails[pr].Cost}}</span>
+              </v-chip>
+              <v-chip color="rgb(117, 149, 166)" outlined class="mx-2">
+                <span class="plan-info">Valid: {{planRegularDetails[pr].Validity}}</span>
+              </v-chip>
+            </div>
+          </div>
+        </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <div>
+            <div>
+              <span class="plan-info">{{planRegularDetails[pr].Description}}</span>
+            </div>
+            <div class="custom-plan-purchase-wrap">
+              <v-btn
+                rounded
+                outlined
+                color="#168834ba"
+                elevation="0"
+                @click="onSignOut()"
+                :disabled="card == false"
+              >
+                Purchase
+                <v-icon dark right size="20">mdi-cart-outline</v-icon>
+              </v-btn>
+            </div>
+          </div>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+    </v-expansion-panels>
     <h4 style="display:none">{{ plansDiscount }}</h4>
-    <v-card
+    <v-expansion-panels
       v-for="pd in planDiscountKeys"
       :key="pd"
       class="custom-card-wrapper"
-      width="40vw"
-      outlined
-      elevation="0"
     >
-      <div class="custom-plan-card-wrap ma-1">
-        <v-card-title class="custom-plan-title mx-3" disabled>
-          <v-icon left color="amber darken-4" size="30">mdi-ticket-percent</v-icon>
-          {{pd}} Plan
-        </v-card-title>
-        <v-btn
-          rounded
-          outlined
-          color="amber darken-4"
-          elevation="0"
-          class="justify-center ma-1"
-          @click="student = true"
-          :disabled="card === true && isStudent != 'approved'"
-        >
-          Purchase
-          <v-icon dark right size="20">mdi-cart-outline</v-icon>
-        </v-btn>
-      </div>
-      <div class="custom-plan-card-wrap ml-3">
-        <v-chip color="rgb(117, 149, 166)" outlined>
-          <span class="plan-info">Cost: {{planDiscountDetails[pd].Cost}}</span>
-        </v-chip>
-      </div>
-      <div class="custom-plan-card-wrap ma-3">
-        <span class="plan-info">{{planDiscountDetails[pd].Description}}</span>
-      </div>
-    </v-card>
+      <v-expansion-panel>
+        <v-expansion-panel-header class="custom-plan-header">
+          <div class="mt-1 mb-2">
+            <div class="custom-plan-title-wrap">
+              <v-card-title class="custom-plan-title" disabled>
+                <v-icon left color="deep-orange lighten-2" size="30">mdi-ticket-percent</v-icon>
+                {{pd}} Plan
+              </v-card-title>
+            </div>
+            <div class="custom-plan-chip-wrap">
+              <v-chip color="rgb(117, 149, 166)" outlined>
+                <span class="plan-info">Cost: {{planDiscountDetails[pd].Cost}}</span>
+              </v-chip>
+              <v-chip color="rgb(117, 149, 166)" outlined class="mx-2">
+                <span class="plan-info">Valid: {{planDiscountDetails[pd].Validity}}</span>
+              </v-chip>
+            </div>
+          </div>
+        </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <div>
+            <div>
+              <span class="plan-info">{{planDiscountDetails[pd].Description}}</span>
+            </div>
+            <div class="custom-plan-purchase-wrap">
+              <v-btn
+                rounded
+                outlined
+                color="#168834ba"
+                elevation="0"
+                @click="student = true"
+                :disabled="card === true && isStudent != 'approved'"
+              >
+                Purchase
+                <v-icon dark right size="20">mdi-cart-outline</v-icon>
+              </v-btn>
+            </div>
+          </div>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+    </v-expansion-panels>
     <h4 style="display:none">{{years}}</h4>
     <v-dialog persistent scrollable v-model="cardAdd" width="40vw">
       <v-card>
@@ -489,6 +511,7 @@ export default {
 }
 
 .custom-card-wrapper {
+  width: 40vw;
   margin-top: 2vh;
   margin-bottom: 2vh;
   margin-left: auto;
@@ -510,9 +533,14 @@ export default {
   padding: 0px 13px 0px 11px;
 }
 
+.custom-plan-header {
+  min-height: 45px;
+  padding: 0px 13px 0px 11px;
+}
+
 .custom-card-button {
   align-self: center;
-  justify-self: center;
+  justify-self: end;
 }
 
 .card-info {
@@ -522,9 +550,13 @@ export default {
   justify-self: center;
 }
 
-.custom-plan-card-wrap {
+.custom-plan-chip-wrap {
+  margin-top: 5px;
+}
+
+.custom-plan-purchase-wrap {
   display: flex;
-  height: auto;
+  justify-content: flex-end;
 }
 
 .custom-plan-button {
@@ -565,7 +597,7 @@ export default {
   margin-right: auto;
   height: auto;
   display: grid;
-  grid-template-columns: 1fr 8fr 2fr;
+  grid-template-columns: 0.9fr 8fr 2fr;
 }
 
 .custom-student-card-pending-grid {
