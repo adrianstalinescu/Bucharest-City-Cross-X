@@ -1,6 +1,6 @@
 <template>
   <div class="home-wrapper">
-    <v-card class="custom-notification-card" width="55vw" min-height="65px" outlined elevation="1">
+    <v-card class="custom-notification-card" width="55vw" min-height="65px" outlined elevation="0">
       <div class="custom-metro-card mt-2 metro-status-wrapper">
         <v-chip class="ma-2 metro-status-icon" color="amber accent-4" outlined>
           <span class="mr-2 metro-line-text">M1</span>
@@ -55,7 +55,7 @@
         class="custom-notification-card"
         width="25vw"
         outlined
-        elevation="1"
+        elevation="0"
       >
         <div class="custom-notification-empty-card-wrap ma-2">
           <v-avatar elevation="0" color="light-blue lighten-3" class="mr-4 ml-2">
@@ -71,7 +71,7 @@
         width="50vw"
         min-height="80px"
         outlined
-        elevation="1"
+        elevation="0"
       >
         <div class="custom-notification-card-wrap mt-2">
           <v-avatar
@@ -127,7 +127,7 @@
       </v-snackbar>
     </div>
     <div v-if="switcher === true">
-      <v-card v-for="s in stationKeys" :key="s" class="custom-capacity-indicator-card">
+      <v-card v-for="s in stationKeys" :key="s" elevation="0" class="custom-capacity-indicator-card">
         <div class="custom-capacity-indicator-title-grid">
           <v-chip :color="stationsData[stationSelect][s].Color" class="capacity-indicator-line">
             {{stationsData[stationSelect][s].Line}}

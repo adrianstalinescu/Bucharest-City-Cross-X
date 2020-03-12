@@ -210,7 +210,7 @@
           <v-row>
             <v-col cols="6">
               <v-subheader class="grey--text text--lighten-1 pl-0 subheader">CARDHOLDERS NAME</v-subheader>
-              <v-text-field single-line label="Name" outlined hide-details />
+              <v-text-field single-line label="Name" v-model="cardAddData.Name" :rules="[rules.required]" outlined hide-details  />
             </v-col>
             <v-col cols="6">
               <v-subheader class="grey--text text--lighten-1 pl-0 subheader">CARD NUMBER</v-subheader>
@@ -220,8 +220,9 @@
                 maxlength="16"
                 mask="credit-card"
                 label="Number"
-                v-model="valueOfCardNumber"
+                v-model="cardAddData.Number"
                 hide-details
+                :rules="[rules.required]"
                 class="inputPrice"
               />
             </v-col>
@@ -230,7 +231,9 @@
               <v-select
                 :items="MonthList"
                 label="Month"
+                v-model="cardAddData.Month"
                 outlined
+                :rules="[rules.required]"
                 append-icon="mdi-chevron-down"
                 hide-details
               />
@@ -240,14 +243,16 @@
               <v-select
                 :items="YearList"
                 label="Year"
+                v-model="cardAddData.Year"
                 outlined
+                :rules="[rules.required]"
                 append-icon="mdi-chevron-down"
                 hide-details
               />
             </v-col>
             <v-col col="4">
               <v-subheader class="grey--text text--lighten-1 pl-0 subheader">CVV</v-subheader>
-              <v-text-field single-line label="CVV" maxlength="3" outlined hide-details />
+              <v-text-field single-line label="CVV" v-model="cardAddData.CVV" :rules="[rules.required]" maxlength="3" outlined hide-details />
             </v-col>
           </v-row>
         </v-card-text>
@@ -259,16 +264,19 @@
             dark
             color="blue-grey lighten-1"
             elevation="0"
-            @click="cardChange = false"
+            @click="cardAdd = false"
           >
             <v-icon dark size="25">mdi-close</v-icon>
           </v-btn>
           <v-spacer></v-spacer>
-          <v-btn fab small dark elevation="0" color="success">
+          <v-btn fab small dark elevation="0" color="success" @click="addCard()">
             <v-icon dark>mdi-check</v-icon>
           </v-btn>
         </v-card-actions>
       </v-card>
+      <v-snackbar v-model="cardAddNotification" :timeout="2000" color="success">
+        <span class="card-modify">The Card has been added</span>
+      </v-snackbar>
     </v-dialog>
     <v-dialog persistent scrollable v-model="cardChange" width="40vw">
       <v-card>
@@ -276,7 +284,7 @@
           <v-row>
             <v-col cols="6">
               <v-subheader class="grey--text text--lighten-1 pl-0 subheader">CARDHOLDERS NAME</v-subheader>
-              <v-text-field single-line label="Name" outlined hide-details />
+              <v-text-field single-line label="Name" v-model="cardChangeData.Name" :rules="[rules.required]" outlined hide-details />
             </v-col>
             <v-col cols="6">
               <v-subheader class="grey--text text--lighten-1 pl-0 subheader">CARD NUMBER</v-subheader>
@@ -286,7 +294,8 @@
                 maxlength="16"
                 mask="credit-card"
                 label="Number"
-                v-model="valueOfCardNumber"
+                :rules="[rules.required]"
+                 v-model="cardChangeData.Number"
                 hide-details
                 class="inputPrice"
               />
@@ -296,7 +305,9 @@
               <v-select
                 :items="MonthList"
                 label="Month"
+                v-model="cardChangeData.Month"
                 outlined
+                :rules="[rules.required]"
                 append-icon="mdi-chevron-down"
                 hide-details
               />
@@ -306,14 +317,16 @@
               <v-select
                 :items="YearList"
                 label="Year"
+                v-model="cardChangeData.Year"
                 outlined
+                :rules="[rules.required]"
                 append-icon="mdi-chevron-down"
                 hide-details
               />
             </v-col>
             <v-col col="4">
               <v-subheader class="grey--text text--lighten-1 pl-0 subheader">CVV</v-subheader>
-              <v-text-field single-line label="CVV" maxlength="3" outlined hide-details />
+              <v-text-field single-line label="CVV" v-model="cardChangeData.CVV" :rules="[rules.required]" maxlength="3" outlined hide-details />
             </v-col>
           </v-row>
         </v-card-text>
@@ -330,18 +343,79 @@
             <v-icon dark size="25">mdi-close</v-icon>
           </v-btn>
           <v-spacer></v-spacer>
-          <v-btn fab small dark elevation="0" color="success">
+          <v-btn fab small dark elevation="0" color="success" @click="changeCard()">
             <v-icon dark>mdi-check</v-icon>
           </v-btn>
         </v-card-actions>
       </v-card>
+      <v-snackbar v-model="cardChangeNotification" :timeout="2000" color="success">
+        <span class="card-modify">The Card has been changed</span>
+      </v-snackbar>
     </v-dialog>
     <v-dialog persistent scrollable v-model="studentCard" width="40vw">
       <v-card>
-        <v-card-text style="height: 70vh;"></v-card-text>
+        <v-card-text style="height: 70vh;">
+            <div class="student-upload-wrapper">
+              <input type="file" accept="image/*" style="display:none" ref="studentPicFront" @change="pictureSelect">
+              <v-btn
+                :loading="loading"
+                @click.native="loader = 'loading'"
+                @click.exact="studentUploadFront()"
+                elevation="0"
+                class="student-upload-button"
+                >
+                <div class="ma-1">
+                  <div>
+                    <v-icon>mdi-upload</v-icon>
+                  </div>
+                  <div>Upload Front Side</div>
+                </div>
+              </v-btn>
+            </div>
+            <div class="student-upload-wrapper">
+              <input type="file" accept="image/*" style="display:none" ref="studentPicFront" @change="pictureSelect">
+              <v-btn
+                :loading="loading"
+                @click.native="loader = 'loading'"
+                @click.exact="studentUploadFront()"
+                elevation="0"
+                class="student-upload-button"
+                >
+                <div class="ma-1">
+                  <div>
+                    <v-icon>mdi-upload</v-icon>
+                  </div>
+                  <div>Upload Back Side</div>
+                </div>
+              </v-btn>
+            </div>
+            <div class="student-upload-wrapper">
+              <input type="file" accept="image/*" style="display:none" ref="studentPicFront" @change="pictureSelect">
+              <v-btn
+                :loading="loading"
+                @click.native="loader = 'loading'"
+                @click.exact="studentUploadFront()"
+                elevation="0"
+                class="student-upload-button"
+                >
+                <div class="ma-1">
+                  <div>
+                    <v-icon>mdi-upload</v-icon>
+                  </div>
+                  <div>Upload Selfie with ID</div>
+                </div>
+              </v-btn>
+            </div>
+            <div>
+              <img v-if="studentFront" :src="studentFront" height="200" class="student-front-image">
+            </div>
+            <div>
+              <img v-if="studentFront" :src="studentFront" height="200" class="student-front-image">
+            </div>
+        </v-card-text>
         <v-divider></v-divider>
         <v-card-actions class="ma-1">
-          <v-btn fab small dark color="blue-grey lighten-1" elevation="0" @click="student = false">
+          <v-btn fab small dark color="blue-grey lighten-1" elevation="0" @click="studentCard = false">
             <v-icon dark size="25">mdi-close</v-icon>
           </v-btn>
           <v-spacer></v-spacer>
@@ -375,7 +449,22 @@ export default {
       card: false,
       cardChange: false,
       cardAdd: false,
-      valueOfCardNumber: null,
+      cardAddData: {
+        Name: null,
+        Number: null,
+        Year: null,
+        Month: null,
+        CVV: null
+      },
+      cardAddNotification: false,
+      cardChangeData: {
+        Name: null,
+        Number: null,
+        Year: null,
+        Month: null,
+        CVV: null
+      },
+      cardChangeNotification: false,
       YearList: [],
       MonthList: [
         "01",
@@ -391,10 +480,16 @@ export default {
         "11",
         "12"
       ],
-      studentCard: false,
+      studentCard: true,
+      studentPicFront: null,
+      studentFront: null,
+      loading: false,
       isStudent: false,
       studentID: null,
-      studentValid: null
+      studentValid: null,
+      rules: {
+        required: value => !!value || "Required.",
+      }
     };
   },
 
@@ -441,19 +536,24 @@ export default {
         .database()
         .ref("CardDetails/" + this.$store.getters.user.uid)
         .on("value", snap => {
-          this.card = true;
-          let myObj = snap.val();
-          let keys = Object.keys(snap.val());
-          keys.forEach(key => {
-            switch (key) {
-              case "CardNumber":
-                let digits = myObj[key].toString();
-                this.cardLastDigits = digits.substr(digits.length - 4);
-                break;
-              case "Expiry":
-                this.cardExpiry = myObj[key];
-            }
-          });
+          if(snap.val() == null)
+          {
+            this.card = false;
+          } else {
+            this.card = true;
+            let myObj = snap.val();
+            let keys = Object.keys(snap.val());
+            keys.forEach(key => {
+              switch (key) {
+                case "CardNumber":
+                  let digits = myObj[key].toString();
+                  this.cardLastDigits = digits.substr(digits.length - 4);
+                  break;
+                case "Expiry":
+                  this.cardExpiry = myObj[key];
+              }
+            });
+          }
         });
     },
     studentData() {
@@ -480,7 +580,60 @@ export default {
 
   mounted() {},
 
-  methods: {}
+  methods: {
+    addCard() {
+      let digits = this.cardAddData.Year.toString()
+      let year = digits.substr(digits.length - 2)
+      let expiry = this.cardAddData.Month + "/" + year
+      firebase
+        .database()
+        .ref("CardDetails/" + this.$store.getters.user.uid)
+        .set({
+           CardHolder: this.cardAddData.Name,
+           CardNumber: this.cardAddData.Number,
+           CVV: this.cardAddData.CVV,
+           Expiry: expiry
+        });
+      this.cardAddNotification = true;
+    },
+    changeCard() {
+      let digits = this.cardChangeData.Year.toString()
+      let year = digits.substr(digits.length - 2)
+      let expiry = this.cardChangeData.Month + "/" + year
+      firebase
+        .database()
+        .ref("CardDetails/" + this.$store.getters.user.uid)
+        .update({
+           CardHolder: this.cardChangeData.Name,
+           CardNumber: this.cardChangeData.Number,
+           CVV: this.cardChangeData.CVV,
+           Expiry: expiry
+        });
+      this.cardChangeNotification = true;
+    },
+    studentUploadFront() {
+      this.$refs.studentPicFront.click()
+    },
+    pictureSelect (payload) {
+        const selectedFile = payload.target.files[0]
+        const fileReader = new FileReader()
+        fileReader.addEventListener('load', () => {
+          this.imageUrl = fileReader.result
+        })
+        fileReader.readAsDataURL(selectedFile)
+        this.imageUrl = selectedFile
+        const uploadTask = firebase.storage().ref('test').put(selectedFile)
+        uploadTask.on('state_changed', snapshot => {
+        }, error => {
+          console.log(error)
+        }, () => {
+          var downloadURL = uploadTask.snapshot.ref.getDownloadURL()
+          downloadURL.then(downloadURL => {
+            this.studentFront = downloadURL
+          })
+        })
+      },
+  }
 };
 </script>
 
@@ -556,7 +709,8 @@ export default {
 
 .custom-plan-purchase-wrap {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
+  margin-top: 10px;
 }
 
 .custom-plan-button {
@@ -645,4 +799,29 @@ export default {
 .inputPrice input::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
+
+.card-modify {
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 1rem;
+}
+
+.student-upload-wrapper {
+  width: 100%;
+  display: flex;
+  margin-top: 2vh;
+}
+
+.student-upload-button {
+  height: 50px !important;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.student-front-image {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 </style>

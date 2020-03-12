@@ -3,13 +3,12 @@
     <v-card class="custom-lines-menu-wrapper" outlined elevation="0">
       <v-expansion-panels multiple accordion class="custom-lines-menu">
         <v-expansion-panel>
-          <v-expansion-panel-header>
+          <v-expansion-panel-header class="pa-2">
             <div class="custom-expansion-panel-header">
               <v-icon color="success" size="30">mdi-bus</v-icon>
-              <v-chip small color="success mr-1">
+              <v-chip small color="success ml-1" outlined>
                 <span class="custom-line-number">Express BUS</span>
-              </v-chip>
-              <v-chip small color="success mr-1">
+                <v-icon size="20">mdi-chevron-right</v-icon>
                 <span class="custom-line-number">R141</span>
               </v-chip>
             </div>
@@ -17,28 +16,42 @@
           <v-expansion-panel-content class="custom-expansion-panel-dropdown">
             <div class="custom-line ma-1">
               <div>
-                <v-btn rounded color="grey lighten-2" elevation="0">Ghencea</v-btn>
+                <v-btn
+                  rounded
+                  dark
+                  elevation="0"
+                  outlined
+                  color="rgb(117, 149, 166)"
+                  class="custom-direction-button"
+                >
+                  <span class="custom-direction-text">Ghencea</span>
+                </v-btn>
               </div>
               <div class="ma-1">
                 <v-icon>mdi-arrow-up-down</v-icon>
               </div>
               <div>
-                <v-btn rounded color="grey lighten-2" elevation="0">
-                  Aeroport Henri Coanda
-                  <br />Terminal Plecari
+                <v-btn
+                  rounded
+                  dark
+                  elevation="0"
+                  outlined
+                  color="rgb(117, 149, 166)"
+                  class="custom-direction-button"
+                >
+                  <span class="custom-direction-text">Aeroport Henri Coanda Plecari</span>
                 </v-btn>
               </div>
             </div>
           </v-expansion-panel-content>
         </v-expansion-panel>
         <v-expansion-panel>
-          <v-expansion-panel-header>
+          <v-expansion-panel-header class="pa-2">
             <div class="custom-expansion-panel-header">
               <v-icon color="cyan" size="30">mdi-tram</v-icon>
-              <v-chip small color="cyan mr-1">
+              <v-chip small dark color="cyan ml-1" outlined>
                 <span class="custom-line-number">TRAM</span>
-              </v-chip>
-              <v-chip small color="cyan mr-1">
+                <v-icon size="20">mdi-chevron-right</v-icon>
                 <span class="custom-line-number">41</span>
               </v-chip>
             </div>
@@ -46,28 +59,42 @@
           <v-expansion-panel-content class="custom-expansion-panel-dropdown">
             <div class="custom-line ma-1">
               <div>
-                <v-btn rounded color="grey lighten-2" elevation="0">Ghencea</v-btn>
+                <v-btn
+                  rounded
+                  dark
+                  elevation="0"
+                  outlined
+                  color="rgb(117, 149, 166)"
+                  class="custom-direction-button"
+                >
+                  <span class="custom-direction-text">Ghencea</span>
+                </v-btn>
               </div>
               <div class="ma-1">
                 <v-icon>mdi-arrow-up-down</v-icon>
               </div>
               <div>
-                <v-btn rounded color="grey lighten-2" elevation="0">
-                  Aeroport Henri Coanda
-                  <br />Terminal Plecari
+                <v-btn
+                  rounded
+                  dark
+                  elevation="0"
+                  outlined
+                  color="rgb(117, 149, 166)"
+                  class="custom-direction-button"
+                >
+                  <span class="custom-direction-text">Aeroport Henri Coanda Plecari</span>
                 </v-btn>
               </div>
             </div>
           </v-expansion-panel-content>
         </v-expansion-panel>
         <v-expansion-panel>
-          <v-expansion-panel-header>
+          <v-expansion-panel-header class="pa-2">
             <div class="custom-expansion-panel-header">
               <v-icon color="teal" size="30">mdi-bus</v-icon>
-              <v-chip small color="teal mr-1">
+              <v-chip small dark outlined color="teal ml-1">
                 <span class="custom-line-number">TROLLEYBUS</span>
-              </v-chip>
-              <v-chip small color="teal mr-1">
+                <v-icon size="20">mdi-chevron-right</v-icon>
                 <span class="custom-line-number">90</span>
               </v-chip>
             </div>
@@ -75,15 +102,30 @@
           <v-expansion-panel-content class="custom-expansion-panel-dropdown">
             <div class="custom-line ma-1">
               <div>
-                <v-btn rounded color="grey lighten-2" elevation="0">Ghencea</v-btn>
+                <v-btn
+                  rounded
+                  dark
+                  elevation="0"
+                  outlined
+                  color="rgb(117, 149, 166)"
+                  class="custom-direction-button"
+                >
+                  <span class="custom-direction-text">Ghencea</span>
+                </v-btn>
               </div>
               <div class="ma-1">
                 <v-icon>mdi-arrow-up-down</v-icon>
               </div>
               <div>
-                <v-btn rounded color="grey lighten-2" elevation="0">
-                  Aeroport Henri Coanda
-                  <br />Terminal Plecari
+                <v-btn
+                  rounded
+                  dark
+                  elevation="0"
+                  outlined
+                  color="rgb(117, 149, 166)"
+                  class="custom-direction-button"
+                >
+                  <span class="custom-direction-text">Aeroport Henri Coanda Plecari</span>
                 </v-btn>
               </div>
             </div>
@@ -146,7 +188,8 @@ export default {
   text-overflow: ellipsis;
   width: -webkit-fill-available;
   font-weight: 600;
-  color: white;
+  font-size: 0.9rem;
+  color: inherit;
 }
 
 .custom-expansion-panel-dropdown {
@@ -159,5 +202,18 @@ export default {
 
 .v-expansion-panel--active > .v-expansion-panel-header {
   min-height: 0px;
+}
+
+.custom-direction-button {
+  height: auto !important;
+  max-width: 225px;
+  min-height: 5vh;
+}
+
+.custom-direction-text {
+  margin-bottom: 5px;
+  margin-top: 5px;
+  max-width: 205px;
+  white-space: normal;
 }
 </style>

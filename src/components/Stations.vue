@@ -1,94 +1,66 @@
 <template>
-    <div class="stations-wrapper">
-      <v-card class="custom-select-wrapper pa-2">
-        <v-select v-model="e1" :items="states" label="Select Station" hide-details color="green"
-          prepend-icon="mdi-bus-stop-covered">
-        </v-select>
+  <div class="stations-wrapper">
+    <v-card elevation="0" class="custom-select-wrapper mt-2 mb-2 pa-2">
+      <v-select
+        v-model="e1"
+        :items="states"
+        label="Select Station"
+        hide-details
+        color="rgb(117, 149, 166)"
+        prepend-icon="mdi-bus-stop-covered"
+      ></v-select>
+    </v-card>
+    <div class="custom-info-wrapper">
+      <v-card elevation="0" class="custom-station-info">
+        <div class="custom-card-grid">
+          <v-icon size="38" color="success">mdi-bus</v-icon>
+          <span class="card-info-line">
+            105
+            <v-icon size="28" color="black">mdi-chevron-right</v-icon>Aeroportul Henri Coanda Plecari
+          </span>
+          <v-chip color="rgb(117, 149, 166)" class="custom-arrival-wrapper" outlined>
+            <span class="card-info-time">16 min</span>
+            <svg width="1em" height="1em" viewBox="0 0 20 20" class="feed-animation">
+              <g fill="#FBD42A">
+                <path
+                  d="M15.9840916,8.88301685 C17.0973425,8.88301685 18,9.78539134 18,10.8988915 C18,12.0123916 17.0973425,12.9147661 15.9840916,12.9147661 C14.2915753,12.9147661 12.9149488,14.2916374 12.9149488,15.9838575 C12.9149488,17.0970897 12.0122913,18 10.8987725,18 C9.78552171,18 8.88286418,17.0970897 8.88286418,15.9838575 C8.88286418,12.0683881 12.0685567,8.88301685 15.9840916,8.88301685"
+                  class="live-feed-animation-1"
+                />
+                <path
+                  d="M10.5402817,3.0998359 C12.2654855,2.37000569 14.0970578,2 15.9840916,2 C17.0973425,2 18,2.90264242 18,4.01614254 C18,5.12937473 17.0973425,6.03201715 15.9840916,6.03201715 C13.3256862,6.03201715 10.8264313,7.0672829 8.94689954,8.94678321 C7.06709982,10.8265515 6.03181674,13.3254965 6.03181674,15.9838575 C6.03181674,17.0970897 5.12942713,18 4.01590837,18 C2.90265753,18 2,17.0970897 2,15.9838575 C2,14.0971231 2.37001189,12.2653136 3.09985431,10.5401387 C3.80424335,8.87471114 4.81219753,7.37941659 6.0958521,6.09578352 C7.37950667,4.81215044 8.87482626,3.80421314 10.5402817,3.0998359 Z"
+                  class="live-feed-animation-2"
+                />
+              </g>
+            </svg>
+          </v-chip>
+        </div>
       </v-card>
-      <div class="custom-info-wrapper">
-        <v-card class="custom-station-info">
-          <div class="custom-card-grid">
-            <v-icon size="40" color="success">mdi-bus</v-icon>
-            <span class="card-info-line">
-              105 <v-icon>mdi-arrow-right</v-icon> Aeroportul Henri Coanda Plecari
-            </span>
-            <v-chip color="success" class="card-info-time">
-              3 min
-              <svg width="0.9em" height="0.9em" viewBox="0 0 20 20" class="feed-animation ml-1 mb-3">
-                <g fill="#FBD42A">
-                  <path
-                    d="M15.9840916,8.88301685 C17.0973425,8.88301685 18,9.78539134 18,10.8988915 C18,12.0123916 17.0973425,12.9147661 15.9840916,12.9147661 C14.2915753,12.9147661 12.9149488,14.2916374 12.9149488,15.9838575 C12.9149488,17.0970897 12.0122913,18 10.8987725,18 C9.78552171,18 8.88286418,17.0970897 8.88286418,15.9838575 C8.88286418,12.0683881 12.0685567,8.88301685 15.9840916,8.88301685"
-                    style="animation: 5000ms ease-in-out 1200ms infinite normal none running animation_197bdt9;">
-
-                  </path>
-                  <path
-                    d="M10.5402817,3.0998359 C12.2654855,2.37000569 14.0970578,2 15.9840916,2 C17.0973425,2 18,2.90264242 18,4.01614254 C18,5.12937473 17.0973425,6.03201715 15.9840916,6.03201715 C13.3256862,6.03201715 10.8264313,7.0672829 8.94689954,8.94678321 C7.06709982,10.8265515 6.03181674,13.3254965 6.03181674,15.9838575 C6.03181674,17.0970897 5.12942713,18 4.01590837,18 C2.90265753,18 2,17.0970897 2,15.9838575 C2,14.0971231 2.37001189,12.2653136 3.09985431,10.5401387 C3.80424335,8.87471114 4.81219753,7.37941659 6.0958521,6.09578352 C7.37950667,4.81215044 8.87482626,3.80421314 10.5402817,3.0998359 Z"
-                    style="animation: 5000ms ease-in-out 1300ms infinite normal none running animation_197bdt9;"></path>
-                </g>
-              </svg>
-            </v-chip>
-          </div>
-        </v-card>
-        <v-card class="custom-station-info">
-          <div class="custom-card-grid">
-            <v-icon size="40" color="success">mdi-bus</v-icon>
-            <span class="card-info-line">
-              105 <v-icon>mdi-arrow-right</v-icon> Aeroportul Henri Coanda Plecari
-            </span>
-            <v-chip color="success" class="card-info-time">
-              3 min
-              <svg width="0.9em" height="0.9em" viewBox="0 0 20 20" class="feed-animation ml-1 mb-3">
-                <g fill="#FBD42A">
-                  <path
-                    d="M15.9840916,8.88301685 C17.0973425,8.88301685 18,9.78539134 18,10.8988915 C18,12.0123916 17.0973425,12.9147661 15.9840916,12.9147661 C14.2915753,12.9147661 12.9149488,14.2916374 12.9149488,15.9838575 C12.9149488,17.0970897 12.0122913,18 10.8987725,18 C9.78552171,18 8.88286418,17.0970897 8.88286418,15.9838575 C8.88286418,12.0683881 12.0685567,8.88301685 15.9840916,8.88301685"
-                    style="animation: 5000ms ease-in-out 1200ms infinite normal none running animation_197bdt9;">
-
-                  </path>
-                  <path
-                    d="M10.5402817,3.0998359 C12.2654855,2.37000569 14.0970578,2 15.9840916,2 C17.0973425,2 18,2.90264242 18,4.01614254 C18,5.12937473 17.0973425,6.03201715 15.9840916,6.03201715 C13.3256862,6.03201715 10.8264313,7.0672829 8.94689954,8.94678321 C7.06709982,10.8265515 6.03181674,13.3254965 6.03181674,15.9838575 C6.03181674,17.0970897 5.12942713,18 4.01590837,18 C2.90265753,18 2,17.0970897 2,15.9838575 C2,14.0971231 2.37001189,12.2653136 3.09985431,10.5401387 C3.80424335,8.87471114 4.81219753,7.37941659 6.0958521,6.09578352 C7.37950667,4.81215044 8.87482626,3.80421314 10.5402817,3.0998359 Z"
-                    style="animation: 5000ms ease-in-out 1300ms infinite normal none running animation_197bdt9;"></path>
-                </g>
-              </svg>
-            </v-chip>
-          </div>
-        </v-card>
-      </div>
     </div>
+  </div>
 </template>
 
 <script>
 /* eslint-disable */
 export default {
-    name: "Stations",
-    data() {
-        return {
-      e1: 'Florida',
-      items: [
-        { text: 'State 1' },
-        { text: 'State 2' },
-      ],
-      states: [
-        'Alabama', 'Alaska', 'American Samoa',
-      ],
-    }
-    },
+  name: "Stations",
+  data() {
+    return {
+      e1: "Florida",
+      items: [{ text: "State 1" }, { text: "State 2" }],
+      states: ["Alabama", "Alaska", "American Samoa"]
+    };
+  },
 
-    created() {
-    },
+  created() {},
 
-    watch: {
-    },
-    
-    computed: {
-    },
+  watch: {},
 
-    mounted () {
-    },
+  computed: {},
 
-    methods: {
-    }
-}
+  mounted() {},
 
+  methods: {}
+};
 </script>
 
 <style scoped>
@@ -103,9 +75,6 @@ export default {
 
 .custom-select-wrapper {
   width: 42vw;
-  height: auto;
-  margin-top: 2vh;
-  margin-bottom: 4vh;
   margin-left: auto;
   margin-right: auto;
 }
@@ -117,10 +86,11 @@ export default {
 
 .custom-station-info {
   width: 40vw;
-  height: 10vh;
+  height: 60px;
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 5vh;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
 }
 
 .custom-card-grid {
@@ -128,7 +98,7 @@ export default {
   margin-right: auto;
   height: 100%;
   display: grid;
-  grid-template-columns: 1fr 5fr 1.5fr;
+  grid-template-columns: 0.8fr 5fr 1.4fr;
 }
 
 .card-info-line {
@@ -138,15 +108,37 @@ export default {
   justify-self: start;
 }
 
-.card-info-time {
-  font-weight: 500;
-  font-size: 1rem;
+.custom-arrival-wrapper {
   align-self: center;
   justify-self: center;
 }
 
+.card-info-time {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
 .feed-animation {
-   -webkit-transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
   transform: scaleX(-1);
+  align-self: baseline;
+  margin-top: 2px;
+}
+
+.live-feed-animation-1 {
+  animation: liveFeed 5000ms ease-in-out 1200ms infinite normal none running;
+}
+
+.live-feed-animation-2 {
+  animation: liveFeed 5000ms ease-in-out 1300ms infinite normal none running;
+}
+
+@keyframes liveFeed {
+  0%, 18%, 22%, 28%, 32% {
+    opacity: 1;
+  }
+  20%, 30% {
+    opacity: 0.2;
+  }
 }
 </style>
