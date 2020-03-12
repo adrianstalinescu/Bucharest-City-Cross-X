@@ -2,6 +2,8 @@
   <div class="plans-wrapper">
     <h4 style="display:none">{{ cardDetail }}</h4>
     <h4 style="display:none">{{ plansSUT }}</h4>
+    <h4 style="display:none">{{ plansRegularAvailability }}</h4>
+    <h4 style="display:none">{{ plansDiscountAvailability }}</h4>
     <v-expansion-panels class="custom-sut-wrapper">
       <v-expansion-panel>
         <v-expansion-panel-header class="custom-sut-header">
@@ -146,10 +148,12 @@
                 color="#168834ba"
                 elevation="0"
                 @click="planPurchase(pr)"
-                :disabled="card == false"
+                :disabled="planRegularPurchaseDisabled"
               >
-                Purchase
-                <v-icon dark right size="20">mdi-cart-outline</v-icon>
+                <span v-if="!planRegularPurchaseDisabled">Purchase</span>
+                <v-icon v-if="!planRegularPurchaseDisabled" dark right size="20">mdi-cart-outline</v-icon>
+                <span v-if="planRegularPurchaseDisabled">Attention Required</span>
+                <v-icon v-if="planRegularPurchaseDisabled" dark right size="20">mdi-alert-circle-outline</v-icon>
               </v-btn>
             </div>
           </div>
@@ -193,10 +197,12 @@
                 color="#168834ba"
                 elevation="0"
                 @click="planPurchase(pd)"
-                :disabled="card === true && isStudent != 'approved'"
+                :disabled="planDiscountPurchaseDisabled"
               >
-                Purchase
-                <v-icon dark right size="20">mdi-cart-outline</v-icon>
+                <span v-if="!planDiscountPurchaseDisabled">Purchase</span>
+                <v-icon v-if="!planDiscountPurchaseDisabled" dark right size="20">mdi-cart-outline</v-icon>
+                <span v-if="planDiscountPurchaseDisabled">Attention Required</span>
+                <v-icon v-if="planDiscountPurchaseDisabled" dark right size="20">mdi-alert-circle-outline</v-icon>
               </v-btn>
             </div>
           </div>
@@ -422,7 +428,8 @@
             <v-icon dark size="25">mdi-close</v-icon>
           </v-btn>
           <v-spacer></v-spacer>
-          <v-btn fab small elevation="0" color="success" @click="studentSubmit()">
+          <h4 style="display:none">{{ studentSubmitDisable }}</h4>
+          <v-btn fab small elevation="0" color="success" @click="studentSubmit()" :disabled="studentSubmitDisabled">
             <v-icon dark>mdi-check</v-icon>
           </v-btn>
         </v-card-actions>
@@ -430,6 +437,9 @@
     </v-dialog>
     <v-snackbar v-model="studentNotification" :timeout="4000" color="success">
       <span class="card-modify">Your Student ID has been uploaded</span>
+    </v-snackbar>
+    <v-snackbar v-model="purchaseNotification" :timeout="1500" color="success">
+      <span class="card-modify">The plan was added to your wallet</span>
     </v-snackbar>
   </div>
 </template>
@@ -452,6 +462,8 @@ export default {
       planRegularDetails: null,
       planDiscountKeys: [],
       planDiscountDetails: null,
+      planRegularPurchaseDisabled: false,
+      planDiscountPurchaseDisabled: false,
       card: false,
       cardChange: false,
       cardAdd: false,
@@ -486,7 +498,9 @@ export default {
         "11",
         "12"
       ],
+      purchaseNotification: false,
       studentCard: false,
+      studentSubmitDisabled: true,
       studentNotification: false,
       studentPicFront: null,
       studentPicBack: null,
@@ -578,6 +592,10 @@ export default {
             this.isStudent = myObj.Status;
             this.studentID = myObj.ID;
             this.studentValid = myObj.Valid;
+          } else {
+            this.isStudent = false;
+            this.stundetID = null;
+            this.studentValid = null;
           }
         });
     },
@@ -588,6 +606,79 @@ export default {
         (value, index) => 2020 + index
       );
       this.YearList = years.reverse();
+    },
+    studentSubmitDisable() {
+      if(this.studentFront !== null)
+      {
+        if(this.studentBack !== null)
+        {
+          if(this.studentSelfie !== null)
+          {
+            this.studentSubmitDisabled = false
+          } else {
+            this.studentSubmitDisabled = true
+          }
+        } else {
+          this.studentSubmitDisabled = true
+        }
+      } else {
+        this.studentSubmitDisabled = true
+      };
+    },
+    plansRegularAvailability() {
+      firebase
+        .database()
+        .ref("Wallet/" + this.$store.getters.user.uid)
+        .on("value", snap => {
+          let myObj = snap.val();
+          if(this.card !== false)
+          {
+            if(myObj !== null)
+            { 
+              let keys = Object.keys(snap.val());
+              if(keys.length >= 2)
+              {
+                this.planRegularPurchaseDisabled = true
+              } else {
+                this.planRegularPurchaseDisabled = false
+              }
+            } else {
+              this.planRegularPurchaseDisabled = false
+            }
+          } else {
+            this.planRegularPurchaseDisabled = true
+          }
+        });
+    },
+    plansDiscountAvailability() {
+      firebase
+        .database()
+        .ref("Wallet/" + this.$store.getters.user.uid)
+        .on("value", snap => {
+          let myObj = snap.val();
+          if(this.card !== false)
+          {
+            if(this.isStudent == 'approved')
+            {
+              if(myObj !== null)
+              { 
+                let keys = Object.keys(snap.val());
+                if(keys.length >= 2)
+                {
+                  this.planDiscountPurchaseDisabled = true
+                } else {
+                  this.planDiscountPurchaseDisabled = false
+                }
+              } else {
+                this.planDiscountPurchaseDisabled = false
+              }
+            } else {
+              this.planDiscountPurchaseDisabled = true
+            }
+          } else {
+            this.planDiscountPurchaseDisabled = true
+          }
+        });
     }
   },
 
@@ -701,7 +792,19 @@ export default {
         this.studentCard = false
     },
     planPurchase(plan) {
-      console.log(plan)
+      this.purchaseNotification = false
+      const year = new Date().getFullYear()
+      const month = new Date().getMonth() + 1
+      const day = new Date().getDate()
+      let currentDate = day +"/"+ month +"/"+ year
+      firebase
+        .database()
+        .ref("Wallet/" + this.$store.getters.user.uid + "/" + plan)
+        .set({
+          Activated: 'false',
+          Purchased: currentDate
+        });
+      this.purchaseNotification = true
     }
   }
 };

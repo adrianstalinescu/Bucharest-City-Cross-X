@@ -1,38 +1,46 @@
 <template>
-  <div class="wallet-wrapper">
     <div class="plans-wrapper">
-      <v-card class="custom-card-wrapper" width="53vw" outlined elevation="0">
+      <h4 style="display:none">{{ plansData }}</h4>
+      <v-card
+        v-for="pk in plansKeys"
+        :key="pk"
+        class="custom-card-wrapper"
+        width="53vw"
+        outlined
+        elevation="0"
+      >
         <div class="custom-card-grid">
-          <v-icon size="36" color="deep-orange lighten-2">mdi-ticket-percent</v-icon>
-          <span class="card-info">Monthly Student Plan</span>
-          <span class="card-info">Valid untill 11/04</span>
+          <v-icon v-if="pk !== 'Monthly Student'" size="36" color="deep-orange lighten-2">mdi-ticket</v-icon>
+          <v-icon
+            v-if="pk === 'Monthly Student'"
+            size="36"
+            color="deep-orange lighten-2"
+          >mdi-ticket-percent</v-icon>
+          <span class="card-info">{{pk}} Plan</span>
+          <span v-if="plansDetails[pk].Activated === 'true'" class="card-info">Valid untill {{plansDetails[pk].Valid}}</span>
+          <span v-if="plansDetails[pk].Activated === 'false'" class="card-info"></span>
           <v-btn
             rounded
-            disabled
+            :disabled="plansDetails[pk].Activated === 'true'"
             color="teal darken-4"
             elevation="0"
             class="justify-center ma-1 mr-2 white--text"
-            @click="planActive = true"
+            @click="activatePlan(pk)"
           >
-            Active
-            <v-icon dark right size="20">mdi-checkbox-marked-circle-outline</v-icon>
-          </v-btn>
-        </div>
-      </v-card>
-      <v-card class="custom-card-wrapper" width="53vw" outlined elevation="0">
-        <div class="custom-card-grid">
-          <v-icon size="36" color="deep-orange lighten-2">mdi-ticket</v-icon>
-          <span class="card-info">Monthly Plan</span>
-          <span class="card-info">Inactive</span>
-          <v-btn
-            rounded
-            color="teal darken-4"
-            elevation="0"
-            class="justify-center ma-1 mr-2 white--text"
-            @click="cardChange = true"
-          >
-            Activate
-            <v-icon dark right size="20">mdi-checkbox-marked-circle-outline</v-icon>
+            <span v-if="plansDetails[pk].Activated === 'true'">Active</span>
+            <v-icon
+              v-if="plansDetails[pk].Activated === 'true'"
+              dark
+              right
+              size="20"
+            >mdi-checkbox-marked-circle-outline</v-icon>
+            <span v-if="plansDetails[pk].Activated === 'false'">Activate</span>
+            <v-icon
+              v-if="plansDetails[pk].Activated === 'false'"
+              dark
+              right
+              size="20"
+            >mdi-plus-circle-outline</v-icon>
           </v-btn>
         </div>
       </v-card>
@@ -53,16 +61,22 @@
           ></v-data-table>
         </div>
       </v-card>
+      <v-snackbar v-model="plansActivateError" :timeout="1500" color="success">
+        <span class="plan-activate-error">Only 1 plan can be Active</span>
+      </v-snackbar>
     </div>
-  </div>
 </template>
 
 <script>
+import firebase from "@/firebase";
 /* eslint-disable */
 export default {
   name: "Wallet",
   data() {
     return {
+      plansKeys: [],
+      plansDetails: null,
+      plansActivateError: false,
       footer_props: {
         "items-per-page-options": [5],
         "items-per-page-text": null,
@@ -122,11 +136,73 @@ export default {
 
   watch: {},
 
-  computed: {},
+  computed: {
+    plansData() {
+      firebase
+        .database()
+        .ref("Wallet/" + this.$store.getters.user.uid)
+        .on("value", snap => {
+          let myObj = snap.val();
+          this.plansDetails = myObj;
+          if (myObj !== null) {
+            let keys = Object.keys(snap.val());
+            this.plansKeys = keys;
+          }
+        });
+    }
+  },
 
   mounted() {},
 
-  methods: {}
+  methods: {
+    activatePlan(plan) {
+      this.plansActivateError = false
+      let counter = 0
+      firebase
+        .database()
+        .ref("Wallet/" + this.$store.getters.user.uid)
+        .on("value", snap => {
+          let myObj = snap.val();
+          if(myObj)
+          {
+            let keys = Object.keys(snap.val());
+            keys.forEach(key => {
+              if(myObj[key].Activated === 'true')
+              {
+                counter++
+              }
+            });
+          }
+        }); 
+        console.log(counter)
+        if(counter < 1)
+        {
+          let validity
+          switch(plan) {
+            case 'Daily':
+              validity = (new Date().getDate()+1) +"/"+ (new Date().getMonth()+1)
+              break;
+            case 'Weekly':
+              validity = (new Date().getDate()+7) +"/"+ new Date().getMonth()
+              break;
+            case 'Monthly':
+              validity = new Date().getDate() +"/"+ (new Date().getMonth() + 2)
+              break;
+            case 'Monthly Student':
+              validity = new Date().getDate() +"/"+ (new Date().getMonth() + 2)
+          }
+          firebase
+            .database()
+            .ref("Wallet/" + this.$store.getters.user.uid + "/" + plan)
+            .update({
+              Activated: 'true',
+              Valid: validity
+            });
+        } else {
+          this.plansActivateError = true
+        }
+    }
+  }
 };
 </script>
 
@@ -204,5 +280,11 @@ export default {
 .custom-wallet-sut-table {
   width: 100%;
   height: 100%;
+}
+
+.plan-activate-error {
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 1rem;
 }
 </style>
