@@ -53,7 +53,7 @@
     </v-card>
     <h4 style="display:none">{{ studentData }}</h4>
     <v-card
-      v-if="isStudent === 'false'"
+      v-if="isStudent === false"
       class="custom-card-wrapper"
       width="53vw"
       outlined
@@ -70,7 +70,7 @@
           color="teal darken-4"
           elevation="0"
           class="justify-center ma-1 mr-2"
-          @click="student = true"
+          @click="studentCard = true"
         >
           Add ID
           <v-icon dark right size="20">mdi-plus</v-icon>
@@ -85,8 +85,8 @@
       elevation="0"
     >
       <div class="custom-student-card-pending-grid">
-        <v-avatar elevation="0" color="light-blue lighten-3" size="40" class="center-item ma-1">
-          <v-icon color="light-blue darken-1" size="30">mdi-exclamation-thick</v-icon>
+        <v-avatar elevation="0" color="light-blue lighten-3" size="34" class="center-item ma-1 ml-2">
+          <v-icon color="light-blue darken-1" size="28">mdi-exclamation-thick</v-icon>
         </v-avatar>
         <span class="student-card-info">
           Your ID is being reviewed
@@ -145,7 +145,7 @@
                 outlined
                 color="#168834ba"
                 elevation="0"
-                @click="onSignOut()"
+                @click="planPurchase(pr)"
                 :disabled="card == false"
               >
                 Purchase
@@ -192,7 +192,7 @@
                 outlined
                 color="#168834ba"
                 elevation="0"
-                @click="student = true"
+                @click="planPurchase(pd)"
                 :disabled="card === true && isStudent != 'approved'"
               >
                 Purchase
@@ -356,7 +356,7 @@
       <v-card>
         <v-card-text style="height: 70vh;">
             <div class="student-upload-wrapper">
-              <input type="file" accept="image/*" style="display:none" ref="studentPicFront" @change="pictureSelect">
+              <input type="file" accept="image/*" style="display:none" ref="studentPicFront" @change="pictureSelectFront">
               <v-btn
                 :loading="loading"
                 @click.native="loader = 'loading'"
@@ -373,11 +373,11 @@
               </v-btn>
             </div>
             <div class="student-upload-wrapper">
-              <input type="file" accept="image/*" style="display:none" ref="studentPicFront" @change="pictureSelect">
+              <input type="file" accept="image/*" style="display:none" ref="studentPicBack" @change="pictureSelectBack">
               <v-btn
                 :loading="loading"
                 @click.native="loader = 'loading'"
-                @click.exact="studentUploadFront()"
+                @click.exact="studentUploadBack()"
                 elevation="0"
                 class="student-upload-button"
                 >
@@ -390,11 +390,11 @@
               </v-btn>
             </div>
             <div class="student-upload-wrapper">
-              <input type="file" accept="image/*" style="display:none" ref="studentPicFront" @change="pictureSelect">
+              <input type="file" accept="image/*" style="display:none" ref="studentPicSelfie" @change="pictureSelectSelfie">
               <v-btn
                 :loading="loading"
                 @click.native="loader = 'loading'"
-                @click.exact="studentUploadFront()"
+                @click.exact="studentUploadSelfie()"
                 elevation="0"
                 class="student-upload-button"
                 >
@@ -406,11 +406,14 @@
                 </div>
               </v-btn>
             </div>
-            <div>
-              <img v-if="studentFront" :src="studentFront" height="200" class="student-front-image">
+            <div class="student-image-wrapper">
+              <img :src="studentFront" class="student-id-image">
             </div>
-            <div>
-              <img v-if="studentFront" :src="studentFront" height="200" class="student-front-image">
+            <div class="student-image-wrapper">
+              <img :src="studentBack" class="student-id-image">
+            </div>
+            <div class="student-image-wrapper">
+              <img :src="studentSelfie" class="student-id-image">
             </div>
         </v-card-text>
         <v-divider></v-divider>
@@ -419,12 +422,15 @@
             <v-icon dark size="25">mdi-close</v-icon>
           </v-btn>
           <v-spacer></v-spacer>
-          <v-btn fab small dark elevation="0" color="success">
+          <v-btn fab small elevation="0" color="success" @click="studentSubmit()">
             <v-icon dark>mdi-check</v-icon>
           </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-snackbar v-model="studentNotification" :timeout="4000" color="success">
+      <span class="card-modify">Your Student ID has been uploaded</span>
+    </v-snackbar>
   </div>
 </template>
 
@@ -480,9 +486,14 @@ export default {
         "11",
         "12"
       ],
-      studentCard: true,
+      studentCard: false,
+      studentNotification: false,
       studentPicFront: null,
+      studentPicBack: null,
+      studentPicSelfie: null,
       studentFront: null,
+      studentBack: null,
+      studentSelfie: null,
       loading: false,
       isStudent: false,
       studentID: null,
@@ -562,10 +573,12 @@ export default {
         .ref("Users/" + this.$store.getters.user.uid + "/Student")
         .on("value", snap => {
           let myObj = snap.val();
-          let keys = Object.keys(snap.val());
-          this.isStudent = myObj.Status;
-          this.studentID = myObj.ID;
-          this.studentValid = myObj.Valid;
+          if(myObj !== null)
+          { 
+            this.isStudent = myObj.Status;
+            this.studentID = myObj.ID;
+            this.studentValid = myObj.Valid;
+          }
         });
     },
     years() {
@@ -614,25 +627,82 @@ export default {
     studentUploadFront() {
       this.$refs.studentPicFront.click()
     },
-    pictureSelect (payload) {
-        const selectedFile = payload.target.files[0]
-        const fileReader = new FileReader()
-        fileReader.addEventListener('load', () => {
-          this.imageUrl = fileReader.result
+    pictureSelectFront (payload) {
+      const selectedFile = payload.target.files[0]
+      const fileReader = new FileReader()
+      fileReader.addEventListener('load', () => {
+        this.imageUrl = fileReader.result
+      })
+      fileReader.readAsDataURL(selectedFile)
+      this.imageUrl = selectedFile
+      const uploadTask = firebase.storage().ref('/' + this.$store.getters.user.uid + '/studentID/front').put(selectedFile)
+      uploadTask.on('state_changed', snapshot => {
+      }, error => {
+        console.log(error)
+      }, () => {
+        var downloadURL = uploadTask.snapshot.ref.getDownloadURL()
+        downloadURL.then(downloadURL => {
+          this.studentFront = downloadURL
         })
-        fileReader.readAsDataURL(selectedFile)
-        this.imageUrl = selectedFile
-        const uploadTask = firebase.storage().ref('test').put(selectedFile)
-        uploadTask.on('state_changed', snapshot => {
-        }, error => {
-          console.log(error)
-        }, () => {
-          var downloadURL = uploadTask.snapshot.ref.getDownloadURL()
-          downloadURL.then(downloadURL => {
-            this.studentFront = downloadURL
-          })
+      })
+    },
+    studentUploadBack() {
+      this.$refs.studentPicBack.click()
+    },
+    pictureSelectBack (payload) {
+      const selectedFile = payload.target.files[0]
+      const fileReader = new FileReader()
+      fileReader.addEventListener('load', () => {
+        this.imageUrl = fileReader.result
+      })
+      fileReader.readAsDataURL(selectedFile)
+      this.imageUrl = selectedFile
+      const uploadTask = firebase.storage().ref('/' + this.$store.getters.user.uid + '/studentID/back').put(selectedFile)
+      uploadTask.on('state_changed', snapshot => {
+      }, error => {
+        console.log(error)
+      }, () => {
+        var downloadURL = uploadTask.snapshot.ref.getDownloadURL()
+        downloadURL.then(downloadURL => {
+          this.studentBack = downloadURL
         })
-      },
+      })
+    },
+    studentUploadSelfie() {
+      this.$refs.studentPicSelfie.click()
+    },
+    pictureSelectSelfie (payload) {
+      const selectedFile = payload.target.files[0]
+      const fileReader = new FileReader()
+      fileReader.addEventListener('load', () => {
+        this.imageUrl = fileReader.result
+      })
+      fileReader.readAsDataURL(selectedFile)
+      this.imageUrl = selectedFile
+      const uploadTask = firebase.storage().ref('/' + this.$store.getters.user.uid + '/studentID/selfie').put(selectedFile)
+      uploadTask.on('state_changed', snapshot => {
+      }, error => {
+        console.log(error)
+      }, () => {
+        var downloadURL = uploadTask.snapshot.ref.getDownloadURL()
+        downloadURL.then(downloadURL => {
+          this.studentSelfie = downloadURL
+        })
+      })
+    },
+    studentSubmit() {
+      firebase
+        .database()
+        .ref("Users/" + this.$store.getters.user.uid + "/Student")
+        .set({
+          Status: 'pending'
+        });
+        this.studentNotification = true
+        this.studentCard = false
+    },
+    planPurchase(plan) {
+      console.log(plan)
+    }
   }
 };
 </script>
@@ -818,10 +888,18 @@ export default {
   margin-right: auto;
 }
 
-.student-front-image {
+.student-id-image {
   display: block;
   margin-left: auto;
   margin-right: auto;
+  max-height: 150px;
+}
+
+.student-image-wrapper {
+  width:100%;
+  max-height: 150px;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
 }
 
 </style>
