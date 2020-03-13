@@ -107,18 +107,12 @@
           </v-btn>
         </div>
         <div class="custom-notification-card-wrap ma-1">
-          <v-chip
-            class="ma-1"
-            color="#7595a6"
-            outlined
-            style="font-weight: 700"
-          >{{notifications[n].Date}}</v-chip>
-          <v-chip
-            class="ma-1"
-            color="#7595a6"
-            outlined
-            style="font-weight: 700"
-          >{{notifications[n].Time}}</v-chip>
+          <v-chip class="ma-1" color="#7595a6" outlined style="font-weight: 700">
+            <v-icon size="20" class="mr-2">mdi-message-text-clock-outline</v-icon>
+            {{notifications[n].Date}}
+            <v-icon size="20">mdi-chevron-right</v-icon>
+            {{notifications[n].Time}}
+          </v-chip>
         </div>
         <div class="custom-notification-card-wrap ma-3">{{notifications[n].Content}}</div>
       </v-card>
@@ -127,7 +121,12 @@
       </v-snackbar>
     </div>
     <div v-if="switcher === true">
-      <v-card v-for="s in stationKeys" :key="s" elevation="0" class="custom-capacity-indicator-card">
+      <v-card
+        v-for="s in stationKeys"
+        :key="s"
+        elevation="0"
+        class="custom-capacity-indicator-card"
+      >
         <div class="custom-capacity-indicator-title-grid">
           <v-chip :color="stationsData[stationSelect][s].Color" class="capacity-indicator-line">
             {{stationsData[stationSelect][s].Line}}
@@ -296,6 +295,7 @@ export default {
   text-overflow: ellipsis;
   width: -webkit-fill-available;
   font-weight: 600;
+  color: rgba(0, 0, 0, 0.87);
 }
 
 .custom-notification-empty-card-wrap {
@@ -311,6 +311,7 @@ export default {
   text-overflow: ellipsis;
   width: -webkit-fill-available;
   font-weight: 600;
+  color: rgba(0, 0, 0, 0.87);
 }
 
 .notification-delete {
@@ -443,8 +444,7 @@ export default {
 
 .capacity {
   height: 80%;
-  background: url('../assets/capacityIndicator/train.svg') -1px -1px
-      no-repeat,
+  background: url("../assets/capacityIndicator/train.svg") -1px -1px no-repeat,
     #23282d;
   background-size: auto calc(100% + 2px);
   text-align: right;
@@ -452,10 +452,14 @@ export default {
   margin-left: 1rem;
 }
 
-@keyframes slide{   
-  0%{transform: translate(100%, 0);}   
-  100%{transform: translate(0, 0);} 
+@keyframes slide {
+  0% {
+    transform: translate(100%, 0);
   }
+  100% {
+    transform: translate(0, 0);
+  }
+}
 
 .carriage {
   width: 14%;

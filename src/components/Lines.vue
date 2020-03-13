@@ -1,15 +1,19 @@
 <template>
   <div class="lines-wrapper">
+    <h4 style="display:none">{{ linesLoader }}</h4>
     <v-card class="custom-lines-menu-wrapper" outlined elevation="0">
       <v-expansion-panels multiple accordion class="custom-lines-menu">
-        <v-expansion-panel>
+        <v-expansion-panel
+          v-for="lk in linesKeys"
+          :key="lk"
+          >
           <v-expansion-panel-header class="pa-2">
             <div class="custom-expansion-panel-header">
-              <v-icon color="success" size="30">mdi-bus</v-icon>
-              <v-chip small color="success ml-1" outlined>
-                <span class="custom-line-number">Express BUS</span>
+              <v-icon :color="lines[lk].Color" size="30">{{lines[lk].Icon}}</v-icon>
+              <v-chip small :color="lines[lk].Color" class="ml-1" outlined>
+                <span class="custom-line-number">{{lines[lk].Type}}</span>
                 <v-icon size="20">mdi-chevron-right</v-icon>
-                <span class="custom-line-number">R141</span>
+                <span class="custom-line-number">{{lk}}</span>
               </v-chip>
             </div>
           </v-expansion-panel-header>
@@ -23,8 +27,9 @@
                   outlined
                   color="rgb(117, 149, 166)"
                   class="custom-direction-button"
+                  @click="autoRefresh(lines[lk].ID, 0, lines[lk].CenterLat, lines[lk].CenterLng, lines[lk].CenterZoom)"
                 >
-                  <span class="custom-direction-text">Ghencea</span>
+                  <span class="custom-direction-text">{{lines[lk].T1}}</span>
                 </v-btn>
               </div>
               <div class="ma-1">
@@ -38,94 +43,9 @@
                   outlined
                   color="rgb(117, 149, 166)"
                   class="custom-direction-button"
+                  @click="autoRefresh(lines[lk].ID, 1, lines[lk].CenterLat, lines[lk].CenterLng, lines[lk].CenterZoom)"
                 >
-                  <span class="custom-direction-text">Aeroport Henri Coanda Plecari</span>
-                </v-btn>
-              </div>
-            </div>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-        <v-expansion-panel>
-          <v-expansion-panel-header class="pa-2">
-            <div class="custom-expansion-panel-header">
-              <v-icon color="cyan" size="30">mdi-tram</v-icon>
-              <v-chip small dark color="cyan ml-1" outlined>
-                <span class="custom-line-number">TRAM</span>
-                <v-icon size="20">mdi-chevron-right</v-icon>
-                <span class="custom-line-number">41</span>
-              </v-chip>
-            </div>
-          </v-expansion-panel-header>
-          <v-expansion-panel-content class="custom-expansion-panel-dropdown">
-            <div class="custom-line ma-1">
-              <div>
-                <v-btn
-                  rounded
-                  dark
-                  elevation="0"
-                  outlined
-                  color="rgb(117, 149, 166)"
-                  class="custom-direction-button"
-                >
-                  <span class="custom-direction-text">Ghencea</span>
-                </v-btn>
-              </div>
-              <div class="ma-1">
-                <v-icon>mdi-arrow-up-down</v-icon>
-              </div>
-              <div>
-                <v-btn
-                  rounded
-                  dark
-                  elevation="0"
-                  outlined
-                  color="rgb(117, 149, 166)"
-                  class="custom-direction-button"
-                >
-                  <span class="custom-direction-text">Aeroport Henri Coanda Plecari</span>
-                </v-btn>
-              </div>
-            </div>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-        <v-expansion-panel>
-          <v-expansion-panel-header class="pa-2">
-            <div class="custom-expansion-panel-header">
-              <v-icon color="teal" size="30">mdi-bus</v-icon>
-              <v-chip small dark outlined color="teal ml-1">
-                <span class="custom-line-number">TROLLEYBUS</span>
-                <v-icon size="20">mdi-chevron-right</v-icon>
-                <span class="custom-line-number">90</span>
-              </v-chip>
-            </div>
-          </v-expansion-panel-header>
-          <v-expansion-panel-content class="custom-expansion-panel-dropdown">
-            <div class="custom-line ma-1">
-              <div>
-                <v-btn
-                  rounded
-                  dark
-                  elevation="0"
-                  outlined
-                  color="rgb(117, 149, 166)"
-                  class="custom-direction-button"
-                >
-                  <span class="custom-direction-text">Ghencea</span>
-                </v-btn>
-              </div>
-              <div class="ma-1">
-                <v-icon>mdi-arrow-up-down</v-icon>
-              </div>
-              <div>
-                <v-btn
-                  rounded
-                  dark
-                  elevation="0"
-                  outlined
-                  color="rgb(117, 149, 166)"
-                  class="custom-direction-button"
-                >
-                  <span class="custom-direction-text">Aeroport Henri Coanda Plecari</span>
+                  <span class="custom-direction-text">{{lines[lk].T2}}</span>
                 </v-btn>
               </div>
             </div>
@@ -133,31 +53,344 @@
         </v-expansion-panel>
       </v-expansion-panels>
     </v-card>
-    <div>MAP goes HERE</div>
+    <div class="custom-map-wrapper">
+      <div id="map" />
+    </div>
   </div>
 </template>
 
 <script>
+import firebase from "@/firebase";
 /* eslint-disable */
 export default {
   name: "Lines",
   data() {
-    return {};
+    return {
+      refresh: null,
+      linesKeys: [],
+      lines: null,
+      defaultLocation: {
+        lat: 44.4268006,
+        lng: 26.1025036,
+        zoom: 16
+      },
+      map: null,
+      vehiclesData: null,
+      markers: []
+    };
   },
 
   created() {},
 
-  watch: {},
+  watch: {
+    defaultLocation: {
+      deep: true,
+      immediate: false,
+      handler(newLocation) {
+        if (newLocation && this.defaultLocation) {
+          this.createMap();
+        }
+      }
+    }
+  },
 
-  computed: {},
+  mounted() {
+    this.createMap();
+  },
 
-  mounted() {},
+  computed: {
+    linesLoader() {
+      firebase
+        .database()
+        .ref("Lines/")
+        .on("value", snap => {
+          let myObj = snap.val();
+          this.lines = myObj
+          let keys = Object.keys(snap.val());
+          this.linesKeys = keys
+        });
+    } 
+  },
 
-  methods: {}
+  methods: {
+    initialize(data) {
+      this.map = data.map;
+      this.google = data.google;
+    },
+    createMap() {
+      let myLatLng = new window.google.maps.LatLng(
+        this.defaultLocation.lat,
+        this.defaultLocation.lng
+      );
+      let z = this.defaultLocation.zoom
+      this.map = new window.google.maps.Map(document.getElementById("map"), {
+        center: myLatLng,
+        zoom: z,
+        options: {
+          disableDefaultUI: true,
+          enableHighAccuracy: true,
+          styles: [
+            {
+              elementType: "geometry",
+              stylers: [
+                {
+                  color: "#212121"
+                }
+              ]
+            },
+            {
+              elementType: "labels.icon",
+              stylers: [
+                {
+                  visibility: "off"
+                }
+              ]
+            },
+            {
+              elementType: "labels.text.fill",
+              stylers: [
+                {
+                  color: "#757575"
+                }
+              ]
+            },
+            {
+              elementType: "labels.text.stroke",
+              stylers: [
+                {
+                  color: "#212121"
+                }
+              ]
+            },
+            {
+              featureType: "administrative",
+              elementType: "geometry",
+              stylers: [
+                {
+                  color: "#757575"
+                }
+              ]
+            },
+            {
+              featureType: "administrative.country",
+              elementType: "labels.text.fill",
+              stylers: [
+                {
+                  color: "#9e9e9e"
+                }
+              ]
+            },
+            {
+              featureType: "administrative.land_parcel",
+              stylers: [
+                {
+                  visibility: "off"
+                }
+              ]
+            },
+            {
+              featureType: "administrative.locality",
+              elementType: "labels.text.fill",
+              stylers: [
+                {
+                  color: "#bdbdbd"
+                }
+              ]
+            },
+            {
+              featureType: "poi",
+              elementType: "labels.text.fill",
+              stylers: [
+                {
+                  color: "#757575"
+                }
+              ]
+            },
+            {
+              featureType: "poi.park",
+              elementType: "geometry",
+              stylers: [
+                {
+                  color: "#181818"
+                }
+              ]
+            },
+            {
+              featureType: "poi.park",
+              elementType: "labels.text.fill",
+              stylers: [
+                {
+                  color: "#616161"
+                }
+              ]
+            },
+            {
+              featureType: "poi.park",
+              elementType: "labels.text.stroke",
+              stylers: [
+                {
+                  color: "#1b1b1b"
+                }
+              ]
+            },
+            {
+              featureType: "road",
+              elementType: "geometry.fill",
+              stylers: [
+                {
+                  color: "#2c2c2c"
+                }
+              ]
+            },
+            {
+              featureType: "road",
+              elementType: "labels.text.fill",
+              stylers: [
+                {
+                  color: "#8a8a8a"
+                }
+              ]
+            },
+            {
+              featureType: "road.arterial",
+              elementType: "geometry",
+              stylers: [
+                {
+                  color: "#373737"
+                }
+              ]
+            },
+            {
+              featureType: "road.highway",
+              elementType: "geometry",
+              stylers: [
+                {
+                  color: "#3c3c3c"
+                }
+              ]
+            },
+            {
+              featureType: "road.highway.controlled_access",
+              elementType: "geometry",
+              stylers: [
+                {
+                  color: "#4e4e4e"
+                }
+              ]
+            },
+            {
+              featureType: "road.local",
+              elementType: "labels.text.fill",
+              stylers: [
+                {
+                  color: "#616161"
+                }
+              ]
+            },
+            {
+              featureType: "transit",
+              elementType: "labels.text.fill",
+              stylers: [
+                {
+                  color: "#757575"
+                }
+              ]
+            },
+            {
+              featureType: "water",
+              elementType: "geometry",
+              stylers: [
+                {
+                  color: "#000000"
+                }
+              ]
+            },
+            {
+              featureType: "water",
+              elementType: "labels.text.fill",
+              stylers: [
+                {
+                  color: "#3d3d3d"
+                }
+              ]
+            }
+          ]
+        }
+      });
+    },
+    autoRefresh (id, direction, centerLat, centerLng, centerZoom) {
+      this.defaultLocation = {
+        lat: centerLat,
+        lng: centerLng,
+        zoom: centerZoom
+      }
+      clearInterval(this.refresh)
+      this.refresh = setInterval(()=> {
+        const lineVehicles = new XMLHttpRequest();
+        lineVehicles.open("GET","https://info.stbsa.ro/rp/api/lines/"+id+"/vehicles/"+direction+"?lang=ro",true)
+        lineVehicles.onload = () => {
+          this.vehiclesData = []
+          let vehicles = JSON.parse(lineVehicles.responseText)
+          vehicles.forEach(vehicle => {
+            this.vehiclesData.push(vehicle)
+          });
+          }
+        lineVehicles.send();
+        this.updateVehicles(this.vehiclesData);
+        }, 3000);
+    },
+    updateVehicles(vehicles) {
+      if(vehicles !== null)
+      {
+        for(i=0; i<this.markers.length; i++){
+          this.markers[i].setMap(null);
+        }
+        this.markers = []
+        let infowindow = new google.maps.InfoWindow();
+        let i;
+        var image = {
+          url: require('@/assets/vehicles/tram.png')
+        }
+        for (i = 0; i < vehicles.length; i++) {
+          let marker = new google.maps.Marker({
+            position: new google.maps.LatLng(vehicles[i].lat, vehicles[i].lng),
+            icon: image,
+            map: this.map
+          });
+          this.markers.push(marker)
+          google.maps.event.addListener(marker, 'click', (function(marker, i) {
+              console.log(marker)
+              console.log(vehicles[i].id)
+            return function() {
+              infowindow.setContent('<span style="font-weight: 500;">' + vehicles[i].id + '</span>');
+              infowindow.open(this.map, marker);
+            }
+          })(marker, i));
+        }
+      }
+    }
+  },
+
+  beforeDestroy () {
+    clearInterval(this.refresh)
+  },
+
 };
 </script>
 
 <style scoped>
+.custom-map-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  top: 0;
+}
+
+#map {
+  height: 100%;
+  width: 100%;
+}
+
 .lines-wrapper {
   display: flex;
   width: 100%;
@@ -171,7 +404,7 @@ export default {
 .custom-lines-menu-wrapper {
   align-self: center;
   overflow-y: auto;
-  width: 20vw;
+  width: 28vw;
   height: 100%;
 }
 
