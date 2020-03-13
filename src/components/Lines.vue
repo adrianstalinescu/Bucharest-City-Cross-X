@@ -324,18 +324,17 @@ export default {
         lng: centerLng,
         zoom: centerZoom
       }
+      this.vehiclesData = []
       clearInterval(this.refresh)
       this.refresh = setInterval(()=> {
-        const lineVehicles = new XMLHttpRequest();
-        lineVehicles.open("GET","https://info.stbsa.ro/rp/api/lines/"+id+"/vehicles/"+direction+"?lang=ro",true)
-        lineVehicles.onload = () => {
+        (async () => {
+          const resp = await fetch("https://info.stbsa.ro/rp/api/lines/"+id+"/vehicles/"+direction+"?lang=ro");
           this.vehiclesData = []
-          let vehicles = JSON.parse(lineVehicles.responseText)
+          let vehicles = await resp.json();
           vehicles.forEach(vehicle => {
             this.vehiclesData.push(vehicle)
           });
-          }
-        lineVehicles.send();
+        })();
         this.updateVehicles(this.vehiclesData);
         }, 3000);
     },
