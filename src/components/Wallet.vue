@@ -1,6 +1,7 @@
 <template>
     <div class="plans-wrapper">
       <h4 style="display:none">{{ plansData }}</h4>
+      <h4 style="display:none">{{ SUTData }}</h4>
       <v-card
         v-for="pk in plansKeys"
         :key="pk"
@@ -61,8 +62,11 @@
           ></v-data-table>
         </div>
       </v-card>
-      <v-snackbar v-model="plansActivateError" :timeout="1500" color="success">
-        <span class="plan-activate-error">Only 1 plan can be Active</span>
+      <v-snackbar v-model="plansActivateSuccess" :timeout="1500" color="success">
+        <span class="plan-activate">The plan was activated</span>
+      </v-snackbar>
+      <v-snackbar v-model="plansActivateError" :timeout="1500" color="error">
+        <span class="plan-activate">Only 1 plan can be Active</span>
       </v-snackbar>
     </div>
 </template>
@@ -77,6 +81,7 @@ export default {
       plansKeys: [],
       plansDetails: null,
       plansActivateError: false,
+      plansActivateSuccess: false,
       footer_props: {
         "items-per-page-options": [5],
         "items-per-page-text": null,
@@ -87,47 +92,19 @@ export default {
           text: "Usage",
           align: "left",
           sortable: false,
-          value: "name"
+          value: "type"
+        },
+        {
+          text: "Line",
+          align: "left",
+          sortable: false,
+          value: "line"
         },
         { text: "Date", sortable: false, value: "date" },
+        { text: "Time", sortable: false, value: "time" },
         { text: "Amount", sortable: false, value: "amount" }
       ],
       SUT: [
-        {
-          name: "Bus 335",
-          date: "02-02-2020",
-          amount: 1.3
-        },
-        {
-          name: "Metro Dristor 2",
-          date: "15-02-2020",
-          amount: 2.5
-        },
-        {
-          name: "Tram 44",
-          date: "12-02-2020",
-          amount: 1.3
-        },
-        {
-          name: "Bus 335",
-          date: "02-02-2020",
-          amount: 1.3
-        },
-        {
-          name: "Metro Dristor 2",
-          date: "15-02-2020",
-          amount: 2.5
-        },
-        {
-          name: "Bus 335",
-          date: "02-02-2020",
-          amount: 1.3
-        },
-        {
-          name: "Metro Dristor 2",
-          date: "15-02-2020",
-          amount: 2.5
-        }
       ]
     };
   },
@@ -149,12 +126,42 @@ export default {
             this.plansKeys = keys;
           }
         });
+    },
+    SUTData() {
+      firebase
+        .database()
+        .ref("SUT/" + this.$store.getters.user.uid)
+        .on("value", snap => {
+          let myObj = snap.val();
+          if (myObj !== null) {
+            this.SUT = []
+            let keys = Object.keys(snap.val());
+            keys.forEach(key => {
+              this.SUT.push({
+                type: myObj[key].Type,
+                line: myObj[key].Line,
+                date: myObj[key].Date,
+                time: myObj[key].Time,
+                amount: myObj[key].Cost
+              })
+            });
+          }
+        });
     }
   },
 
   mounted() {},
 
   methods: {
+    curday(sp, day, month) {
+      let today = new Date()
+      let dd = today.getDate()+day
+      let mm = today.getMonth()+1+month
+
+      if(dd<10) dd='0'+dd
+      if(mm<10) mm='0'+mm
+      return (dd+sp+mm)
+    },
     activatePlan(plan) {
       this.plansActivateError = false
       let counter = 0
@@ -173,23 +180,22 @@ export default {
               }
             });
           }
-        }); 
-        console.log(counter)
+        });
         if(counter < 1)
         {
           let validity
           switch(plan) {
             case 'Daily':
-              validity = (new Date().getDate()+1) +"/"+ (new Date().getMonth()+1)
+              validity = this.curday('/',1,0)
               break;
             case 'Weekly':
-              validity = (new Date().getDate()+7) +"/"+ new Date().getMonth()
+              validity = this.curday('/',7,0)
               break;
             case 'Monthly':
-              validity = new Date().getDate() +"/"+ (new Date().getMonth() + 2)
+              validity = this.curday('/',0,1)
               break;
             case 'Monthly Student':
-              validity = new Date().getDate() +"/"+ (new Date().getMonth() + 2)
+              validity = this.curday('/',0,1)
           }
           firebase
             .database()
@@ -198,6 +204,7 @@ export default {
               Activated: 'true',
               Valid: validity
             });
+          this.plansActivateSuccess = true
         } else {
           this.plansActivateError = true
         }
@@ -282,7 +289,7 @@ export default {
   height: 100%;
 }
 
-.plan-activate-error {
+.plan-activate {
   margin-left: auto;
   margin-right: auto;
   font-size: 1rem;

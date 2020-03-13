@@ -1,6 +1,8 @@
 <template>
   <div class="history-wrapper">
     <div class="history-wrapper">
+      <h4 style="display:none">{{ purchasedData }}</h4>
+      <h4 style="display:none">{{ searchedData }}</h4>
       <v-card class="custom-card-wrapper" outlined elevation="0">
         <div class="custom-history-title-wrap ma-2">
           <v-card-title class="custom-history-title">
@@ -38,6 +40,7 @@
 </template>
 
 <script>
+import firebase from "@/firebase";
 /* eslint-disable */
 export default {
   name: "History",
@@ -50,31 +53,16 @@ export default {
       },
       headerPurchased: [
         {
-          text: "Title",
+          text: "Type",
           align: "left",
           sortable: false,
-          value: "name"
+          value: "type"
         },
         { text: "Date", sortable: false, value: "date" },
+        { text: "Time", sortable: true, value: "time" },
         { text: "Amount", sortable: false, value: "amount" }
       ],
-      purchased: [
-        {
-          name: "Bus 335",
-          date: "02-02-2020",
-          amount: 1.3
-        },
-        {
-          name: "Metro Dristor 2",
-          date: "15-02-2020",
-          amount: 2.5
-        },
-        {
-          name: "Tram 44",
-          date: "12-02-2020",
-          amount: 1.3
-        }
-      ],
+      purchased: [],
       headerSearched: [
         {
           text: "Title",
@@ -82,22 +70,10 @@ export default {
           sortable: false,
           value: "title"
         },
-        { text: "Date", sortable: false, value: "date" }
+        { text: "Date", sortable: false, value: "date" },
+        { text: "Time", sortable: true, value: "time" },
       ],
-      searched: [
-        {
-          title: "Piata Unirii",
-          date: "02-02-2020"
-        },
-        {
-          title: "Universitatea Romano Americana",
-          date: "15-02-2020"
-        },
-        {
-          title: "Preciziei",
-          date: "12-02-2020"
-        }
-      ]
+      searched: []
     };
   },
 
@@ -105,7 +81,47 @@ export default {
 
   watch: {},
 
-  computed: {},
+  computed: {
+    purchasedData() {
+      firebase
+        .database()
+        .ref("History/Purchase/" + this.$store.getters.user.uid)
+        .on("value", snap => {
+          let myObj = snap.val();
+          if (myObj !== null) {
+            this.purchased = []
+            let keys = Object.keys(snap.val());
+            keys.forEach(key => {
+              this.purchased.unshift({
+                type: myObj[key].Type,
+                date: myObj[key].Date,
+                time: myObj[key].Time,
+                amount: myObj[key].Cost
+              })
+            });
+          }
+        });
+    },
+    searchedData() {
+      firebase
+        .database()
+        .ref("History/Search/" + this.$store.getters.user.uid)
+        .on("value", snap => {
+          let myObj = snap.val();
+          if (myObj !== null) {
+            this.searched = []
+            let keys = Object.keys(snap.val());
+            keys.forEach(key => {
+              this.searched.unshift({
+                title: myObj[key].Title,
+                date: myObj[key].Date,
+                time: myObj[key].Time
+              })
+            });
+          }
+        });
+    }
+  },
 
   mounted() {},
 

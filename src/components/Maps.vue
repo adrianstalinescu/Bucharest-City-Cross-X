@@ -29,6 +29,7 @@
 
 <script>
 /* eslint-disable */
+import firebase from "@/firebase";
 import VueGoogleAutocomplete from "vue-google-autocomplete";
 export default {
   name: "Maps",
@@ -75,6 +76,26 @@ export default {
   },
 
   methods: {
+    curday(sp) {
+      let today = new Date();
+      let dd = today.getDate();
+      let mm = today.getMonth()+1; 
+      let yyyy = today.getFullYear();
+
+      if(dd<10) dd='0'+dd;
+      if(mm<10) mm='0'+mm;
+      return (dd+sp+mm+sp+yyyy);
+    },
+    curtime() {
+      let today = new Date();
+      let hh = today.getHours()
+      let mm = today.getMinutes()
+
+      if(hh<10) hh='0'+hh;
+      if(mm<10) mm='0'+mm;
+      let time =  hh + ":" + mm
+      return (time)
+    },
     initialize(data) {
       this.map = data.map;
       this.google = data.google;
@@ -317,6 +338,14 @@ export default {
         this.directions.service.route(request, (response, status) => {
           if (status === "OK") {
             this.directions.display.setDirections(response);
+            firebase
+              .database()
+              .ref("History/Search/" + this.$store.getters.user.uid)
+              .push({
+                Title: this.destination.name,
+                Date: this.curday('-'),
+                Time: this.curtime()
+              });
           } else {
             window.alert("Directions request failed due to " + status);
           }

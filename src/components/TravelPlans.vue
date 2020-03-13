@@ -147,7 +147,7 @@
                 outlined
                 color="#168834ba"
                 elevation="0"
-                @click="planPurchase(pr)"
+                @click="planPurchase(pr, planRegularDetails[pr].Cost)"
                 :disabled="planRegularPurchaseDisabled"
               >
                 <span v-if="!planRegularPurchaseDisabled">Purchase</span>
@@ -196,7 +196,7 @@
                 outlined
                 color="#168834ba"
                 elevation="0"
-                @click="planPurchase(pd)"
+                @click="planPurchase(pd, planDiscountDetails[pd].Cost)"
                 :disabled="planDiscountPurchaseDisabled"
               >
                 <span v-if="!planDiscountPurchaseDisabled">Purchase</span>
@@ -685,6 +685,21 @@ export default {
   mounted() {},
 
   methods: {
+    curday(sp) {
+      let today = new Date();
+      let dd = today.getDate();
+      let mm = today.getMonth()+1; 
+      let yyyy = today.getFullYear();
+
+      if(dd<10) dd='0'+dd;
+      if(mm<10) mm='0'+mm;
+      return (dd+sp+mm+sp+yyyy);
+    },
+    curtime() {
+      let today = new Date();
+      let time = today.getHours() + ":" + today.getMinutes()
+      return (time)
+    },
     addCard() {
       let digits = this.cardAddData.Year.toString()
       let year = digits.substr(digits.length - 2)
@@ -791,18 +806,23 @@ export default {
         this.studentNotification = true
         this.studentCard = false
     },
-    planPurchase(plan) {
+    planPurchase(plan, cost) {
       this.purchaseNotification = false
-      const year = new Date().getFullYear()
-      const month = new Date().getMonth() + 1
-      const day = new Date().getDate()
-      let currentDate = day +"/"+ month +"/"+ year
       firebase
         .database()
         .ref("Wallet/" + this.$store.getters.user.uid + "/" + plan)
         .set({
           Activated: 'false',
-          Purchased: currentDate
+          Purchased: this.curday('-')
+        });
+      firebase
+        .database()
+        .ref("History/Purchase/" + this.$store.getters.user.uid + "/")
+        .push({
+          Type: plan,
+          Time: this.curtime(),
+          Date: this.curday('-'),
+          Cost: cost
         });
       this.purchaseNotification = true
     }

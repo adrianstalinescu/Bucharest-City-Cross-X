@@ -458,7 +458,6 @@ export default {
   }
 
 .carriage {
-  display: inline;
   width: 14%;
   height: 2.9rem;
   margin-top: 0.7rem;
