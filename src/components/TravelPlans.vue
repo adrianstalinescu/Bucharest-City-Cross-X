@@ -2,8 +2,7 @@
   <div class="plans-wrapper">
     <h4 style="display:none">{{ cardDetail }}</h4>
     <h4 style="display:none">{{ plansSUT }}</h4>
-    <h4 style="display:none">{{ plansRegularAvailability }}</h4>
-    <h4 style="display:none">{{ plansDiscountAvailability }}</h4>
+    <h4 style="display:none">{{ walletDataCheck }}</h4>
     <v-expansion-panels class="custom-sut-wrapper">
       <v-expansion-panel>
         <v-expansion-panel-header class="custom-sut-header">
@@ -87,7 +86,12 @@
       elevation="0"
     >
       <div class="custom-student-card-pending-grid">
-        <v-avatar elevation="0" color="light-blue lighten-3" size="34" class="center-item ma-1 ml-2">
+        <v-avatar
+          elevation="0"
+          color="light-blue lighten-3"
+          size="34"
+          class="center-item ma-1 ml-2"
+        >
           <v-icon color="light-blue darken-1" size="28">mdi-exclamation-thick</v-icon>
         </v-avatar>
         <span class="student-card-info">
@@ -112,11 +116,7 @@
       </div>
     </v-card>
     <h4 style="display:none">{{ plansRegular }}</h4>
-    <v-expansion-panels
-      v-for="pr in planRegularKeys"
-      :key="pr"
-      class="custom-card-wrapper"
-      >
+    <v-expansion-panels v-for="pr in planRegularKeys" :key="pr" class="custom-card-wrapper">
       <v-expansion-panel>
         <v-expansion-panel-header class="custom-plan-header">
           <div class="mt-1 mb-2">
@@ -148,12 +148,16 @@
                 color="#168834ba"
                 elevation="0"
                 @click="planPurchase(pr, planRegularDetails[pr].Cost)"
-                :disabled="planRegularPurchaseDisabled"
               >
                 <span v-if="!planRegularPurchaseDisabled">Purchase</span>
                 <v-icon v-if="!planRegularPurchaseDisabled" dark right size="20">mdi-cart-outline</v-icon>
                 <span v-if="planRegularPurchaseDisabled">Attention Required</span>
-                <v-icon v-if="planRegularPurchaseDisabled" dark right size="20">mdi-alert-circle-outline</v-icon>
+                <v-icon
+                  v-if="planRegularPurchaseDisabled"
+                  dark
+                  right
+                  size="20"
+                >mdi-alert-circle-outline</v-icon>
               </v-btn>
             </div>
           </div>
@@ -161,11 +165,7 @@
       </v-expansion-panel>
     </v-expansion-panels>
     <h4 style="display:none">{{ plansDiscount }}</h4>
-    <v-expansion-panels
-      v-for="pd in planDiscountKeys"
-      :key="pd"
-      class="custom-card-wrapper"
-    >
+    <v-expansion-panels v-for="pd in planDiscountKeys" :key="pd" class="custom-card-wrapper">
       <v-expansion-panel>
         <v-expansion-panel-header class="custom-plan-header">
           <div class="mt-1 mb-2">
@@ -197,12 +197,16 @@
                 color="#168834ba"
                 elevation="0"
                 @click="planPurchase(pd, planDiscountDetails[pd].Cost)"
-                :disabled="planDiscountPurchaseDisabled"
               >
                 <span v-if="!planDiscountPurchaseDisabled">Purchase</span>
                 <v-icon v-if="!planDiscountPurchaseDisabled" dark right size="20">mdi-cart-outline</v-icon>
                 <span v-if="planDiscountPurchaseDisabled">Attention Required</span>
-                <v-icon v-if="planDiscountPurchaseDisabled" dark right size="20">mdi-alert-circle-outline</v-icon>
+                <v-icon
+                  v-if="planDiscountPurchaseDisabled"
+                  dark
+                  right
+                  size="20"
+                >mdi-alert-circle-outline</v-icon>
               </v-btn>
             </div>
           </div>
@@ -216,7 +220,14 @@
           <v-row>
             <v-col cols="6">
               <v-subheader class="grey--text text--lighten-1 pl-0 subheader">CARDHOLDERS NAME</v-subheader>
-              <v-text-field single-line label="Name" v-model="cardAddData.Name" :rules="[rules.required]" outlined hide-details  />
+              <v-text-field
+                single-line
+                label="Name"
+                v-model="cardAddData.Name"
+                :rules="[rules.required]"
+                outlined
+                hide-details
+              />
             </v-col>
             <v-col cols="6">
               <v-subheader class="grey--text text--lighten-1 pl-0 subheader">CARD NUMBER</v-subheader>
@@ -258,20 +269,21 @@
             </v-col>
             <v-col col="4">
               <v-subheader class="grey--text text--lighten-1 pl-0 subheader">CVV</v-subheader>
-              <v-text-field single-line label="CVV" v-model="cardAddData.CVV" :rules="[rules.required]" maxlength="3" outlined hide-details />
+              <v-text-field
+                single-line
+                label="CVV"
+                v-model="cardAddData.CVV"
+                :rules="[rules.required]"
+                maxlength="3"
+                outlined
+                hide-details
+              />
             </v-col>
           </v-row>
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions class="ma-1">
-          <v-btn
-            fab
-            small
-            dark
-            color="blue-grey lighten-1"
-            elevation="0"
-            @click="cardAdd = false"
-          >
+          <v-btn fab small dark color="blue-grey lighten-1" elevation="0" @click="cardAdd = false">
             <v-icon dark size="25">mdi-close</v-icon>
           </v-btn>
           <v-spacer></v-spacer>
@@ -280,9 +292,6 @@
           </v-btn>
         </v-card-actions>
       </v-card>
-      <v-snackbar v-model="cardAddNotification" :timeout="2000" color="success">
-        <span class="card-modify">The Card has been added</span>
-      </v-snackbar>
     </v-dialog>
     <v-dialog persistent scrollable v-model="cardChange" width="40vw">
       <v-card>
@@ -290,7 +299,14 @@
           <v-row>
             <v-col cols="6">
               <v-subheader class="grey--text text--lighten-1 pl-0 subheader">CARDHOLDERS NAME</v-subheader>
-              <v-text-field single-line label="Name" v-model="cardChangeData.Name" :rules="[rules.required]" outlined hide-details />
+              <v-text-field
+                single-line
+                label="Name"
+                v-model="cardChangeData.Name"
+                :rules="[rules.required]"
+                outlined
+                hide-details
+              />
             </v-col>
             <v-col cols="6">
               <v-subheader class="grey--text text--lighten-1 pl-0 subheader">CARD NUMBER</v-subheader>
@@ -301,7 +317,7 @@
                 mask="credit-card"
                 label="Number"
                 :rules="[rules.required]"
-                 v-model="cardChangeData.Number"
+                v-model="cardChangeData.Number"
                 hide-details
                 class="inputPrice"
               />
@@ -332,7 +348,15 @@
             </v-col>
             <v-col col="4">
               <v-subheader class="grey--text text--lighten-1 pl-0 subheader">CVV</v-subheader>
-              <v-text-field single-line label="CVV" v-model="cardChangeData.CVV" :rules="[rules.required]" maxlength="3" outlined hide-details />
+              <v-text-field
+                single-line
+                label="CVV"
+                v-model="cardChangeData.CVV"
+                :rules="[rules.required]"
+                maxlength="3"
+                outlined
+                hide-details
+              />
             </v-col>
           </v-row>
         </v-card-text>
@@ -354,82 +378,111 @@
           </v-btn>
         </v-card-actions>
       </v-card>
-      <v-snackbar v-model="cardChangeNotification" :timeout="2000" color="success">
-        <span class="card-modify">The Card has been changed</span>
-      </v-snackbar>
     </v-dialog>
     <v-dialog persistent scrollable v-model="studentCard" width="40vw">
       <v-card>
         <v-card-text style="height: 70vh;">
-            <div class="student-upload-wrapper">
-              <input type="file" accept="image/*" style="display:none" ref="studentPicFront" @change="pictureSelectFront">
-              <v-btn
-                :loading="loading"
-                @click.native="loader = 'loading'"
-                @click.exact="studentUploadFront()"
-                elevation="0"
-                class="student-upload-button"
-                >
-                <div class="ma-1">
-                  <div>
-                    <v-icon>mdi-upload</v-icon>
-                  </div>
-                  <div>Upload Front Side</div>
+          <div class="student-upload-wrapper">
+            <input
+              type="file"
+              accept="image/*"
+              style="display:none"
+              ref="studentPicFront"
+              @change="pictureSelectFront"
+            />
+            <v-btn
+              :loading="loading"
+              @click.native="loader = 'loading'"
+              @click.exact="studentUploadFront()"
+              elevation="0"
+              class="student-upload-button"
+            >
+              <div class="ma-1">
+                <div>
+                  <v-icon>mdi-upload</v-icon>
                 </div>
-              </v-btn>
-            </div>
-            <div class="student-upload-wrapper">
-              <input type="file" accept="image/*" style="display:none" ref="studentPicBack" @change="pictureSelectBack">
-              <v-btn
-                :loading="loading"
-                @click.native="loader = 'loading'"
-                @click.exact="studentUploadBack()"
-                elevation="0"
-                class="student-upload-button"
-                >
-                <div class="ma-1">
-                  <div>
-                    <v-icon>mdi-upload</v-icon>
-                  </div>
-                  <div>Upload Back Side</div>
+                <div>Upload Front Side</div>
+              </div>
+            </v-btn>
+          </div>
+          <div class="student-upload-wrapper">
+            <input
+              type="file"
+              accept="image/*"
+              style="display:none"
+              ref="studentPicBack"
+              @change="pictureSelectBack"
+            />
+            <v-btn
+              :loading="loading"
+              @click.native="loader = 'loading'"
+              @click.exact="studentUploadBack()"
+              elevation="0"
+              class="student-upload-button"
+            >
+              <div class="ma-1">
+                <div>
+                  <v-icon>mdi-upload</v-icon>
                 </div>
-              </v-btn>
-            </div>
-            <div class="student-upload-wrapper">
-              <input type="file" accept="image/*" style="display:none" ref="studentPicSelfie" @change="pictureSelectSelfie">
-              <v-btn
-                :loading="loading"
-                @click.native="loader = 'loading'"
-                @click.exact="studentUploadSelfie()"
-                elevation="0"
-                class="student-upload-button"
-                >
-                <div class="ma-1">
-                  <div>
-                    <v-icon>mdi-upload</v-icon>
-                  </div>
-                  <div>Upload Selfie with ID</div>
+                <div>Upload Back Side</div>
+              </div>
+            </v-btn>
+          </div>
+          <div class="student-upload-wrapper">
+            <input
+              type="file"
+              accept="image/*"
+              style="display:none"
+              ref="studentPicSelfie"
+              @change="pictureSelectSelfie"
+            />
+            <v-btn
+              :loading="loading"
+              @click.native="loader = 'loading'"
+              @click.exact="studentUploadSelfie()"
+              elevation="0"
+              class="student-upload-button"
+            >
+              <div class="ma-1">
+                <div>
+                  <v-icon>mdi-upload</v-icon>
                 </div>
-              </v-btn>
-            </div>
-            <div class="student-image-wrapper">
-              <img :src="studentFront" class="student-id-image">
-            </div>
-            <div class="student-image-wrapper">
-              <img :src="studentBack" class="student-id-image">
-            </div>
-            <div class="student-image-wrapper">
-              <img :src="studentSelfie" class="student-id-image">
-            </div>
+                <div>Upload Selfie with ID</div>
+              </div>
+            </v-btn>
+          </div>
+          <div class="student-image-wrapper">
+            <img :src="studentFront" class="student-id-image" />
+          </div>
+          <div class="student-image-wrapper">
+            <img :src="studentBack" class="student-id-image" />
+          </div>
+          <div class="student-image-wrapper">
+            <img :src="studentSelfie" class="student-id-image" />
+          </div>
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions class="ma-1">
-          <v-btn fab small dark color="blue-grey lighten-1" elevation="0" @click="studentCard = false">
+          <v-btn
+            fab
+            small
+            dark
+            color="blue-grey lighten-1"
+            elevation="0"
+            @click="studentCard = false"
+          >
             <v-icon dark size="25">mdi-close</v-icon>
           </v-btn>
           <v-spacer></v-spacer>
           <h4 style="display:none">{{ studentSubmitDisable }}</h4>
-          <v-btn fab small elevation="0" color="success" @click="studentSubmit()" :disabled="studentSubmitDisabled">
+          <v-btn
+            fab
+            small
+            elevation="0"
+            color="success"
+            @click="studentSubmit()"
+            :disabled="studentSubmitDisabled"
+          >
             <v-icon dark>mdi-check</v-icon>
           </v-btn>
         </v-card-actions>
@@ -440,6 +493,15 @@
     </v-snackbar>
     <v-snackbar v-model="purchaseNotification" :timeout="1500" color="success">
       <span class="card-modify">The plan was added to your wallet</span>
+    </v-snackbar>
+    <v-snackbar v-model="purchaseError.status" :timeout="3000" color="error">
+      <span class="card-modify">{{purchaseError.reason}}</span>
+    </v-snackbar>
+    <v-snackbar v-model="cardAddNotification" :timeout="2000" color="success">
+      <span class="card-modify">The Card has been added</span>
+    </v-snackbar>
+    <v-snackbar v-model="cardChangeNotification" :timeout="2000" color="success">
+      <span class="card-modify">The Card has been changed</span>
     </v-snackbar>
   </div>
 </template>
@@ -499,6 +561,15 @@ export default {
         "12"
       ],
       purchaseNotification: false,
+      purchaseError: {
+        status: false,
+        reason: null
+      },
+      walletData: {
+        status: false,
+        length: false,
+        plan: null
+      },
       studentCard: false,
       studentSubmitDisabled: true,
       studentNotification: false,
@@ -513,11 +584,11 @@ export default {
       studentID: null,
       studentValid: null,
       rules: {
-        required: value => !!value || "Required.",
+        required: value => !!value || "Required."
       }
     };
   },
-
+  
   created() {},
 
   watch: {},
@@ -561,8 +632,7 @@ export default {
         .database()
         .ref("CardDetails/" + this.$store.getters.user.uid)
         .on("value", snap => {
-          if(snap.val() == null)
-          {
+          if (snap.val() == null) {
             this.card = false;
           } else {
             this.card = true;
@@ -587,8 +657,7 @@ export default {
         .ref("Users/" + this.$store.getters.user.uid + "/Student")
         .on("value", snap => {
           let myObj = snap.val();
-          if(myObj !== null)
-          { 
+          if (myObj !== null) {
             this.isStudent = myObj.Status;
             this.studentID = myObj.ID;
             this.studentValid = myObj.Valid;
@@ -608,76 +677,40 @@ export default {
       this.YearList = years.reverse();
     },
     studentSubmitDisable() {
-      if(this.studentFront !== null)
-      {
-        if(this.studentBack !== null)
-        {
-          if(this.studentSelfie !== null)
-          {
-            this.studentSubmitDisabled = false
+      if (this.studentFront !== null) {
+        if (this.studentBack !== null) {
+          if (this.studentSelfie !== null) {
+            this.studentSubmitDisabled = false;
           } else {
-            this.studentSubmitDisabled = true
+            this.studentSubmitDisabled = true;
           }
         } else {
-          this.studentSubmitDisabled = true
+          this.studentSubmitDisabled = true;
         }
       } else {
-        this.studentSubmitDisabled = true
-      };
+        this.studentSubmitDisabled = true;
+      }
     },
-    plansRegularAvailability() {
+    walletDataCheck() {
       firebase
         .database()
         .ref("Wallet/" + this.$store.getters.user.uid)
         .on("value", snap => {
           let myObj = snap.val();
-          if(this.card !== false)
-          {
-            if(myObj !== null)
-            { 
+            if (myObj !== null) {
+              this.walletData.status = true
               let keys = Object.keys(snap.val());
               if(keys.length >= 2)
               {
-                this.planRegularPurchaseDisabled = true
+                this.walletData.length = true
               } else {
-                this.planRegularPurchaseDisabled = false
+                this.walletData.length = false
+                this.walletData.plan = keys[0]
               }
             } else {
-              this.planRegularPurchaseDisabled = false
+              this.walletData.status = false
             }
-          } else {
-            this.planRegularPurchaseDisabled = true
-          }
-        });
-    },
-    plansDiscountAvailability() {
-      firebase
-        .database()
-        .ref("Wallet/" + this.$store.getters.user.uid)
-        .on("value", snap => {
-          let myObj = snap.val();
-          if(this.card !== false)
-          {
-            if(this.isStudent == 'approved')
-            {
-              if(myObj !== null)
-              { 
-                let keys = Object.keys(snap.val());
-                if(keys.length >= 2)
-                {
-                  this.planDiscountPurchaseDisabled = true
-                } else {
-                  this.planDiscountPurchaseDisabled = false
-                }
-              } else {
-                this.planDiscountPurchaseDisabled = false
-              }
-            } else {
-              this.planDiscountPurchaseDisabled = true
-            }
-          } else {
-            this.planDiscountPurchaseDisabled = true
-          }
+
         });
     }
   },
@@ -688,143 +721,276 @@ export default {
     curday(sp) {
       let today = new Date();
       let dd = today.getDate();
-      let mm = today.getMonth()+1; 
+      let mm = today.getMonth() + 1;
       let yyyy = today.getFullYear();
-
-      if(dd<10) dd='0'+dd;
-      if(mm<10) mm='0'+mm;
-      return (dd+sp+mm+sp+yyyy);
+      if (dd < 10) dd = "0" + dd;
+      if (mm < 10) mm = "0" + mm;
+      return dd + sp + mm + sp + yyyy;
     },
     curtime() {
-      let today = new Date();
-      let time = today.getHours() + ":" + today.getMinutes()
-      return (time)
+      let today = new Date()
+      let hh = today.getHours()
+      let mm = today.getMinutes()
+      if (hh < 10) hh = "0" + hh;
+      if (mm < 10) mm = "0" + mm;
+      let time = hh+ ":" + mm;
+      return time;
     },
     addCard() {
-      let digits = this.cardAddData.Year.toString()
-      let year = digits.substr(digits.length - 2)
-      let expiry = this.cardAddData.Month + "/" + year
+      let digits = this.cardAddData.Year.toString();
+      let year = digits.substr(digits.length - 2);
+      let expiry = this.cardAddData.Month + "/" + year;
       firebase
         .database()
         .ref("CardDetails/" + this.$store.getters.user.uid)
         .set({
-           CardHolder: this.cardAddData.Name,
-           CardNumber: this.cardAddData.Number,
-           CVV: this.cardAddData.CVV,
-           Expiry: expiry
+          CardHolder: this.cardAddData.Name,
+          CardNumber: this.cardAddData.Number,
+          CVV: this.cardAddData.CVV,
+          Expiry: expiry
         });
       this.cardAddNotification = true;
+      this.cardAdd = false
     },
     changeCard() {
-      let digits = this.cardChangeData.Year.toString()
-      let year = digits.substr(digits.length - 2)
-      let expiry = this.cardChangeData.Month + "/" + year
+      let digits = this.cardChangeData.Year.toString();
+      let year = digits.substr(digits.length - 2);
+      let expiry = this.cardChangeData.Month + "/" + year;
       firebase
         .database()
         .ref("CardDetails/" + this.$store.getters.user.uid)
         .update({
-           CardHolder: this.cardChangeData.Name,
-           CardNumber: this.cardChangeData.Number,
-           CVV: this.cardChangeData.CVV,
-           Expiry: expiry
+          CardHolder: this.cardChangeData.Name,
+          CardNumber: this.cardChangeData.Number,
+          CVV: this.cardChangeData.CVV,
+          Expiry: expiry
         });
-      this.cardChangeNotification = true;
+      this.cardChangeNotification = true
+      this.cardChange = false
     },
     studentUploadFront() {
-      this.$refs.studentPicFront.click()
+      this.$refs.studentPicFront.click();
     },
-    pictureSelectFront (payload) {
-      const selectedFile = payload.target.files[0]
-      const fileReader = new FileReader()
-      fileReader.addEventListener('load', () => {
-        this.imageUrl = fileReader.result
-      })
-      fileReader.readAsDataURL(selectedFile)
-      this.imageUrl = selectedFile
-      const uploadTask = firebase.storage().ref('/' + this.$store.getters.user.uid + '/studentID/front').put(selectedFile)
-      uploadTask.on('state_changed', snapshot => {
-      }, error => {
-        console.log(error)
-      }, () => {
-        var downloadURL = uploadTask.snapshot.ref.getDownloadURL()
-        downloadURL.then(downloadURL => {
-          this.studentFront = downloadURL
-        })
-      })
+    pictureSelectFront(payload) {
+      const selectedFile = payload.target.files[0];
+      const fileReader = new FileReader();
+      fileReader.addEventListener("load", () => {
+        this.imageUrl = fileReader.result;
+      });
+      fileReader.readAsDataURL(selectedFile);
+      this.imageUrl = selectedFile;
+      const uploadTask = firebase
+        .storage()
+        .ref("/" + this.$store.getters.user.uid + "/studentID/front")
+        .put(selectedFile);
+      uploadTask.on(
+        "state_changed",
+        snapshot => {},
+        error => {
+          console.log(error);
+        },
+        () => {
+          var downloadURL = uploadTask.snapshot.ref.getDownloadURL();
+          downloadURL.then(downloadURL => {
+            this.studentFront = downloadURL;
+          });
+        }
+      );
     },
     studentUploadBack() {
-      this.$refs.studentPicBack.click()
+      this.$refs.studentPicBack.click();
     },
-    pictureSelectBack (payload) {
-      const selectedFile = payload.target.files[0]
-      const fileReader = new FileReader()
-      fileReader.addEventListener('load', () => {
-        this.imageUrl = fileReader.result
-      })
-      fileReader.readAsDataURL(selectedFile)
-      this.imageUrl = selectedFile
-      const uploadTask = firebase.storage().ref('/' + this.$store.getters.user.uid + '/studentID/back').put(selectedFile)
-      uploadTask.on('state_changed', snapshot => {
-      }, error => {
-        console.log(error)
-      }, () => {
-        var downloadURL = uploadTask.snapshot.ref.getDownloadURL()
-        downloadURL.then(downloadURL => {
-          this.studentBack = downloadURL
-        })
-      })
+    pictureSelectBack(payload) {
+      const selectedFile = payload.target.files[0];
+      const fileReader = new FileReader();
+      fileReader.addEventListener("load", () => {
+        this.imageUrl = fileReader.result;
+      });
+      fileReader.readAsDataURL(selectedFile);
+      this.imageUrl = selectedFile;
+      const uploadTask = firebase
+        .storage()
+        .ref("/" + this.$store.getters.user.uid + "/studentID/back")
+        .put(selectedFile);
+      uploadTask.on(
+        "state_changed",
+        snapshot => {},
+        error => {
+          console.log(error);
+        },
+        () => {
+          var downloadURL = uploadTask.snapshot.ref.getDownloadURL();
+          downloadURL.then(downloadURL => {
+            this.studentBack = downloadURL;
+          });
+        }
+      );
     },
     studentUploadSelfie() {
-      this.$refs.studentPicSelfie.click()
+      this.$refs.studentPicSelfie.click();
     },
-    pictureSelectSelfie (payload) {
-      const selectedFile = payload.target.files[0]
-      const fileReader = new FileReader()
-      fileReader.addEventListener('load', () => {
-        this.imageUrl = fileReader.result
-      })
-      fileReader.readAsDataURL(selectedFile)
-      this.imageUrl = selectedFile
-      const uploadTask = firebase.storage().ref('/' + this.$store.getters.user.uid + '/studentID/selfie').put(selectedFile)
-      uploadTask.on('state_changed', snapshot => {
-      }, error => {
-        console.log(error)
-      }, () => {
-        var downloadURL = uploadTask.snapshot.ref.getDownloadURL()
-        downloadURL.then(downloadURL => {
-          this.studentSelfie = downloadURL
-        })
-      })
+    pictureSelectSelfie(payload) {
+      const selectedFile = payload.target.files[0];
+      const fileReader = new FileReader();
+      fileReader.addEventListener("load", () => {
+        this.imageUrl = fileReader.result;
+      });
+      fileReader.readAsDataURL(selectedFile);
+      this.imageUrl = selectedFile;
+      const uploadTask = firebase
+        .storage()
+        .ref("/" + this.$store.getters.user.uid + "/studentID/selfie")
+        .put(selectedFile);
+      uploadTask.on(
+        "state_changed",
+        snapshot => {},
+        error => {
+          console.log(error);
+        },
+        () => {
+          var downloadURL = uploadTask.snapshot.ref.getDownloadURL();
+          downloadURL.then(downloadURL => {
+            this.studentSelfie = downloadURL;
+          });
+        }
+      );
     },
     studentSubmit() {
       firebase
         .database()
         .ref("Users/" + this.$store.getters.user.uid + "/Student")
         .set({
-          Status: 'pending'
+          Status: "pending"
         });
-        this.studentNotification = true
-        this.studentCard = false
+      this.studentNotification = true;
+      this.studentCard = false;
     },
     planPurchase(plan, cost) {
-      this.purchaseNotification = false
-      firebase
-        .database()
-        .ref("Wallet/" + this.$store.getters.user.uid + "/" + plan)
-        .set({
-          Activated: 'false',
-          Purchased: this.curday('-')
-        });
-      firebase
-        .database()
-        .ref("History/Purchase/" + this.$store.getters.user.uid + "/")
-        .push({
-          Type: plan,
-          Time: this.curtime(),
-          Date: this.curday('-'),
-          Cost: cost
-        });
-      this.purchaseNotification = true
+      let card = this.card
+      let student = this.isStudent
+      let wallet = this.walletData.status
+      let walletKeys = this.walletData.length
+      let walletPlan = this.walletData.plan
+      this.purchaseError.status = false
+      this.purchaseError.message = null
+      if (wallet === true) {
+        if (walletKeys === true) {
+          this.purchaseError.status = true;
+          this.purchaseError.reason = "You reached the limit of Plans in the Wallet"
+        } else {
+          if(card === true)
+          {
+            if(walletPlan === plan)
+            {
+              this.purchaseError.status = true
+              this.purchaseError.reason = "Can't have 2 Plans of the same Type in the Wallet"
+            } else {
+              if(plan === "Monthly Student")
+              {
+                if(student === "approved")
+                {
+                  this.purchaseNotification = false;
+                  firebase
+                    .database()
+                    .ref("Wallet/" + this.$store.getters.user.uid + "/" + plan)
+                    .set({
+                      Activated: "false",
+                      Purchased: this.curday("-")
+                    });
+                  firebase
+                    .database()
+                    .ref("History/Purchase/" + this.$store.getters.user.uid + "/")
+                    .push({
+                      Type: plan,
+                      Time: this.curtime(),
+                      Date: this.curday("-"),
+                      Cost: cost
+                    });
+                  this.purchaseNotification = true;
+                } else {
+                  this.purchaseError.status = true
+                  this.purchaseError.reason = "You don't have an approved student ID"
+                }
+              } else {
+                this.purchaseNotification = false
+                firebase
+                  .database()
+                  .ref("Wallet/" + this.$store.getters.user.uid + "/" + plan)
+                  .set({
+                    Activated: "false",
+                    Purchased: this.curday("-")
+                  });
+                firebase
+                  .database()
+                  .ref("History/Purchase/" + this.$store.getters.user.uid + "/")
+                  .push({
+                    Type: plan,
+                    Time: this.curtime(),
+                    Date: this.curday("-"),
+                    Cost: cost
+                  });
+                this.purchaseNotification = true
+              }
+            }
+          } else {
+            this.purchaseError.status = true
+            this.purchaseError.reason = "You don't have a Card linked to your Account"
+          }
+        }
+      } else {
+        if(card === true)
+          {
+            if(plan === "Monthly Student")
+            {
+              if(student === "approved")
+              {
+                this.purchaseNotification = false;
+                firebase
+                  .database()
+                  .ref("Wallet/" + this.$store.getters.user.uid + "/" + plan)
+                  .set({
+                    Activated: "false",
+                    Purchased: this.curday("-")
+                  });
+                firebase
+                  .database()
+                  .ref("History/Purchase/" + this.$store.getters.user.uid + "/")
+                  .push({
+                    Type: plan,
+                    Time: this.curtime(),
+                    Date: this.curday("-"),
+                    Cost: cost
+                  });
+                this.purchaseNotification = true;
+              } else {
+                this.purchaseError.status = true
+                this.purchaseError.reason = "You don't have an approved student ID"
+              }
+            } else {
+              this.purchaseNotification = false
+              firebase
+                .database()
+                .ref("Wallet/" + this.$store.getters.user.uid + "/" + plan)
+                .set({
+                  Activated: "false",
+                  Purchased: this.curday("-")
+                });
+              firebase
+                .database()
+                .ref("History/Purchase/" + this.$store.getters.user.uid + "/")
+                .push({
+                  Type: plan,
+                  Time: this.curtime(),
+                  Date: this.curday("-"),
+                  Cost: cost
+                });
+              this.purchaseNotification = true
+            }
+          } else {
+            this.purchaseError.status = true
+            this.purchaseError.reason = "You don't have a Card linked to your Account"
+          }
+      }
     }
   }
 };
@@ -839,7 +1005,6 @@ export default {
   top: 0;
   background: url("https://picsum.photos/1920/1080?random");
 }
-
 .custom-card-grid {
   margin-left: auto;
   margin-right: auto;
@@ -847,7 +1012,6 @@ export default {
   display: grid;
   grid-template-columns: 1fr 5fr 3fr 3.5fr;
 }
-
 .custom-card-add-grid {
   margin-left: auto;
   margin-right: auto;
@@ -855,7 +1019,6 @@ export default {
   display: grid;
   grid-template-columns: 1fr 8fr 3.5fr;
 }
-
 .custom-card-wrapper {
   width: 40vw;
   margin-top: 2vh;
@@ -864,7 +1027,6 @@ export default {
   margin-right: auto;
   height: auto;
 }
-
 .custom-sut-wrapper {
   margin-top: 2vh;
   margin-bottom: 2vh;
@@ -873,43 +1035,35 @@ export default {
   width: 53vw;
   height: auto;
 }
-
 .custom-sut-header {
   min-height: 45px;
   padding: 0px 13px 0px 11px;
 }
-
 .custom-plan-header {
   min-height: 45px;
   padding: 0px 13px 0px 11px;
 }
-
 .custom-card-button {
   align-self: center;
   justify-self: end;
 }
-
 .card-info {
   font-weight: 600;
   font-size: 1.1rem;
   align-self: center;
   justify-self: center;
 }
-
 .custom-plan-chip-wrap {
   margin-top: 5px;
 }
-
 .custom-plan-purchase-wrap {
   display: flex;
   justify-content: center;
   margin-top: 10px;
 }
-
 .custom-plan-button {
   align-self: center;
 }
-
 .custom-plan-title {
   padding: 0px;
   margin-bottom: 0px;
@@ -919,7 +1073,6 @@ export default {
   width: -webkit-fill-available;
   font-weight: 600;
 }
-
 .custom-sut-title {
   padding: 0px;
   margin-bottom: 0px;
@@ -931,14 +1084,12 @@ export default {
   font-weight: 600;
   font-size: 1.2rem;
 }
-
 .plan-info {
   font-weight: 500;
   font-size: 0.9rem;
   align-self: center;
   justify-self: center;
 }
-
 .custom-student-card-grid {
   margin-left: auto;
   margin-right: auto;
@@ -946,7 +1097,6 @@ export default {
   display: grid;
   grid-template-columns: 0.9fr 8fr 2fr;
 }
-
 .custom-student-card-pending-grid {
   margin-left: auto;
   margin-right: auto;
@@ -954,7 +1104,6 @@ export default {
   display: grid;
   grid-template-columns: 1fr 10fr;
 }
-
 .custom-student-card-approved-grid {
   margin-left: auto;
   margin-right: auto;
@@ -962,67 +1111,56 @@ export default {
   display: grid;
   grid-template-columns: 1fr 5fr 5fr;
 }
-
 .custom-student-card-sut {
   margin-left: auto;
   margin-right: auto;
   height: auto;
 }
-
 .student-card-info {
   font-weight: 600;
   font-size: 1.3rem;
   align-self: center;
   justify-self: center;
 }
-
 .student-card-details {
   font-weight: 600;
   font-size: 1.2rem;
   align-self: center;
   justify-self: center;
 }
-
 .center-item {
   align-self: center;
   justify-self: center;
 }
-
 .inputPrice input::-webkit-outer-spin-button,
 .inputPrice input::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
-
 .card-modify {
   margin-left: auto;
   margin-right: auto;
   font-size: 1rem;
 }
-
 .student-upload-wrapper {
   width: 100%;
   display: flex;
   margin-top: 2vh;
 }
-
 .student-upload-button {
   height: 50px !important;
   margin-left: auto;
   margin-right: auto;
 }
-
 .student-id-image {
   display: block;
   margin-left: auto;
   margin-right: auto;
   max-height: 150px;
 }
-
 .student-image-wrapper {
-  width:100%;
+  width: 100%;
   max-height: 150px;
   margin-top: 2vh;
   margin-bottom: 2vh;
 }
-
 </style>
