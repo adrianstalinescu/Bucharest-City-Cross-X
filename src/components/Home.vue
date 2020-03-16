@@ -201,6 +201,9 @@ export default {
   },
 
   computed: {
+    user () {
+      return this.$store.getters.user
+    },
     notificationsKeys() {
       return this.$store.getters.notificationsCount;
     },

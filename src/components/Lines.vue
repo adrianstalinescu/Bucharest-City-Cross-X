@@ -66,7 +66,7 @@ export default {
   name: "Lines",
   data() {
     return {
-      refresh: null,
+      refresh: '',
       linesKeys: [],
       lines: null,
       defaultLocation: {
@@ -324,47 +324,76 @@ export default {
         lng: centerLng,
         zoom: centerZoom
       }
-      this.vehiclesData = []
+      this.callerSTB(id,direction)
       clearInterval(this.refresh)
-      this.refresh = setInterval(()=> {
-        (async () => {
-          const resp = await fetch("https://info.stbsa.ro/rp/api/lines/"+id+"/vehicles/"+direction+"?lang=ro");
-          this.vehiclesData = []
-          let vehicles = await resp.json();
-          vehicles.forEach(vehicle => {
-            this.vehiclesData.push(vehicle)
-          });
-        })();
-        this.updateVehicles(this.vehiclesData);
-        }, 3000);
+      this.refresh = setInterval(() => {
+      let vehicles = []
+      const callSTB = new XMLHttpRequest();
+      callSTB.open("GET", "https://info.stbsa.ro/rp/api/lines/"+id+"/vehicles/"+direction+"?lang=ro", true);
+      callSTB.send()
+      callSTB.onload = () => {
+        vehicles = JSON.parse(callSTB.responseText)
+        if(vehicles !== null)
+        {
+          for(i=0; i<this.markers.length; i++){
+            this.markers[i].setMap(null);
+          }
+          this.markers = []
+          let infowindow = new google.maps.InfoWindow();
+          let i;
+          var image = {
+            url: require('@/assets/vehicles/tram.png')
+          }
+          for (i = 0; i < vehicles.length; i++) {
+            let marker = new google.maps.Marker({
+              position: new google.maps.LatLng(vehicles[i].lat, vehicles[i].lng),
+              icon: image,
+              map: this.map
+            });
+            this.markers.push(marker)
+            google.maps.event.addListener(marker, 'click', (function(marker, i) {
+              return function() {
+                infowindow.setContent('<span style="font-weight: 500;">' + vehicles[i].id + '</span>');
+                infowindow.open(this.map, marker);
+              }
+            })(marker, i));
+          }
+        }
+      }
+      }, 7000);
     },
-    updateVehicles(vehicles) {
-      if(vehicles !== null)
-      {
-        for(i=0; i<this.markers.length; i++){
-          this.markers[i].setMap(null);
-        }
-        this.markers = []
-        let infowindow = new google.maps.InfoWindow();
-        let i;
-        var image = {
-          url: require('@/assets/vehicles/tram.png')
-        }
-        for (i = 0; i < vehicles.length; i++) {
-          let marker = new google.maps.Marker({
-            position: new google.maps.LatLng(vehicles[i].lat, vehicles[i].lng),
-            icon: image,
-            map: this.map
-          });
-          this.markers.push(marker)
-          google.maps.event.addListener(marker, 'click', (function(marker, i) {
-              console.log(marker)
-              console.log(vehicles[i].id)
-            return function() {
-              infowindow.setContent('<span style="font-weight: 500;">' + vehicles[i].id + '</span>');
-              infowindow.open(this.map, marker);
-            }
-          })(marker, i));
+    callerSTB(id, direction) {
+      let vehicles = []
+      const callSTB = new XMLHttpRequest();
+      callSTB.open("GET", "https://info.stbsa.ro/rp/api/lines/"+id+"/vehicles/"+direction+"?lang=ro", true);
+      callSTB.send()
+      callSTB.onload = () => {
+        vehicles = JSON.parse(callSTB.responseText);
+        if(vehicles !== null)
+        {
+          for(i=0; i<this.markers.length; i++){
+            this.markers[i].setMap(null);
+          }
+          this.markers = []
+          let infowindow = new google.maps.InfoWindow();
+          let i;
+          var image = {
+            url: require('@/assets/vehicles/tram.png')
+          }
+          for (i = 0; i < vehicles.length; i++) {
+            let marker = new google.maps.Marker({
+              position: new google.maps.LatLng(vehicles[i].lat, vehicles[i].lng),
+              icon: image,
+              map: this.map
+            });
+            this.markers.push(marker)
+            google.maps.event.addListener(marker, 'click', (function(marker, i) {
+              return function() {
+                infowindow.setContent('<span style="font-weight: 500;">' + vehicles[i].id + '</span>');
+                infowindow.open(this.map, marker);
+              }
+            })(marker, i));
+          }
         }
       }
     }

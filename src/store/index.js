@@ -23,21 +23,19 @@ export default new Vuex.Store({
         },
     },
     actions: {
-        AuthChange({
-            commit
-        }) {
+        AuthChange({commit}) {
             firebase.auth().onAuthStateChanged((user) => {
                 if (user) {
                     commit('setUser', user)
                     firebase.database().ref('Users/' + this.state.user.uid)
                         .on('value', snap => {
                             const myObj = snap.val()
-                            if(myObj.Notifications) {
-                            commit('setNotificationsCount', Object.keys(myObj.Notifications))
-                            commit('setNotifications', myObj.Notifications)
+                            if (myObj.Notifications) {
+                                commit('setNotificationsCount', Object.keys(myObj.Notifications))
+                                commit('setNotifications', myObj.Notifications)
                             } else {
-                            commit('setNotificationsCount', null)
-                            commit('setNotifications', null)
+                                commit('setNotificationsCount', null)
+                                commit('setNotifications', null)
                             }
                         }, function (error) {
                             console.log('Error: ' + error.message)

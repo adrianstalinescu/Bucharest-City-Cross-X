@@ -1,5 +1,8 @@
 import Vue from 'vue'
+import AuthGuard from '../router/AuthGuard'
 import Router from 'vue-router'
+import Entrance from '../components/Entrance'
+import Check from '../components/Check'
 import Home from '../components/Home'
 import Maps from '../components/Maps'
 import Wallet from '../components/Wallet'
@@ -8,44 +11,62 @@ import History from '../components/History'
 import Lines from '../components/Lines'
 import Stations from '../components/Stations'
 
+
 Vue.use(Router)
 
 export default new Router({
     routes: [
         {
             path: '/',
+            name: 'Check',
+            component: Check
+        },
+        {
+            path: '/entrance',
+            name: 'Entrance',
+            component: Entrance
+        },
+        {
+            path: '/home',
             name: 'Home',
-            component: Home
+            component: Home,
+            beforeEnter: AuthGuard
         },
         {
             path: '/map',
             name: 'Map',
-            component: Maps
+            component: Maps,
+            beforeEnter: AuthGuard
         },
         {
             path: '/wallet',
             name: 'Wallet',
-            component: Wallet
+            component: Wallet,
+            beforeEnter: AuthGuard
         },
         {
             path: '/plans',
             name: 'Plans',
-            component: TravelPlans
+            component: TravelPlans,
+            beforeEnter: AuthGuard
         },
         {
             path: '/history',
             name: 'History',
-            component: History
+            component: History,
+            beforeEnter: AuthGuard
         },
         {
             path: '/lines',
             name: 'Lines',
-            component: Lines
+            component: Lines,
+            beforeEnter: AuthGuard
         },
         {
             path: '/stations',
             name: 'Stations',
-            component: Stations
+            component: Stations,
+            beforeEnter: AuthGuard
         },
     ],
     mode: "history"
