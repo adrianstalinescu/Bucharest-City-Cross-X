@@ -62,13 +62,15 @@
           <v-btn
             fab
             dark
-            color="grey"
+            color="blue-grey"
             elevation="0"
             class="custom-profile-avatar"
             @click="profile = true"
           >
+            <v-icon v-if="!user.profilePicture" dark size="25">mdi-account-circle</v-icon>
             <img
-              src="https://sunrift.com/wp-content/uploads/2014/12/Blake-profile-photo-square.jpg"
+              v-if="user.profilePicture"
+              :src="user.profilePicture"
               style="border-radius: 50%;"
               width="38px"
             />
@@ -79,41 +81,32 @@
     <v-content>
       <v-dialog persistent scrollable v-model="profile" width="40vw">
         <v-card>
-          <v-row justify="space-around" class="ma-1">
-            <v-btn
-              fab
-              small
-              dark
-              color="blue-grey lighten-1"
-              elevation="0"
-              @click="profile = false"
-            >
-              <v-icon dark size="25">mdi-close</v-icon>
-            </v-btn>
-            <v-spacer></v-spacer>
-            <v-btn
-              rounded
-              dark
-              color="error"
-              elevation="0"
-              class="justify-center"
-              @click="SignOut()"
-            >
-              Log Out
-              <v-icon dark right size="20">mdi-logout</v-icon>
-            </v-btn>
-          </v-row>
-          <v-divider></v-divider>
           <v-card-text style="height: 70vh;">
             <v-row justify="space-around" class="mt-3">
-              <v-avatar width="150px" height="150px" color="teal">
-                <img
-                  src="https://sunrift.com/wp-content/uploads/2014/12/Blake-profile-photo-square.jpg"
-                />
+              <v-avatar v-if="!user.profilePicture" width="150px" height="150px" color="blue-grey">
+                <v-icon dark size="85">mdi-account-circle</v-icon>
+              </v-avatar>
+              <v-avatar v-if="user.profilePicture" width="150px" height="150px" color="white">
+                <img width="151px" height="151px" v-if="user.profilePicture" :src="user.profilePicture"/>
               </v-avatar>
             </v-row>
             <v-row justify="space-around">
-              <v-btn color="blue-grey" class="ma-4 white--text">
+              <input
+                type="file"
+                accept="image/*"
+                style="display:none"
+                ref="profilePicture"
+                @change="pictureSelect"
+              />
+              <v-btn
+                :loading="loading"
+                @click.native="loader = 'loading'"
+                @click.exact="profilePictureUpdate()"
+                elevation="0"
+                rounded
+                color="blue-grey"
+                class="ma-4 white--text"
+              >
                 Upload
                 <v-icon right dark>mdi-cloud-upload</v-icon>
               </v-btn>
@@ -128,7 +121,7 @@
             <v-row justify="space-around">
               <v-btn elevation="0" color="grey darken-1" @click="gdpr = true" class="white--text">
                 GDPR and Privacy Policy
-                <v-icon right dark>mdi-library-books</v-icon>
+                <v-icon right dark size="20">mdi-book-open-outline</v-icon>
               </v-btn>
             </v-row>
             <v-row justify="space-around">
@@ -137,6 +130,33 @@
               </v-btn>
             </v-row>
           </v-card-text>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-row justify="space-around" class="ma-1">
+              <v-btn
+                fab
+                small
+                dark
+                color="blue-grey lighten-1"
+                elevation="0"
+                @click="profile = false"
+              >
+                <v-icon dark size="25">mdi-close</v-icon>
+              </v-btn>
+              <v-spacer></v-spacer>
+              <v-btn
+                rounded
+                dark
+                color="error"
+                elevation="0"
+                class="justify-center"
+                @click="SignOut()"
+              >
+                Log Out
+                <v-icon dark right size="20">mdi-logout</v-icon>
+              </v-btn>
+            </v-row>
+          </v-card-actions>
         </v-card>
       </v-dialog>
       <v-dialog persistent scrollable v-model="gdpr" v-if="profile" width="40vw">
@@ -158,6 +178,7 @@
 </template>
 
 <script>
+import firebase from '@/firebase'
 /* eslint-disable */
 export default {
   name: "App",
@@ -169,6 +190,11 @@ export default {
         temperature: null
       },
       profile: false,
+      user: {
+        profilePicture: null
+      },
+      profilePicture: null,
+      loading: false,
       gdpr: false
     };
   },
@@ -355,6 +381,35 @@ export default {
   mounted() {},
 
   methods: {
+    pictureSelect(payload) {
+      const selectedFile = payload.target.files[0];
+      const fileReader = new FileReader();
+      fileReader.addEventListener("load", () => {
+        this.imageUrl = fileReader.result;
+      });
+      fileReader.readAsDataURL(selectedFile);
+      this.imageUrl = selectedFile;
+      const uploadTask = firebase
+        .storage()
+        .ref("/" + this.$store.getters.user.uid + "/profile/profile")
+        .put(selectedFile);
+      uploadTask.on(
+        "state_changed",
+        snapshot => {},
+        error => {
+          console.log(error);
+        },
+        () => {
+          var downloadURL = uploadTask.snapshot.ref.getDownloadURL();
+          downloadURL.then(downloadURL => {
+            this.user.profilePicture = downloadURL;
+          });
+        }
+      );
+    },
+    profilePictureUpdate() {
+      this.$refs.profilePicture.click();
+    },
     SignOut() {
       this.profile = false
       this.$store.dispatch("signOut")
