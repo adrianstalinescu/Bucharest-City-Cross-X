@@ -12,15 +12,23 @@
       ></v-select>
     </v-card>
     <div v-if="stationSelect" class="custom-info-wrapper">
-      <v-card 
-        v-for="lk in lines.keys"
-        :key="lk" 
-        elevation="0" 
-        class="custom-station-info">
+      <v-card v-for="lk in lines.keys" :key="lk" elevation="0" class="custom-station-info">
         <div class="custom-card-grid">
-          <v-icon v-if="lines.data[lk].type === 'BUS'" size="38" :color="lines.data[lk].color">mdi-bus</v-icon>
-          <v-icon v-if="lines.data[lk].type === 'CABLE_CAR'" size="38" :color="lines.data[lk].color">mdi-bus</v-icon>
-          <v-icon v-if="lines.data[lk].type === 'TRAM'" size="38" :color="lines.data[lk].color">mdi-bus</v-icon>
+          <v-icon
+            v-if="lines.data[lk].type === 'BUS'"
+            size="38"
+            :color="lines.data[lk].color"
+          >mdi-bus</v-icon>
+          <v-icon
+            v-if="lines.data[lk].type === 'CABLE_CAR'"
+            size="38"
+            :color="lines.data[lk].color"
+          >mdi-bus</v-icon>
+          <v-icon
+            v-if="lines.data[lk].type === 'TRAM'"
+            size="38"
+            :color="lines.data[lk].color"
+          >mdi-bus</v-icon>
           <div class="custom-line-details">
             <v-chip :color="lines.data[lk].color" class="ml-1 custom-info-line" outlined>
               <span class="custom-line-number">{{lines.data[lk].name}}</span>
@@ -29,8 +37,14 @@
             </v-chip>
           </div>
           <v-chip color="rgb(117, 149, 166)" class="custom-arrival-wrapper" outlined>
-            <span class="card-info-time" >{{ time(lines.data[lk].arriving_time) }} min</span>
-            <svg width="1em" height="1em" viewBox="0 0 20 20" class="feed-animation">
+            <span class="card-info-time">{{ time(lines.data[lk].arriving_time) }}</span>
+            <svg
+              v-if="lines.data[lk].arriving_time !== null"
+              width="1em"
+              height="1em"
+              viewBox="0 0 20 20"
+              class="feed-animation"
+            >
               <g fill="#FBD42A">
                 <path
                   d="M15.9840916,8.88301685 C17.0973425,8.88301685 18,9.78539134 18,10.8988915 C18,12.0123916 17.0973425,12.9147661 15.9840916,12.9147661 C14.2915753,12.9147661 12.9149488,14.2916374 12.9149488,15.9838575 C12.9149488,17.0970897 12.0122913,18 10.8987725,18 C9.78552171,18 8.88286418,17.0970897 8.88286418,15.9838575 C8.88286418,12.0683881 12.0685567,8.88301685 15.9840916,8.88301685"
@@ -50,7 +64,7 @@
 </template>
 
 <script>
-import firebase from '@/firebase'
+import firebase from "@/firebase";
 /* eslint-disable */
 export default {
   name: "Stations",
@@ -71,8 +85,7 @@ export default {
   watch: {
     stationSelect: {
       handler(stationSelect) {
-        this.autoRefresh(this.stations[stationSelect].ID)
-        // this.stations.keys = Object.keys(this.stations.data[stationSelect]);
+        this.autoRefresh(this.stations[stationSelect].ID);
       }
     }
   },
@@ -83,10 +96,10 @@ export default {
         .database()
         .ref("Stations")
         .on("value", snap => {
-          let myObj = snap.val()
-          let keys = Object.keys(myObj)
-          this.stations = myObj
-          this.selectItems = keys
+          let myObj = snap.val();
+          let keys = Object.keys(myObj);
+          this.stations = myObj;
+          this.selectItems = keys;
         });
     }
   },
@@ -94,38 +107,55 @@ export default {
   mounted() {},
 
   methods: {
-     autoRefresh (station) {
-      this.callerSTB(station)
-      clearInterval(this.refresh)
+    autoRefresh(station) {
+      this.callerSTB(station);
+      clearInterval(this.refresh);
       this.refresh = setInterval(() => {
-      const callSTB = new XMLHttpRequest();
-      callSTB.open("GET", "https://info.stbsa.ro/rp/api/lines/stops/"+station+"?lang=ro", true);
-      callSTB.send()
-      callSTB.onload = () => {
-        let response = JSON.parse(callSTB.responseText)
-        this.lines.data = response.lines
-      }
+        const callSTB = new XMLHttpRequest();
+        callSTB.open(
+          "GET",
+          "https://info.stbsa.ro/rp/api/lines/stops/" + station + "?lang=ro",
+          true
+        );
+        callSTB.send();
+        callSTB.onload = () => {
+          let response = JSON.parse(callSTB.responseText);
+          this.lines.data = response.lines;
+        };
       }, 15000);
     },
     callerSTB(station) {
-      let lines = []
+      let lines = [];
       const callSTB = new XMLHttpRequest();
-      callSTB.open("GET", "https://info.stbsa.ro/rp/api/lines/stops/"+station+"?lang=ro", true);
-      callSTB.send()
+      callSTB.open(
+        "GET",
+        "https://info.stbsa.ro/rp/api/lines/stops/" + station + "?lang=ro",
+        true
+      );
+      callSTB.send();
       callSTB.onload = () => {
-        let response = JSON.parse(callSTB.responseText)
-        this.lines.keys = Object.keys(response.lines)
-        this.lines.data = response.lines
-      }
+        let response = JSON.parse(callSTB.responseText);
+        this.lines.keys = Object.keys(response.lines);
+        this.lines.data = response.lines;
+      };
     },
     time(arriving_time) {
-      return Math.floor(arriving_time / 60)
+      if (arriving_time !== null) {
+        var h = Math.floor(arriving_time / 3600);
+        var m = Math.floor((arriving_time % 3600) / 60);
+
+        var hDisplay = h > 0 ? h + (h == 1 ? " h, " : " hrs ") : "";
+        var mDisplay = m > 0 ? m + (m == 1 ? " min " : " min ") : "0 min";
+        return hDisplay + mDisplay;
+      } else {
+        return "No Service";
+      }
     }
   },
 
-  beforeDestroy () {
-    clearInterval(this.refresh)
-  },
+  beforeDestroy() {
+    clearInterval(this.refresh);
+  }
 };
 </script>
 
@@ -164,7 +194,7 @@ export default {
   margin-right: auto;
   height: 100%;
   display: grid;
-  grid-template-columns: 0.8fr 5fr 1.4fr;
+  grid-template-columns: 0.8fr 5fr 2fr;
 }
 
 .card-info-line {
@@ -191,7 +221,8 @@ export default {
 
 .custom-arrival-wrapper {
   align-self: center;
-  justify-self: center;
+  justify-self: end;
+  margin-right: 15px;
 }
 
 .card-info-time {
@@ -215,10 +246,15 @@ export default {
 }
 
 @keyframes liveFeed {
-  0%, 18%, 22%, 28%, 32% {
+  0%,
+  18%,
+  22%,
+  28%,
+  32% {
     opacity: 1;
   }
-  20%, 30% {
+  20%,
+  30% {
     opacity: 0.2;
   }
 }
