@@ -1,25 +1,35 @@
 <template>
   <div class="stations-wrapper">
+    <h4 style="display:none">{{ stationsLoader }}</h4>
     <v-card elevation="0" class="custom-select-wrapper mt-2 mb-2 pa-2">
       <v-select
-        v-model="e1"
-        :items="states"
+        v-model="stationSelect"
+        :items="selectItems"
         label="Select Station"
         hide-details
-        color="rgb(117, 149, 166)"
+        color="#7595a6"
         prepend-icon="mdi-bus-stop-covered"
       ></v-select>
     </v-card>
-    <div class="custom-info-wrapper">
-      <v-card elevation="0" class="custom-station-info">
+    <div v-if="stationSelect" class="custom-info-wrapper">
+      <v-card 
+        v-for="lk in lines.keys"
+        :key="lk" 
+        elevation="0" 
+        class="custom-station-info">
         <div class="custom-card-grid">
-          <v-icon size="38" color="success">mdi-bus</v-icon>
-          <span class="card-info-line">
-            105
-            <v-icon size="28" color="black">mdi-chevron-right</v-icon>Aeroportul Henri Coanda Plecari
-          </span>
+          <v-icon v-if="lines.data[lk].type === 'BUS'" size="38" :color="lines.data[lk].color">mdi-bus</v-icon>
+          <v-icon v-if="lines.data[lk].type === 'CABLE_CAR'" size="38" :color="lines.data[lk].color">mdi-bus</v-icon>
+          <v-icon v-if="lines.data[lk].type === 'TRAM'" size="38" :color="lines.data[lk].color">mdi-bus</v-icon>
+          <div class="custom-line-details">
+            <v-chip :color="lines.data[lk].color" class="ml-1 custom-info-line" outlined>
+              <span class="custom-line-number">{{lines.data[lk].name}}</span>
+              <v-icon size="28" :color="lines.data[lk].color">mdi-chevron-right</v-icon>
+              <span class="custom-line-number">{{lines.data[lk].direction_name}}</span>
+            </v-chip>
+          </div>
           <v-chip color="rgb(117, 149, 166)" class="custom-arrival-wrapper" outlined>
-            <span class="card-info-time">16 min</span>
+            <span class="card-info-time" >{{ time(lines.data[lk].arriving_time) }} min</span>
             <svg width="1em" height="1em" viewBox="0 0 20 20" class="feed-animation">
               <g fill="#FBD42A">
                 <path
@@ -40,26 +50,82 @@
 </template>
 
 <script>
+import firebase from '@/firebase'
 /* eslint-disable */
 export default {
   name: "Stations",
   data() {
     return {
-      e1: "Florida",
-      items: [{ text: "State 1" }, { text: "State 2" }],
-      states: ["Alabama", "Alaska", "American Samoa"]
+      stationSelect: "",
+      selectItems: [],
+      stations: null,
+      lines: {
+        keys: [],
+        data: null
+      }
     };
   },
 
   created() {},
 
-  watch: {},
+  watch: {
+    stationSelect: {
+      handler(stationSelect) {
+        this.autoRefresh(this.stations[stationSelect].ID)
+        // this.stations.keys = Object.keys(this.stations.data[stationSelect]);
+      }
+    }
+  },
 
-  computed: {},
+  computed: {
+    stationsLoader() {
+      firebase
+        .database()
+        .ref("Stations")
+        .on("value", snap => {
+          let myObj = snap.val()
+          let keys = Object.keys(myObj)
+          this.stations = myObj
+          this.selectItems = keys
+        });
+    }
+  },
 
   mounted() {},
 
-  methods: {}
+  methods: {
+     autoRefresh (station) {
+      this.callerSTB(station)
+      clearInterval(this.refresh)
+      this.refresh = setInterval(() => {
+      const callSTB = new XMLHttpRequest();
+      callSTB.open("GET", "https://info.stbsa.ro/rp/api/lines/stops/"+station+"?lang=ro", true);
+      callSTB.send()
+      callSTB.onload = () => {
+        let response = JSON.parse(callSTB.responseText)
+        this.lines.data = response.lines
+      }
+      }, 15000);
+    },
+    callerSTB(station) {
+      let lines = []
+      const callSTB = new XMLHttpRequest();
+      callSTB.open("GET", "https://info.stbsa.ro/rp/api/lines/stops/"+station+"?lang=ro", true);
+      callSTB.send()
+      callSTB.onload = () => {
+        let response = JSON.parse(callSTB.responseText)
+        this.lines.keys = Object.keys(response.lines)
+        this.lines.data = response.lines
+      }
+    },
+    time(arriving_time) {
+      return Math.floor(arriving_time / 60)
+    }
+  },
+
+  beforeDestroy () {
+    clearInterval(this.refresh)
+  },
 };
 </script>
 
@@ -103,9 +169,24 @@ export default {
 
 .card-info-line {
   font-weight: 600;
-  font-size: 1.1rem;
   align-self: center;
   justify-self: start;
+}
+
+.custom-line-details {
+  align-self: center;
+}
+
+.custom-line-number {
+  padding: 0px;
+  margin-bottom: 0px !important;
+  align-self: center;
+  justify-content: start;
+  text-overflow: ellipsis;
+  width: -webkit-fill-available;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: inherit;
 }
 
 .custom-arrival-wrapper {

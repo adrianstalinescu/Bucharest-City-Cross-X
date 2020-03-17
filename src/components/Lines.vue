@@ -27,7 +27,7 @@
                   outlined
                   color="rgb(117, 149, 166)"
                   class="custom-direction-button"
-                  @click="autoRefresh(lines[lk].ID, 0, lines[lk].CenterLat, lines[lk].CenterLng, lines[lk].CenterZoom)"
+                  @click="autoRefresh(lines[lk].ID, 0, lines[lk].CenterLat, lines[lk].CenterLng, lines[lk].CenterZoom, lines[lk].Color)"
                 >
                   <span class="custom-direction-text">{{lines[lk].T1}}</span>
                 </v-btn>
@@ -43,7 +43,7 @@
                   outlined
                   color="rgb(117, 149, 166)"
                   class="custom-direction-button"
-                  @click="autoRefresh(lines[lk].ID, 1, lines[lk].CenterLat, lines[lk].CenterLng, lines[lk].CenterZoom)"
+                  @click="autoRefresh(lines[lk].ID, 1, lines[lk].CenterLat, lines[lk].CenterLng, lines[lk].CenterZoom, lines[lk].Color)"
                 >
                   <span class="custom-direction-text">{{lines[lk].T2}}</span>
                 </v-btn>
@@ -75,8 +75,8 @@ export default {
         zoom: 16
       },
       map: null,
-      vehiclesData: null,
-      markers: []
+      markers: [],
+      stations: []
     };
   },
 
@@ -318,13 +318,13 @@ export default {
         }
       });
     },
-    autoRefresh (id, direction, centerLat, centerLng, centerZoom) {
+    autoRefresh (id, direction, centerLat, centerLng, centerZoom, lineColor) {
       this.defaultLocation = {
         lat: centerLat,
         lng: centerLng,
         zoom: centerZoom
       }
-      this.callerSTB(id,direction)
+      this.callerSTB(id,direction,lineColor)
       clearInterval(this.refresh)
       this.refresh = setInterval(() => {
       let vehicles = []
@@ -362,7 +362,7 @@ export default {
       }
       }, 7000);
     },
-    callerSTB(id, direction) {
+    callerSTB(id, direction, lineColor) {
       let vehicles = []
       const callSTB = new XMLHttpRequest();
       callSTB.open("GET", "https://info.stbsa.ro/rp/api/lines/"+id+"/vehicles/"+direction+"?lang=ro", true);
@@ -390,6 +390,55 @@ export default {
             google.maps.event.addListener(marker, 'click', (function(marker, i) {
               return function() {
                 infowindow.setContent('<span style="font-weight: 500;">' + vehicles[i].id + '</span>');
+                infowindow.open(this.map, marker);
+              }
+            })(marker, i));
+          }
+        }
+      }
+      //Load path of the line and the stations
+      let lineDirection
+      const callSTBDirection = new XMLHttpRequest();
+      callSTBDirection.open("GET", "https://info.stbsa.ro/rp/api/lines/"+id+"/direction/"+direction+"?lang=ro", true);
+      callSTBDirection.send()
+      callSTBDirection.onload = () => {
+        lineDirection = JSON.parse(callSTBDirection.responseText);
+        let stops = lineDirection.stops
+        if(stops !== null)
+        {
+          for(i=0; i<this.stations.length; i++){
+            this.stations[i].setMap(null);
+          }
+          this.stations = []
+          let infowindow = new google.maps.InfoWindow();
+          let i;
+          var image = {
+            url: require('@/assets/vehicles/station.png'),
+            scaledSize: new google.maps.Size(15, 15),
+            origin: new google.maps.Point(0, 0),
+            anchor: new google.maps.Point(7, 7)
+          }
+          let encodedPath = lineDirection.segment_path
+          let decodedPoints = google.maps.geometry.encoding.decodePath(encodedPath) ;
+          let encodedPolyline = new google.maps.Polyline ( {
+                        strokeColor: lineColor,
+                        strokeOpacity: 1.0 ,
+                        strokeWeight: 5 ,
+                        path: decodedPoints ,
+                        clickable: false
+          } );
+          encodedPolyline.setMap(this.map)
+
+          for (i = 0; i < stops.length; i++) {
+            let marker = new google.maps.Marker({
+              position: new google.maps.LatLng(stops[i].lat, stops[i].lng),
+              icon: image,
+              map: this.map
+            });
+            this.stations.push(marker)
+            google.maps.event.addListener(marker, 'click', (function(marker, i) {
+              return function() {
+                infowindow.setContent('<span style="font-weight: 500;">' + stops[i].name + '</span>');
                 infowindow.open(this.map, marker);
               }
             })(marker, i));
