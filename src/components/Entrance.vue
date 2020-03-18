@@ -1,37 +1,90 @@
 <template>
   <v-dialog v-model="entrance" fullscreen>
     <div class="entrance-wrapper" v-if="entranceWrap" style="background: white">
-      <v-card
-        width="35vw"
-        elevation="0"
-        color="transparent"
-        class="margin-L-R entrance-card-wrapper"
-      >
+      <v-card width="35vw" elevation="0" color="transparent" class="margin-L-R align-self-center">
         <v-card-actions>
           <v-btn
             fab
+            outlined
             elevation="0"
             color="success"
             class="entrance-buttons"
             @click="signupWrapper()"
           >
-            Join
+            <span>Join</span>
             <v-icon right>mdi-plus-circle-outline</v-icon>
           </v-btn>
           <v-spacer></v-spacer>
-          <v-btn fab elevation="0" color="success" class="entrance-buttons" @click="loginWrapper()">
-            Login
+          <v-btn
+            fab
+            outlined
+            elevation="0"
+            color="success"
+            class="entrance-buttons"
+            @click="loginWrapper()"
+          >
+            <span>Login</span>
             <v-icon right>mdi-location-enter</v-icon>
+          </v-btn>
+        </v-card-actions>
+        <v-card-actions justify-align-center>
+          <v-btn
+            rounded
+            outlined
+            color="success"
+            elevation="0"
+            @click="recoverWrapper()"
+            class="margin-L-R"
+          >
+            <span class="mx-1">Forgot password?</span>
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </div>
+    <div v-if="recover" class="login-wrapper">
+      <v-card width="35vw" height="70vh" elevation="0" class="margin-L-R align-self-center">
+        <v-card-title class="pa-0 justify-align-center">
+          <div class="margin-L-R">
+            <span>Recover Password</span>
+            <v-icon right>mdi-lock-reset</v-icon>
+          </div>
+        </v-card-title>
+        <v-container grid-list-sm class="pa-0 justify-align-center">
+          <v-layout row wrap>
+            <v-flex xs12 align-center justify-space-between>
+              <v-text-field
+                label="Email"
+                v-model="recoverEmail"
+                color="green"
+                :rules="[rules.requiredRecover, rules.emailRecover]"
+              ></v-text-field>
+            </v-flex>
+          </v-layout>
+        </v-container>
+        <v-card-actions justify-align-center>
+          <v-btn fab outlined color="success" elevation="0" @click="entranceBack()">
+            <v-icon>mdi-arrow-left</v-icon>
+          </v-btn>
+          <v-spacer></v-spacer>
+          <v-btn
+            fab
+            outlined
+            color="success"
+            elevation="0"
+            type="submit"
+            @click="recoverPassword()"
+          >
+            <v-icon>mdi-location-enter</v-icon>
           </v-btn>
         </v-card-actions>
       </v-card>
     </div>
     <div v-if="login" class="login-wrapper">
-      <v-card width="35vw" height="70vh" elevation="0" class="margin-L-R login-card-wrapper">
+      <v-card width="35vw" height="70vh" elevation="0" class="margin-L-R align-self-center">
         <v-card-title class="pa-0 justify-align-center">
           <div class="margin-L-R">
-            TRANSIT
-            <v-icon>mdi-tram-side</v-icon>
+            <span>TRANSIT</span>
+            <v-icon right>mdi-tram-side</v-icon>
           </div>
         </v-card-title>
         <v-container grid-list-sm class="pa-0 justify-align-center">
@@ -41,7 +94,7 @@
                 label="Email"
                 v-model="email"
                 color="green"
-                :rules="[rules.required, rules.email]"
+                :rules="[rules.requiredLogin, rules.emailLogin]"
               ></v-text-field>
               <v-text-field
                 name="input-10-1"
@@ -52,49 +105,32 @@
                 :append-icon="e1 ? 'mdi-eye' : 'mdi-eye-off'"
                 @click:append="() => (e1 = !e1)"
                 :type="e1 ? 'password' : 'text'"
-                :rules="[rules.required]"
+                :rules="[rules.requiredLogin]"
               ></v-text-field>
             </v-flex>
           </v-layout>
         </v-container>
         <v-card-actions justify-align-center>
-          <v-btn fab color="success" elevation="0" @click="entranceBack()">
+          <v-btn fab outlined color="success" elevation="0" @click="entranceBack()">
             <v-icon>mdi-arrow-left</v-icon>
           </v-btn>
           <v-spacer></v-spacer>
-          <v-btn fab color="success" elevation="0" type="submit" @click="userSignin()">
+          <v-btn fab outlined color="success" elevation="0" type="submit" @click="userSignin()">
             <v-icon>mdi-location-enter</v-icon>
           </v-btn>
-        </v-card-actions>
-        <v-card-actions justify-align-center>
-          <v-btn
-            rounded
-            color="success"
-            elevation="0"
-            @click="userSignin"
-            class="margin-L-R"
-          >Forgot password?</v-btn>
         </v-card-actions>
       </v-card>
     </div>
     <div v-if="register" class="register-wrapper">
-      <v-card width="70vw" height="90vh" elevation="0" class="margin-L-R register-card-wrapper">
+      <v-card width="70vw" height="90vh" elevation="0" class="margin-L-R align-self-center">
         <v-card-title>
           <div class="margin-L-R">
-            Join
-            <v-icon>mdi-plus-circle-outline</v-icon>
+            <span>Join</span>
+            <v-icon right>mdi-plus-circle-outline</v-icon>
           </div>
         </v-card-title>
         <v-container grid-list-sm>
           <v-layout wrap>
-            <v-flex xs12 align-center justify-space-between>
-              <v-text-field
-                label="Email"
-                v-model="email"
-                color="success"
-                :rules="[rules.required, rules.email]"
-              ></v-text-field>
-            </v-flex>
             <v-flex xs6>
               <v-text-field label="Name" v-model="name" color="success"></v-text-field>
             </v-flex>
@@ -133,75 +169,84 @@
                 ></v-date-picker>
               </v-menu>
             </v-flex>
-            <v-flex xs6>
+            <v-flex xs12 align-center justify-space-between>
+              <v-text-field
+                label="Email"
+                v-model="registerEmail"
+                color="success"
+                :rules="[rules.requiredRegister, rules.emailRegister]"
+              ></v-text-field>
+            </v-flex>
+            <v-flex xs12>
               <v-text-field
                 name="input-10-1"
                 label="Password"
                 color="success"
                 hint="Minimum 8 characters"
-                v-model="password"
+                v-model="registerPassword"
                 min="8"
                 :append-icon-cb="() => (e1 = !e1)"
                 :type="'password'"
-                :rules="[rules.required]"
+                :rules="[rules.requiredRegister]"
                 counter
               ></v-text-field>
             </v-flex>
-            <v-flex xs6>
-              <v-text-field
-                name="input-10-1"
-                label="Password confirm"
-                hint="Minimum 8 caractere"
-                color="success"
-                v-model="confirmPassword"
-                min="8"
-                :type="'password'"
-                :rules="[comparePasswords]"
-              ></v-text-field>
-            </v-flex>
             <v-btn
+              rounded
               elevation="0"
+              outlined
               color="grey darken-1"
-              @click="gdprRegister = true"
+              @click="gdpr = true"
               class="white--text justify-center margin-L-R mt-2"
             >
-              GDPR and Privacy Policy
-              <v-icon right dark>mdi-library-books</v-icon>
+              <span>GDPR and Privacy Policy</span>
+              <v-icon right dark>mdi-file-multiple</v-icon>
             </v-btn>
             <v-flex xs12>
               <v-checkbox
                 class="justify-center margin-L-R mt-2"
                 label="I agree to the terms and conditions"
                 color="success"
+                v-model="agreements"
               ></v-checkbox>
             </v-flex>
           </v-layout>
         </v-container>
         <v-card-actions>
-          <v-btn fab color="success" elevation="0" @click="entranceBack()">
+          <v-btn fab outlined color="success" elevation="0" @click="entranceBack()">
             <v-icon>mdi-arrow-left</v-icon>
           </v-btn>
           <v-spacer></v-spacer>
-          <v-btn fab color="success" elevation="0" type="submit" @click="userRegister()">
+          <v-btn
+            fab
+            outlined
+            color="success"
+            elevation="0"
+            type="submit"
+            :disabled="agreements === false"
+            @click="userRegister()"
+          >
             <v-icon>mdi-plus-circle-outline</v-icon>
           </v-btn>
         </v-card-actions>
-        <v-dialog persistent scrollable v-model="gdprRegister" width="40vw">
+        <v-dialog persistent scrollable v-model="gdpr" width="40vw">
           <v-card>
-            <v-row justify="space-around" class="ma-1">
-              <v-btn
-                fab
-                small
-                dark
-                color="blue-grey lighten-1"
-                elevation="0"
-                @click="gdprRegister = false"
-              >
-                <v-icon dark size="25">mdi-close</v-icon>
-              </v-btn>
-            </v-row>
-            <v-divider></v-divider>
             <v-card-text style="height: 70vh;">Lorem ipsum dolor sit amet</v-card-text>
+            <v-divider></v-divider>
+            <v-card-actions>
+              <v-row justify="space-around" class="ma-1">
+                <v-btn
+                  fab
+                  small
+                  dark
+                  color="blue-grey lighten-1"
+                  elevation="0"
+                  @click="gdpr = false"
+                >
+                  <v-icon dark size="25">mdi-close</v-icon>
+                </v-btn>
+              </v-row>
+            </v-card-actions>
           </v-card>
         </v-dialog>
       </v-card>
@@ -210,6 +255,7 @@
 </template>
 
 <script>
+import firebase from "@/firebase";
 /* eslint-disable */
 export default {
   name: "Entrance",
@@ -217,12 +263,14 @@ export default {
     return {
       name: null,
       email: null,
+      registerEmail: null,
+      recoverEmail: null,
       date: null,
       phone: null,
       password: null,
-      confirmPassword: null,
+      registerPassword: null,
       menu: false,
-      gdprRegister: false,
+      agreements: false,
       gdpr: false,
       genderSelect: ["Male", "Female"],
       gender: null,
@@ -230,10 +278,21 @@ export default {
       entranceWrap: true,
       login: false,
       register: false,
+      recover: false,
       e1: true,
       rules: {
-        required: value => !!value || "Required.",
-        email: value => {
+        requiredLogin: value => !!value || "Required.",
+        requiredRegister: value => !!value || "Required.",
+        requiredRecover: value => !!value || "Required.",
+        emailRegister: value => {
+          const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+          return pattern.test(value) || "Email invalid.";
+        },
+        emailLogin: value => {
+          const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+          return pattern.test(value) || "Email invalid.";
+        },
+        emailRecover: value => {
           const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
           return pattern.test(value) || "Email invalid.";
         }
@@ -245,22 +304,35 @@ export default {
     this.$store.dispatch("AuthChange");
   },
 
-  watch: {},
+  watch: {
+    menu(val) {
+      val && setTimeout(() => (this.$refs.picker.activePicker = "YEAR"));
+    },
+  },
 
   computed: {
     user() {
       return this.$store.getters.user;
-    },
-    comparePasswords() {
-      return this.password !== this.confirmPassword
-        ? "Passwords do not match"
-        : "";
     }
   },
 
   mounted() {},
 
   methods: {
+    curday(sp) {
+      let today = new Date();
+      let dd = today.getDate();
+      let mm = today.getMonth() + 1;
+      let yyyy = today.getFullYear();
+      if (dd < 10) dd = "0" + dd;
+      if (mm < 10) mm = "0" + mm;
+      return dd + sp + mm + sp + yyyy;
+    },
+    birthFormat(bd) {
+      let date = bd.split('-')
+      let final = new Date(date[0], date[1] - 1, date[2]).toLocaleDateString('en-GB')
+      return final
+    },
     save(date) {
       this.$refs.menu.save(date);
     },
@@ -268,26 +340,81 @@ export default {
       this.login = true;
       this.entranceWrap = false;
       this.register = false;
+      this.recover = false;
     },
     signupWrapper() {
       this.register = true;
       this.entranceWrap = false;
       this.login = false;
+      this.recover = false;
+    },
+    recoverWrapper() {
+      this.recover = true;
+      this.login = false;
+      this.register = false;
+      this.entranceWrap = false;
     },
     entranceBack() {
       this.login = false;
       this.register = false;
+      this.recover = false;
       this.entranceWrap = true;
     },
-    
     userSignin() {
       this.$store.dispatch("signIn", {
         email: this.email,
         password: this.password
       });
     },
-    ceva() {
-      this.gdpr = true;
+    userRegister() {
+      let email = this.registerEmail
+      let password = this.registerPassword
+      let gender = this.gender
+      let name = this.name
+      let phone = this.phone
+      let created = this.curday("/")
+      let birthday = this.birthFormat(this.date)
+      let gdpr = true
+
+      this.$store.dispatch("register", {
+        Email: email,
+        Password: password,
+        Gender: gender,
+        Name: name,
+        Phone: phone,
+        Created: created,
+        Birthdate: birthday,
+        GDPR: gdpr
+      });
+      // firebase
+      //   .auth()
+      //   .createUserWithEmailAndPassword(this.registerEmail, this.registerPassword)
+      //   .then(authData => {
+      //     console.log(authData)
+      //     console.log(authData.user.uid)
+      //     firebase.database().ref('Users/' + authData.user.uid)
+      //         .set({
+      //             Email: this.registerEmail,
+      //             Gender: this.genderSelect,
+      //             Name: this.name,
+      //             Phone: this.phone,
+      //             Created: this.curday("-"),
+      //             Birthdate: this.birthFormat(this.date),
+      //             GDPR: true
+      //         })
+      //   })
+      //   .catch(error => {
+      //     console.log(error.message);
+      //   });
+    },
+    recoverPassword() {
+      firebase
+        .auth()
+        .sendPasswordResetEmail(this.recoverEmail)
+        .then(function() {})
+        .catch(function(error) {
+          alert(error.message);
+        });
     }
   }
 };
@@ -329,15 +456,7 @@ export default {
   height: 10vw !important;
 }
 
-.login-card-wrapper {
-  align-self: center;
-}
-
-.register-card-wrapper {
-  align-self: center;
-}
-
-.entrance-card-wrapper {
+.align-self-center {
   align-self: center;
 }
 

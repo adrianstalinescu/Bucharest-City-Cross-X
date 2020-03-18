@@ -134,7 +134,7 @@
             </v-row>
             <v-row justify="space-around">
               <v-btn elevation="0" color="grey darken-1" rounded @click="gdpr = true" outlined class="white--text mt-2">
-                GDPR and Privacy Policy
+                <span>GDPR and Privacy Policy</span>
                 <v-icon right dark size="20">mdi-file-multiple</v-icon>
               </v-btn>
             </v-row>
@@ -239,9 +239,6 @@ export default {
   },
 
   watch: {
-    menu(val) {
-      val && setTimeout(() => (this.$refs.picker.activePicker = "YEAR"));
-    },
     profile: {
       handler(profile) {
         if(profile === true)

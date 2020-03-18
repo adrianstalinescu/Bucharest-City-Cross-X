@@ -99,6 +99,28 @@ export default new Vuex.Store({
                     }
                 )
         },
+        register({commit}, payload) {
+            console.log(payload)
+            firebase
+                .auth()
+                .createUserWithEmailAndPassword(payload.Email, payload.Password)
+                .then(authData => {
+                commit('setUser', authData.user.uid)
+                firebase.database().ref('Users/' + authData.user.uid)
+                    .set({
+                        Email: payload.Email,
+                        Gender: payload.Gender,
+                        Name: payload.Name,
+                        Phone: payload.Phone,
+                        Created: payload.Created,
+                        Birthdate: payload.Birthdate,
+                        GDPR: payload.GDPR
+                    })
+                })
+                .catch(error => {
+                console.log(error.message);
+                });
+        },
         signOut({
             commit
         }) {
