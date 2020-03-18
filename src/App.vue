@@ -244,7 +244,6 @@ export default {
         if(profile === true)
         {
           this.user.name = this.$store.getters.userName
-          this.user.email = this.$store.getters.userEmail
           this.user.phone = this.$store.getters.userPhone
         }
       }

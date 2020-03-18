@@ -386,26 +386,6 @@ export default {
         Birthdate: birthday,
         GDPR: gdpr
       });
-      // firebase
-      //   .auth()
-      //   .createUserWithEmailAndPassword(this.registerEmail, this.registerPassword)
-      //   .then(authData => {
-      //     console.log(authData)
-      //     console.log(authData.user.uid)
-      //     firebase.database().ref('Users/' + authData.user.uid)
-      //         .set({
-      //             Email: this.registerEmail,
-      //             Gender: this.genderSelect,
-      //             Name: this.name,
-      //             Phone: this.phone,
-      //             Created: this.curday("-"),
-      //             Birthdate: this.birthFormat(this.date),
-      //             GDPR: true
-      //         })
-      //   })
-      //   .catch(error => {
-      //     console.log(error.message);
-      //   });
     },
     recoverPassword() {
       firebase
