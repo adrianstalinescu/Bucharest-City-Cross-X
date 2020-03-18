@@ -67,27 +67,28 @@
             class="custom-profile-avatar"
             @click="profile = true"
           >
-            <v-icon v-if="!user.profilePicture" dark size="25">mdi-account-circle</v-icon>
+            <v-icon v-if="!this.$store.getters.profilePicture" dark size="25">mdi-account-circle</v-icon>
             <img
-              v-if="user.profilePicture"
-              :src="user.profilePicture"
+              v-if="this.$store.getters.profilePicture"
+              :src="this.$store.getters.profilePicture"
               style="border-radius: 50%;"
               width="38px"
+              height="38px"
             />
           </v-btn>
         </div>
       </div>
     </v-app-bar>
     <v-content>
-      <v-dialog persistent scrollable v-model="profile" width="40vw">
+      <v-dialog persistent scrollable v-model="profile" width="35vw">
         <v-card>
-          <v-card-text style="height: 70vh;">
+          <v-card-text style="height: 80vh;">
             <v-row justify="space-around" class="mt-3">
-              <v-avatar v-if="!user.profilePicture" width="150px" height="150px" color="blue-grey">
+              <v-avatar v-if="!this.$store.getters.profilePicture" width="150px" height="150px" color="blue-grey">
                 <v-icon dark size="85">mdi-account-circle</v-icon>
               </v-avatar>
-              <v-avatar v-if="user.profilePicture" width="150px" height="150px" color="white">
-                <img width="151px" height="151px" v-if="user.profilePicture" :src="user.profilePicture"/>
+              <v-avatar v-if="this.$store.getters.profilePicture" width="150px" height="150px" color="white">
+                <img width="151px" height="151px" :src="this.$store.getters.profilePicture"/>
               </v-avatar>
             </v-row>
             <v-row justify="space-around">
@@ -104,6 +105,7 @@
                 @click.exact="profilePictureUpdate()"
                 elevation="0"
                 rounded
+                outlined
                 color="blue-grey"
                 class="ma-4 white--text"
               >
@@ -111,22 +113,29 @@
                 <v-icon right dark>mdi-cloud-upload</v-icon>
               </v-btn>
             </v-row>
+            <v-row justify="space-around">
+              <v-switch inset v-model="switcher" class="custom-switcher" label="Edit data"></v-switch>
+            </v-row>
             <v-row>
-              <v-col cols="12">
-                <v-text-field label="Email" type="email" prepend-icon="mdi-email" color="green"></v-text-field>
-                <v-text-field label="Name" type="text" prepend-icon="mdi-account" color="green"></v-text-field>
-                <v-text-field label="Phone" type="text" prepend-icon="mdi-phone" color="green"></v-text-field>
+              <v-col cols="12" class="pa-0">
+                <v-text-field v-model="user.name" label="Name" type="text" prepend-icon="mdi-account" color="green" class="ma-0" :disabled="switcher === false" :rules="[rules.required]"></v-text-field>
+                <v-text-field v-model="user.phone" label="Phone" type="text" prepend-icon="mdi-phone" color="green" class="ma-0" :disabled="switcher === false" :rules="[rules.required]"></v-text-field>
               </v-col>
             </v-row>
-            <v-row justify="space-around">
-              <v-btn elevation="0" color="grey darken-1" @click="gdpr = true" class="white--text">
-                GDPR and Privacy Policy
-                <v-icon right dark size="20">mdi-book-open-outline</v-icon>
+            <v-row v-if="switcher === true" justify="space-around">
+              <v-btn fab elevation="0" color="success" class="ma-1 white--text" outlined @click="profileSave()">
+                <v-icon dark>mdi-content-save-outline</v-icon>
+              </v-btn>
+            </v-row>
+            <v-row v-if="switcher === true" justify="space-around">
+              <v-btn rounded elevation="0" color="red" class="ma-2" outlined @click="profileCancelSave()">
+                <span>Cancel</span>
               </v-btn>
             </v-row>
             <v-row justify="space-around">
-              <v-btn fab elevation="0" color="success" class="ma-4 white--text">
-                <v-icon dark>mdi-content-save-outline</v-icon>
+              <v-btn elevation="0" color="grey darken-1" rounded @click="gdpr = true" outlined class="white--text mt-2">
+                GDPR and Privacy Policy
+                <v-icon right dark size="20">mdi-file-multiple</v-icon>
               </v-btn>
             </v-row>
           </v-card-text>
@@ -152,27 +161,42 @@
                 class="justify-center"
                 @click="SignOut()"
               >
-                Log Out
+              <div class="ml-1">
+                <span>Log Out</span>
                 <v-icon dark right size="20">mdi-logout</v-icon>
+              </div>
               </v-btn>
             </v-row>
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <v-dialog persistent scrollable v-model="gdpr" v-if="profile" width="40vw">
+      <v-dialog persistent scrollable v-model="gdpr" v-if="profile" width="50vw">
         <v-card>
-          <v-row justify="space-around" class="ma-1">
-            <v-btn fab small dark color="blue-grey lighten-1" elevation="0" @click="gdpr = false">
-              <v-icon dark size="25">mdi-close</v-icon>
-            </v-btn>
-          </v-row>
+          <v-card-text style="height: 70vh;" class="pt-2 pb-2">
+            <span v-html="this.$store.getters.gdpr"></span>
+          </v-card-text>
           <v-divider></v-divider>
-          <v-card-text style="height: 70vh;">Lorem ipsum dolor sit amet</v-card-text>
+          <v-card-actions>
+            <v-row justify="space-around" class="ma-1">
+              <v-btn fab small dark color="blue-grey lighten-1" elevation="0" @click="gdpr = false">
+                <v-icon dark size="25">mdi-close</v-icon>
+              </v-btn>
+            </v-row>
+          </v-card-actions>
         </v-card>
       </v-dialog>
       <transition name="fade">
         <router-view></router-view>
       </transition>
+      <v-snackbar v-model="profilePictureNotification" :timeout="2000" color="success">
+        <span class="data-modify">The Profile picture was updated</span>
+      </v-snackbar>
+      <v-snackbar v-model="profileUpdate" :timeout="2000" color="success">
+        <span class="data-modify">The Data has been updated</span>
+      </v-snackbar>
+      <v-snackbar v-model="profileUpdateError" :timeout="2000" color="error">
+        <span class="data-modify">All required data must be completed</span>
+      </v-snackbar>
     </v-content>
   </v-app>
 </template>
@@ -185,27 +209,48 @@ export default {
 
   data() {
     return {
+      switcher: false,
+      profilePictureNotification: false,
+      profileUpdate: false,
+      profileUpdateError: false,
       weather: {
         icon: null,
         temperature: null
       },
       profile: false,
       user: {
-        profilePicture: null
+        profilePicture: null,
+        mail: null,
+        phone: null,
+        name: null
       },
       profilePicture: null,
       loading: false,
-      gdpr: false
+      gdpr: false,
+      rules: {
+        required: value => !!value || "Required"
+      }
     };
   },
 
   created() {
-    this.$store.dispatch("AuthChange");
+    this.$store.dispatch("AuthChange")
+    this.$store.dispatch("gdpr")
   },
 
   watch: {
     menu(val) {
       val && setTimeout(() => (this.$refs.picker.activePicker = "YEAR"));
+    },
+    profile: {
+      handler(profile) {
+        if(profile === true)
+        {
+          this.user.name = this.$store.getters.userName
+          this.user.email = this.$store.getters.userEmail
+          this.user.phone = this.$store.getters.userPhone
+        }
+      }
     }
   },
 
@@ -382,6 +427,7 @@ export default {
 
   methods: {
     pictureSelect(payload) {
+      this.profilePictureNotification = false
       const selectedFile = payload.target.files[0];
       const fileReader = new FileReader();
       fileReader.addEventListener("load", () => {
@@ -402,13 +448,53 @@ export default {
         () => {
           var downloadURL = uploadTask.snapshot.ref.getDownloadURL();
           downloadURL.then(downloadURL => {
-            this.user.profilePicture = downloadURL;
+            this.$store.dispatch("profilePicture", {
+              url: downloadURL
+            })
+            this.profilePictureNotification = true
           });
         }
       );
     },
     profilePictureUpdate() {
       this.$refs.profilePicture.click();
+    },
+    profileSave() {
+      this.profileUpdate = false
+      this.profileUpdateError = false
+      let validateName = false
+      let validatePhone = false
+      if(this.user.name)
+      {
+        validateName = true
+      } else {
+        validateName = false
+      }
+      if(this.user.phone)
+      {
+        validatePhone = true
+      } else {
+        validatePhone = false
+      }
+      if(validateName + validatePhone === 2)
+      {
+        firebase
+          .database()
+          .ref("Users/" + this.$store.getters.user.uid + "/")
+          .update({
+            Name: this.user.name,
+            Phone: this.user.phone
+          })
+        this.switcher = false
+        this.profileUpdate = true
+      } else {
+        this.profileUpdateError = true
+      }
+    },
+    profileCancelSave() {
+      this.switcher = false
+      this.user.name = this.$store.getters.userName
+      this.user.phone = this.$store.getters.userPhone
     },
     SignOut() {
       this.profile = false
@@ -430,6 +516,13 @@ export default {
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
+}
+
+.custom-switcher {
+  width: 120px;
+  height: 35px;
+  margin-top: 0px;
+  font-weight: 700;
 }
 
 .custom-badges {
@@ -463,5 +556,18 @@ export default {
   margin-right: 10px;
   font-weight: 500;
   font-size: 1rem;
+}
+
+.data-modify {
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 1rem;
+}
+
+.gdpr-info {
+  font-weight: 500;
+  font-size: 0.9rem;
+  align-self: center;
+  justify-self: center;
 }
 </style>

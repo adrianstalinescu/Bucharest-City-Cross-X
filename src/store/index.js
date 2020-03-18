@@ -7,13 +7,29 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
+        gdpr: null,
         user: null,
+        userName: null,
+        userPhone: null,
+        profilePicture: null,
         notifications: null,
         notificationsCount: null
     },
     mutations: {
+        setGDPR(state, payload) {
+            state.gdpr = payload
+        },
         setUser(state, payload) {
             state.user = payload
+        },
+        setUserName(state, payload) {
+            state.userName = payload
+        },
+        setUserPhone(state, payload) {
+            state.userPhone = payload
+        },
+        setUserProfilePicture(state, payload) {
+            state.profilePicture = payload
         },
         setNotifications(state, payload) {
             state.notifications = payload
@@ -30,6 +46,8 @@ export default new Vuex.Store({
                     firebase.database().ref('Users/' + this.state.user.uid)
                         .on('value', snap => {
                             const myObj = snap.val()
+                            commit("setUserName", myObj.Name)
+                            commit("setUserPhone", myObj.Phone)
                             if (myObj.Notifications) {
                                 commit('setNotificationsCount', Object.keys(myObj.Notifications))
                                 commit('setNotifications', myObj.Notifications)
@@ -37,6 +55,10 @@ export default new Vuex.Store({
                                 commit('setNotificationsCount', null)
                                 commit('setNotifications', null)
                             }
+                    firebase.storage().ref("/" + user.uid + "/profile/profile")
+                        .getDownloadURL().then(function(url) {
+                            commit('setUserProfilePicture', url)
+                        })
                         }, function (error) {
                             console.log('Error: ' + error.message)
                         })
@@ -44,6 +66,18 @@ export default new Vuex.Store({
                     commit('setUser', null)
                 }
             })
+        },
+        profilePicture({commit}, payload) {
+            commit('setUserProfilePicture', payload.url)
+        },
+        gdpr({commit}) {
+            firebase
+                .database()
+                .ref("Agreements/")
+                .on("value", snap => {
+                let myObj = snap.val()
+                commit('setGDPR', myObj.Content)
+                });
         },
         signIn({
             commit
@@ -77,7 +111,11 @@ export default new Vuex.Store({
         },
     },
     getters: {
+        gdpr: state => state.gdpr,
         user: state => state.user,
+        userName: state => state.userName,
+        userPhone: state => state.userPhone,
+        profilePicture: state => state.profilePicture,
         notifications: state => state.notifications,
         notificationsCount: state => state.notificationsCount
     },
