@@ -381,85 +381,110 @@
     </v-dialog>
     <v-dialog persistent scrollable v-model="studentCard" width="40vw">
       <v-card>
-        <v-card-text style="height: 70vh;">
-          <div class="student-upload-wrapper">
-            <input
-              type="file"
-              accept="image/*"
-              style="display:none"
-              ref="studentPicFront"
-              @change="pictureSelectFront"
-            />
-            <v-btn
-              :loading="loading"
-              @click.native="loader = 'loading'"
-              @click.exact="studentUploadFront()"
-              elevation="0"
-              class="student-upload-button"
-            >
-              <div class="ma-1">
-                <div>
-                  <v-icon>mdi-upload</v-icon>
+        <v-card-text class="padding-zero">
+          <v-stepper v-model="e6" vertical class="padding-zero">
+            <v-stepper-step color="blue lighten-4" :complete="e6 > 1" step="1">
+              <span class="custom-student-step-title">Upload ID Front Side</span>
+            </v-stepper-step>
+            <v-stepper-content step="1">
+              <v-card elevation="0" height="200px">
+                <div class="student-upload-wrapper">
+                  <img v-if="studentFront" :src="studentFront" height="190px" class="student-id-image" />
+                  <div v-if="studentFront" class="student-image-wrapper">
+                  </div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    style="display:none"
+                    ref="studentPicFront"
+                    @change="pictureSelectFront"
+                  />
+                  <v-btn
+                    :loading="loading"
+                    @click.native="loader = 'loading'"
+                    @click.exact="studentUploadFront()"
+                    elevation="0"
+                    fab
+                    color="blue-grey"
+                    small
+                    dark
+                    class="student-upload-button"
+                  >
+                    <v-icon>mdi-upload</v-icon>
+                  </v-btn>
                 </div>
-                <div>Upload Front Side</div>
-              </div>
-            </v-btn>
-          </div>
-          <div class="student-upload-wrapper">
-            <input
-              type="file"
-              accept="image/*"
-              style="display:none"
-              ref="studentPicBack"
-              @change="pictureSelectBack"
-            />
-            <v-btn
-              :loading="loading"
-              @click.native="loader = 'loading'"
-              @click.exact="studentUploadBack()"
-              elevation="0"
-              class="student-upload-button"
-            >
-              <div class="ma-1">
-                <div>
-                  <v-icon>mdi-upload</v-icon>
+              </v-card>
+              <v-btn rounded outlined color="rgb(117, 149, 166)" @click="e6 = 2">Continue</v-btn>
+            </v-stepper-content>
+            <v-stepper-step color="blue lighten-4" :complete="e6 > 2" step="2">
+              <span class="custom-student-step-title">Upload ID Back Side</span>
+            </v-stepper-step>
+            <v-stepper-content step="2">
+              <v-card elevation="0" height="200px">
+                <div class="student-upload-wrapper">
+                  <img v-if="studentBack" :src="studentBack" height="190px" class="student-id-image" />
+                  <div v-if="studentBack" class="student-image-wrapper">
+                  </div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    style="display:none"
+                    ref="studentPicBack"
+                    @change="pictureSelectBack"
+                  />
+                  <v-btn
+                    :loading="loading"
+                    @click.native="loader = 'loading'"
+                    @click.exact="studentUploadBack()"
+                    elevation="0"
+                    fab
+                    color="blue-grey"
+                    small
+                    dark
+                    class="student-upload-button"
+                  >
+                    <v-icon>mdi-upload</v-icon>
+                  </v-btn>
                 </div>
-                <div>Upload Back Side</div>
-              </div>
-            </v-btn>
-          </div>
-          <div class="student-upload-wrapper">
-            <input
-              type="file"
-              accept="image/*"
-              style="display:none"
-              ref="studentPicSelfie"
-              @change="pictureSelectSelfie"
-            />
-            <v-btn
-              :loading="loading"
-              @click.native="loader = 'loading'"
-              @click.exact="studentUploadSelfie()"
-              elevation="0"
-              class="student-upload-button"
-            >
-              <div class="ma-1">
-                <div>
-                  <v-icon>mdi-upload</v-icon>
+              </v-card>
+              <v-btn rounded outlined color="rgb(117, 149, 166)" @click="e6 = 1" class="mr-4">Return</v-btn>
+              <v-btn rounded outlined color="rgb(117, 149, 166)" @click="e6 = 3">Continue</v-btn>
+            </v-stepper-content>
+            <v-stepper-step color="blue lighten-4" :complete="e6 > 3" step="3">
+              <span class="custom-student-step-title">Upload ID Selfie</span>
+              <small style="font-weight:400 !important;">Upload a Selfie holding the ID</small>
+            </v-stepper-step>
+            <v-stepper-content step="3">
+              <v-card elevation="0" height="200px">
+                <div class="student-upload-wrapper">
+                  <img v-if="studentSelfie" :src="studentSelfie" height="190px" class="student-id-image" />
+                  <div v-if="studentSelfie" class="student-image-wrapper">
+                  </div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    style="display:none"
+                    ref="studentPicSelfie"
+                    @change="pictureSelectSelfie"
+                  />
+                  <v-btn
+                    :loading="loading"
+                    @click.native="loader = 'loading'"
+                    @click.exact="studentUploadSelfie()"
+                    elevation="0"
+                    fab
+                    color="blue-grey"
+                    small
+                    dark
+                    class="student-upload-button"
+                  >
+                    <v-icon>mdi-upload</v-icon>
+                  </v-btn>
                 </div>
-                <div>Upload Selfie with ID</div>
-              </div>
-            </v-btn>
-          </div>
-          <div class="student-image-wrapper">
-            <img :src="studentFront" class="student-id-image" />
-          </div>
-          <div class="student-image-wrapper">
-            <img :src="studentBack" class="student-id-image" />
-          </div>
-          <div class="student-image-wrapper">
-            <img :src="studentSelfie" class="student-id-image" />
-          </div>
+              </v-card>
+              <v-btn rounded outlined color="rgb(117, 149, 166)" @click="e6 = 2" class="mb-4">Return</v-btn>
+            </v-stepper-content>
+          </v-stepper>
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions class="ma-1">
@@ -513,6 +538,7 @@ export default {
   name: "TravelPlans",
   data() {
     return {
+      e6: 1,
       cardLastDigits: null,
       cardExpiry: null,
       SUT: {
@@ -1143,24 +1169,33 @@ export default {
 }
 .student-upload-wrapper {
   width: 100%;
+  height: 95%;
   display: flex;
-  margin-top: 2vh;
+  justify-content: center;
 }
-.student-upload-button {
-  height: 50px !important;
-  margin-left: auto;
-  margin-right: auto;
-}
-.student-id-image {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  max-height: 150px;
-}
+
 .student-image-wrapper {
+  position: absolute;
   width: 100%;
-  max-height: 150px;
-  margin-top: 2vh;
-  margin-bottom: 2vh;
+  height: 95%;
+  display: flex;
+  justify-content: center;
+  background-color: rgb(0,0,0,0.2)
 }
+
+.student-upload-button {
+  display: flex;
+  align-self: center;
+  position: absolute;
+}
+
+.padding-zero {
+  padding: 0px !important;
+}
+
+.custom-student-step-title {
+  font-weight: 500;
+  font-size: 1rem;
+}
+
 </style>
