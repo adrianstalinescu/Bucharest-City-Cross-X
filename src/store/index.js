@@ -43,12 +43,12 @@ export default new Vuex.Store({
         },
     },
     actions: {
-        AuthChange({commit}) {
+        AuthChange({
+            commit
+        }) {
             firebase.auth().onAuthStateChanged((user) => {
                 if (user) {
-                    if(this.state.profilePictureRegister !== null)
-                    {
-                        console.log("asta e poza: " + this.state.profilePictureRegister)
+                    if (this.state.profilePictureRegister !== null) {
                         firebase.storage().ref("/" + user.uid + "/profile/profile").put(this.state.profilePictureRegister).then(() => {
                             firebase.storage().ref("/" + user.uid + "/profile/profile").getDownloadURL().then(res => {
                                 commit('setUserProfilePicture', res)
@@ -65,11 +65,10 @@ export default new Vuex.Store({
                                             commit('setNotificationsCount', null)
                                             commit('setNotifications', null)
                                         }
-                                })
+                                    })
                             })
                         })
                     } else {
-                        console.log("asta e null: " + this.state.profilePictureRegister)
                         commit('setUserProfilePictureRegister', null)
                         commit('setUser', user)
                         firebase.database().ref('Users/' + this.state.user.uid)
@@ -84,10 +83,10 @@ export default new Vuex.Store({
                                     commit('setNotificationsCount', null)
                                     commit('setNotifications', null)
                                 }
-                        firebase.storage().ref("/" + user.uid + "/profile/profile")
-                            .getDownloadURL().then(function(url) {
-                                commit('setUserProfilePicture', url)
-                            })
+                                firebase.storage().ref("/" + user.uid + "/profile/profile")
+                                    .getDownloadURL().then(function (url) {
+                                        commit('setUserProfilePicture', url)
+                                    })
                             }, function (error) {
                                 console.log('Error: ' + error.message)
                             })
@@ -98,22 +97,30 @@ export default new Vuex.Store({
                     commit('setUserPhone', null)
                     commit('setUserProfilePicture', null)
                     commit('setUserProfilePictureRegister', null)
+                    commit('setNotifications', null)
+                    commit('setNotificationsCount', null)
                 }
             })
         },
-        profilePicture({commit}, payload) {
+        profilePicture({
+            commit
+        }, payload) {
             commit('setUserProfilePicture', payload.url)
         },
-        profilePictureRegister({commit}, payload) {
+        profilePictureRegister({
+            commit
+        }, payload) {
             commit('setUserProfilePictureRegister', payload.Picture)
         },
-        gdpr({commit}) {
+        gdpr({
+            commit
+        }) {
             firebase
                 .database()
                 .ref("Agreements/")
                 .on("value", snap => {
-                let myObj = snap.val()
-                commit('setGDPR', myObj.Content)
+                    let myObj = snap.val()
+                    commit('setGDPR', myObj.Content)
                 });
         },
         signIn({
@@ -124,11 +131,6 @@ export default new Vuex.Store({
                     authData => {
                         commit('setUser', authData.user.uid)
                         firebase.database().ref('Users/' + authData.user.uid)
-                            .on('value', snap => {
-                                console.log(snap.val())
-                            }, function (error) {
-                                console.log('Error: ' + error.message)
-                            })
                     })
                 .catch(
                     error => {
@@ -136,26 +138,27 @@ export default new Vuex.Store({
                     }
                 )
         },
-        register({commit}, payload) {
-            console.log(payload)
+        register({
+            commit
+        }, payload) {
             firebase
                 .auth()
                 .createUserWithEmailAndPassword(payload.Email, payload.Password)
                 .then(authData => {
-                commit('setUser', authData.user.uid)
-                firebase.database().ref('Users/' + authData.user.uid)
-                    .set({
-                        Email: payload.Email,
-                        Gender: payload.Gender,
-                        Name: payload.Name,
-                        Phone: payload.Phone,
-                        Created: payload.Created,
-                        Birthdate: payload.Birthdate,
-                        GDPR: payload.GDPR
-                    })
+                    commit('setUser', authData.user.uid)
+                    firebase.database().ref('Users/' + authData.user.uid)
+                        .set({
+                            Email: payload.Email,
+                            Gender: payload.Gender,
+                            Name: payload.Name,
+                            Phone: payload.Phone,
+                            Created: payload.Created,
+                            Birthdate: payload.Birthdate,
+                            GDPR: payload.GDPR
+                        })
                 })
                 .catch(error => {
-                console.log(error.message);
+                    console.log(error.message);
                 })
         },
         signOut({
@@ -167,6 +170,8 @@ export default new Vuex.Store({
                 commit('setUserPhone', null)
                 commit('setUserProfilePicture', null)
                 commit('setUserProfilePictureRegister', null)
+                commit('setNotifications', null)
+                commit('setNotificationsCount', null)
             }).catch(
                 error => {
                     window.alert(error.message)
