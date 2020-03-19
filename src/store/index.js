@@ -12,6 +12,7 @@ export default new Vuex.Store({
         userName: null,
         userPhone: null,
         profilePicture: null,
+        profilePictureRegister: null,
         notifications: null,
         notificationsCount: null
     },
@@ -31,6 +32,9 @@ export default new Vuex.Store({
         setUserProfilePicture(state, payload) {
             state.profilePicture = payload
         },
+        setUserProfilePictureRegister(state, payload) {
+            state.profilePictureRegister = payload
+        },
         setNotifications(state, payload) {
             state.notifications = payload
         },
@@ -42,33 +46,66 @@ export default new Vuex.Store({
         AuthChange({commit}) {
             firebase.auth().onAuthStateChanged((user) => {
                 if (user) {
-                    commit('setUser', user)
-                    firebase.database().ref('Users/' + this.state.user.uid)
-                        .on('value', snap => {
-                            const myObj = snap.val()
-                            commit("setUserName", myObj.Name)
-                            commit("setUserPhone", myObj.Phone)
-                            if (myObj.Notifications) {
-                                commit('setNotificationsCount', Object.keys(myObj.Notifications))
-                                commit('setNotifications', myObj.Notifications)
-                            } else {
-                                commit('setNotificationsCount', null)
-                                commit('setNotifications', null)
-                            }
-                    firebase.storage().ref("/" + user.uid + "/profile/profile")
-                        .getDownloadURL().then(function(url) {
-                            commit('setUserProfilePicture', url)
+                    if(this.state.profilePictureRegister !== null)
+                    {
+                        console.log("asta e poza: " + this.state.profilePictureRegister)
+                        firebase.storage().ref("/" + user.uid + "/profile/profile").put(this.state.profilePictureRegister).then(() => {
+                            firebase.storage().ref("/" + user.uid + "/profile/profile").getDownloadURL().then(res => {
+                                commit('setUserProfilePicture', res)
+                                commit('setUser', user)
+                                firebase.database().ref('Users/' + this.state.user.uid)
+                                    .on('value', snap => {
+                                        const myObj = snap.val()
+                                        commit("setUserName", myObj.Name)
+                                        commit("setUserPhone", myObj.Phone)
+                                        if (myObj.Notifications) {
+                                            commit('setNotificationsCount', Object.keys(myObj.Notifications))
+                                            commit('setNotifications', myObj.Notifications)
+                                        } else {
+                                            commit('setNotificationsCount', null)
+                                            commit('setNotifications', null)
+                                        }
+                                })
+                            })
                         })
-                        }, function (error) {
-                            console.log('Error: ' + error.message)
-                        })
+                    } else {
+                        console.log("asta e null: " + this.state.profilePictureRegister)
+                        commit('setUserProfilePictureRegister', null)
+                        commit('setUser', user)
+                        firebase.database().ref('Users/' + this.state.user.uid)
+                            .on('value', snap => {
+                                const myObj = snap.val()
+                                commit("setUserName", myObj.Name)
+                                commit("setUserPhone", myObj.Phone)
+                                if (myObj.Notifications) {
+                                    commit('setNotificationsCount', Object.keys(myObj.Notifications))
+                                    commit('setNotifications', myObj.Notifications)
+                                } else {
+                                    commit('setNotificationsCount', null)
+                                    commit('setNotifications', null)
+                                }
+                        firebase.storage().ref("/" + user.uid + "/profile/profile")
+                            .getDownloadURL().then(function(url) {
+                                commit('setUserProfilePicture', url)
+                            })
+                            }, function (error) {
+                                console.log('Error: ' + error.message)
+                            })
+                    }
                 } else {
                     commit('setUser', null)
+                    commit('setUserName', null)
+                    commit('setUserPhone', null)
+                    commit('setUserProfilePicture', null)
+                    commit('setUserProfilePictureRegister', null)
                 }
             })
         },
         profilePicture({commit}, payload) {
             commit('setUserProfilePicture', payload.url)
+        },
+        profilePictureRegister({commit}, payload) {
+            commit('setUserProfilePictureRegister', payload.Picture)
         },
         gdpr({commit}) {
             firebase
@@ -119,13 +156,17 @@ export default new Vuex.Store({
                 })
                 .catch(error => {
                 console.log(error.message);
-                });
+                })
         },
         signOut({
             commit
         }) {
             firebase.auth().signOut().then(function () {
                 commit('setUser', null)
+                commit('setUserName', null)
+                commit('setUserPhone', null)
+                commit('setUserProfilePicture', null)
+                commit('setUserProfilePictureRegister', null)
             }).catch(
                 error => {
                     window.alert(error.message)

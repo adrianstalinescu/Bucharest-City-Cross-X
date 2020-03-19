@@ -122,113 +122,145 @@
       </v-card>
     </div>
     <div v-if="register" class="register-wrapper">
-      <v-card width="70vw" height="90vh" elevation="0" class="margin-L-R align-self-center">
-        <v-card-title>
-          <div class="margin-L-R">
-            <span>Join</span>
-            <v-icon right>mdi-plus-circle-outline</v-icon>
-          </div>
-        </v-card-title>
-        <v-container grid-list-sm>
-          <v-layout wrap>
-            <v-flex xs6>
-              <v-text-field label="Name" v-model="name" color="success"></v-text-field>
-            </v-flex>
-            <v-flex xs6>
-              <v-text-field label="Phone" color="success" v-model="phone"></v-text-field>
-            </v-flex>
-            <v-flex xs6>
-              <v-select :items="genderSelect" v-model="gender" color="success" label="Gender"></v-select>
-            </v-flex>
-            <v-flex xs6>
-              <v-menu
-                ref="menu"
-                v-model="menu"
-                :close-on-content-click="false"
-                transition="scale-transition"
-                offset-y
-                min-width="290px"
-              >
-                <template v-slot:activator="{ on }">
-                  <v-text-field
+      <v-card width="70vw" height="90vh" elevation="0" class="margin-L-R align-self-center display-flex">
+        <div class="align-self-center">
+          <v-card-title class="padding-zero">
+            <div class="margin-L-R">
+              <span>Join</span>
+              <v-icon right>mdi-plus-circle-outline</v-icon>
+            </div>
+          </v-card-title>
+          <v-container grid-list-sm class="padding-zero">
+            <v-layout wrap>
+              <v-flex v-if="this.image" xs12>
+                <v-row justify="space-around">
+                  <img width="100px" height="100px" style="border-radius: 50%;" :src="this.image"/>
+                </v-row>
+              </v-flex>
+              <v-flex xs12>
+                <v-row justify="space-around">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    style="display:none"
+                    ref="profilePicture"
+                    @change="pictureSelect"
+                  />
+                  <v-btn
+                    :loading="loading"
+                    @click.native="loader = 'loading'"
+                    @click.exact="profilePictureUpdate()"
+                    elevation="0"
+                    rounded
+                    outlined
+                    color="blue-grey"
+                    class="ma-4 white--text"
+                  >
+                    <v-icon dark>mdi-cloud-upload</v-icon>
+                  </v-btn>
+                </v-row>
+              </v-flex>
+              <v-flex xs6>
+                <v-text-field label="Name" v-model="name" color="success" class="padding-zero"></v-text-field>
+              </v-flex>
+              <v-flex xs6>
+                <v-text-field label="Phone" color="success" v-model="phone" class="padding-zero"></v-text-field>
+              </v-flex>
+              <v-flex xs6>
+                <v-select :items="genderSelect" v-model="gender" color="success" label="Gender"></v-select>
+              </v-flex>
+              <v-flex xs6>
+                <v-menu
+                  ref="menu"
+                  v-model="menu"
+                  :close-on-content-click="false"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="290px"
+                >
+                  <template v-slot:activator="{ on }">
+                    <v-text-field
+                      v-model="date"
+                      label="Birthday date"
+                      prepend-icon="mdi-calendar"
+                      readonly
+                      v-on="on"
+                      color="green"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
+                    ref="picker"
                     v-model="date"
-                    label="Birthday date"
-                    prepend-icon="mdi-calendar"
-                    readonly
-                    v-on="on"
+                    :max="new Date().toISOString().substr(0, 10)"
+                    min="1950-01-01"
                     color="green"
-                  ></v-text-field>
-                </template>
-                <v-date-picker
-                  ref="picker"
-                  v-model="date"
-                  :max="new Date().toISOString().substr(0, 10)"
-                  min="1950-01-01"
-                  color="green"
-                  @change="save"
-                ></v-date-picker>
-              </v-menu>
-            </v-flex>
-            <v-flex xs12 align-center justify-space-between>
-              <v-text-field
-                label="Email"
-                v-model="registerEmail"
-                color="success"
-                :rules="[rules.requiredRegister, rules.emailRegister]"
-              ></v-text-field>
-            </v-flex>
-            <v-flex xs12>
-              <v-text-field
-                name="input-10-1"
-                label="Password"
-                color="success"
-                hint="Minimum 8 characters"
-                v-model="registerPassword"
-                min="8"
-                :append-icon-cb="() => (e1 = !e1)"
-                :type="'password'"
-                :rules="[rules.requiredRegister]"
-                counter
-              ></v-text-field>
-            </v-flex>
-            <v-btn
-              rounded
-              elevation="0"
-              outlined
-              color="grey darken-1"
-              @click="gdpr = true"
-              class="white--text justify-center margin-L-R mt-2"
-            >
-              <span>GDPR and Privacy Policy</span>
-              <v-icon right dark>mdi-file-multiple</v-icon>
+                    @change="save"
+                  ></v-date-picker>
+                </v-menu>
+              </v-flex>
+              <v-flex xs6>
+                <v-text-field
+                  label="Email"
+                  v-model="registerEmail"
+                  color="success"
+                  :rules="[rules.requiredRegister, rules.emailRegister]"
+                  class="padding-zero"
+                ></v-text-field>
+              </v-flex>
+              <v-flex xs6>
+                <v-text-field
+                  name="input-10-1"
+                  label="Password"
+                  color="success"
+                  hint="Minimum 8 characters"
+                  v-model="registerPassword"
+                  min="8"
+                  :append-icon-cb="() => (e1 = !e1)"
+                  :type="'password'"
+                  :rules="[rules.requiredRegister]"
+                  counter
+                  class="padding-zero"
+                ></v-text-field>
+              </v-flex>
+              <v-btn
+                rounded
+                elevation="0"
+                outlined
+                color="grey darken-1"
+                @click="gdpr = true"
+                class="white--text justify-center margin-L-R mt-2"
+              >
+                <span>GDPR and Privacy Policy</span>
+                <v-icon right dark>mdi-file-multiple</v-icon>
+              </v-btn>
+              <v-flex xs12>
+                <v-checkbox
+                  class="justify-center margin-L-R mt-2"
+                  label="I agree to the terms and conditions"
+                  color="success"
+                  v-model="agreements"
+                ></v-checkbox>
+              </v-flex>
+            </v-layout>
+          </v-container>
+          <v-card-actions class="padding-zero">
+            <v-btn fab outlined color="success" elevation="0" @click="entranceBack()">
+              <v-icon>mdi-arrow-left</v-icon>
             </v-btn>
-            <v-flex xs12>
-              <v-checkbox
-                class="justify-center margin-L-R mt-2"
-                label="I agree to the terms and conditions"
-                color="success"
-                v-model="agreements"
-              ></v-checkbox>
-            </v-flex>
-          </v-layout>
-        </v-container>
-        <v-card-actions>
-          <v-btn fab outlined color="success" elevation="0" @click="entranceBack()">
-            <v-icon>mdi-arrow-left</v-icon>
-          </v-btn>
-          <v-spacer></v-spacer>
-          <v-btn
-            fab
-            outlined
-            color="success"
-            elevation="0"
-            type="submit"
-            :disabled="agreements === false"
-            @click="userRegister()"
-          >
-            <v-icon>mdi-plus-circle-outline</v-icon>
-          </v-btn>
-        </v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              fab
+              outlined
+              color="success"
+              elevation="0"
+              type="submit"
+              :disabled="agreements === false"
+              @click="userRegister()"
+            >
+              <v-icon>mdi-plus-circle-outline</v-icon>
+            </v-btn>
+          </v-card-actions>
+        </div>
         <v-dialog persistent scrollable v-model="gdpr" width="40vw">
           <v-card>
             <v-card-text style="height: 70vh;">Lorem ipsum dolor sit amet</v-card-text>
@@ -261,6 +293,9 @@ export default {
   name: "Entrance",
   data() {
     return {
+      profilePicture: null,
+      image: null,
+      loading: false,
       name: null,
       email: null,
       registerEmail: null,
@@ -336,6 +371,22 @@ export default {
     save(date) {
       this.$refs.menu.save(date);
     },
+    pictureSelect(payload) {
+      this.profilePictureNotification = false
+      const selectedFile = payload.target.files[0];
+      const fileReader = new FileReader();
+      fileReader.addEventListener("load", () => {
+        this.imageUrl = fileReader.result;
+      });
+      fileReader.readAsDataURL(selectedFile);
+      this.imageUrl = selectedFile;
+      console.log(this.imageUrl)
+      this.profilePicture = this.imageUrl
+      this.image = URL.createObjectURL(selectedFile)
+    },
+    profilePictureUpdate() {
+      this.$refs.profilePicture.click();
+    },
     loginWrapper() {
       this.login = true;
       this.entranceWrap = false;
@@ -369,6 +420,7 @@ export default {
     userRegister() {
       let email = this.registerEmail
       let password = this.registerPassword
+      let picture = this.profilePicture
       let gender = this.gender
       let name = this.name
       let phone = this.phone
@@ -376,6 +428,9 @@ export default {
       let birthday = this.birthFormat(this.date)
       let gdpr = true
 
+      this.$store.dispatch("profilePictureRegister", {
+        Picture: picture
+      })
       this.$store.dispatch("register", {
         Email: email,
         Password: password,
@@ -443,5 +498,13 @@ export default {
 .margin-L-R {
   margin-left: auto;
   margin-right: auto;
+}
+
+.padding-zero {
+  padding: 0px !important;
+}
+
+.display-flex {
+  display: flex;
 }
 </style>
