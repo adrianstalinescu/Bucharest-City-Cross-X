@@ -389,9 +389,13 @@
             <v-stepper-content step="1">
               <v-card elevation="0" height="200px">
                 <div class="student-upload-wrapper">
-                  <img v-if="studentFront" :src="studentFront" height="190px" class="student-id-image" />
-                  <div v-if="studentFront" class="student-image-wrapper">
-                  </div>
+                  <img
+                    v-if="studentFront"
+                    :src="studentFront"
+                    height="190px"
+                    class="student-id-image"
+                  />
+                  <div v-if="studentFront" class="student-image-wrapper"></div>
                   <input
                     type="file"
                     accept="image/*"
@@ -422,9 +426,13 @@
             <v-stepper-content step="2">
               <v-card elevation="0" height="200px">
                 <div class="student-upload-wrapper">
-                  <img v-if="studentBack" :src="studentBack" height="190px" class="student-id-image" />
-                  <div v-if="studentBack" class="student-image-wrapper">
-                  </div>
+                  <img
+                    v-if="studentBack"
+                    :src="studentBack"
+                    height="190px"
+                    class="student-id-image"
+                  />
+                  <div v-if="studentBack" class="student-image-wrapper"></div>
                   <input
                     type="file"
                     accept="image/*"
@@ -457,9 +465,13 @@
             <v-stepper-content step="3">
               <v-card elevation="0" height="200px">
                 <div class="student-upload-wrapper">
-                  <img v-if="studentSelfie" :src="studentSelfie" height="190px" class="student-id-image" />
-                  <div v-if="studentSelfie" class="student-image-wrapper">
-                  </div>
+                  <img
+                    v-if="studentSelfie"
+                    :src="studentSelfie"
+                    height="190px"
+                    class="student-id-image"
+                  />
+                  <div v-if="studentSelfie" class="student-image-wrapper"></div>
                   <input
                     type="file"
                     accept="image/*"
@@ -596,6 +608,11 @@ export default {
         length: false,
         plan: null
       },
+      studentPictures: {
+        front: null,
+        back: null,
+        selfie: null
+      },
       studentCard: false,
       studentSubmitDisabled: true,
       studentNotification: false,
@@ -614,7 +631,7 @@ export default {
       }
     };
   },
-  
+
   created() {},
 
   watch: {},
@@ -723,20 +740,18 @@ export default {
         .ref("Wallet/" + this.$store.getters.user.uid)
         .on("value", snap => {
           let myObj = snap.val();
-            if (myObj !== null) {
-              this.walletData.status = true
-              let keys = Object.keys(snap.val());
-              if(keys.length >= 2)
-              {
-                this.walletData.length = true
-              } else {
-                this.walletData.length = false
-                this.walletData.plan = keys[0]
-              }
+          if (myObj !== null) {
+            this.walletData.status = true;
+            let keys = Object.keys(snap.val());
+            if (keys.length >= 2) {
+              this.walletData.length = true;
             } else {
-              this.walletData.status = false
+              this.walletData.length = false;
+              this.walletData.plan = keys[0];
             }
-
+          } else {
+            this.walletData.status = false;
+          }
         });
     }
   },
@@ -754,12 +769,12 @@ export default {
       return dd + sp + mm + sp + yyyy;
     },
     curtime() {
-      let today = new Date()
-      let hh = today.getHours()
-      let mm = today.getMinutes()
+      let today = new Date();
+      let hh = today.getHours();
+      let mm = today.getMinutes();
       if (hh < 10) hh = "0" + hh;
       if (mm < 10) mm = "0" + mm;
-      let time = hh+ ":" + mm;
+      let time = hh + ":" + mm;
       return time;
     },
     addCard() {
@@ -776,7 +791,7 @@ export default {
           Expiry: expiry
         });
       this.cardAddNotification = true;
-      this.cardAdd = false
+      this.cardAdd = false;
     },
     changeCard() {
       let digits = this.cardChangeData.Year.toString();
@@ -791,8 +806,8 @@ export default {
           CVV: this.cardChangeData.CVV,
           Expiry: expiry
         });
-      this.cardChangeNotification = true
-      this.cardChange = false
+      this.cardChangeNotification = true;
+      this.cardChange = false;
     },
     studentUploadFront() {
       this.$refs.studentPicFront.click();
@@ -805,23 +820,8 @@ export default {
       });
       fileReader.readAsDataURL(selectedFile);
       this.imageUrl = selectedFile;
-      const uploadTask = firebase
-        .storage()
-        .ref("/" + this.$store.getters.user.uid + "/studentID/front")
-        .put(selectedFile);
-      uploadTask.on(
-        "state_changed",
-        snapshot => {},
-        error => {
-          console.log(error);
-        },
-        () => {
-          var downloadURL = uploadTask.snapshot.ref.getDownloadURL();
-          downloadURL.then(downloadURL => {
-            this.studentFront = downloadURL;
-          });
-        }
-      );
+      this.studentPictures.front = this.imageUrl
+      this.studentFront = URL.createObjectURL(selectedFile)
     },
     studentUploadBack() {
       this.$refs.studentPicBack.click();
@@ -834,23 +834,8 @@ export default {
       });
       fileReader.readAsDataURL(selectedFile);
       this.imageUrl = selectedFile;
-      const uploadTask = firebase
-        .storage()
-        .ref("/" + this.$store.getters.user.uid + "/studentID/back")
-        .put(selectedFile);
-      uploadTask.on(
-        "state_changed",
-        snapshot => {},
-        error => {
-          console.log(error);
-        },
-        () => {
-          var downloadURL = uploadTask.snapshot.ref.getDownloadURL();
-          downloadURL.then(downloadURL => {
-            this.studentBack = downloadURL;
-          });
-        }
-      );
+      this.studentPictures.back = this.imageUrl
+      this.studentBack = URL.createObjectURL(selectedFile)
     },
     studentUploadSelfie() {
       this.$refs.studentPicSelfie.click();
@@ -862,26 +847,14 @@ export default {
         this.imageUrl = fileReader.result;
       });
       fileReader.readAsDataURL(selectedFile);
-      this.imageUrl = selectedFile;
-      const uploadTask = firebase
-        .storage()
-        .ref("/" + this.$store.getters.user.uid + "/studentID/selfie")
-        .put(selectedFile);
-      uploadTask.on(
-        "state_changed",
-        snapshot => {},
-        error => {
-          console.log(error);
-        },
-        () => {
-          var downloadURL = uploadTask.snapshot.ref.getDownloadURL();
-          downloadURL.then(downloadURL => {
-            this.studentSelfie = downloadURL;
-          });
-        }
-      );
+      this.imageUrl = selectedFile
+      this.studentPictures.selfie= this.imageUrl
+      this.studentSelfie = URL.createObjectURL(selectedFile)
     },
     studentSubmit() {
+      firebase.storage().ref("/" + this.$store.getters.user.uid + "/studentID/front").put(this.studentPictures.front)
+      firebase.storage().ref("/" + this.$store.getters.user.uid + "/studentID/back").put(this.studentPictures.back)
+      firebase.storage().ref("/" + this.$store.getters.user.uid + "/studentID/selfie").put(this.studentPictures.selfie)
       firebase
         .database()
         .ref("Users/" + this.$store.getters.user.uid + "/Student")
@@ -892,29 +865,27 @@ export default {
       this.studentCard = false;
     },
     planPurchase(plan, cost) {
-      let card = this.card
-      let student = this.isStudent
-      let wallet = this.walletData.status
-      let walletKeys = this.walletData.length
-      let walletPlan = this.walletData.plan
-      this.purchaseError.status = false
-      this.purchaseError.message = null
+      let card = this.card;
+      let student = this.isStudent;
+      let wallet = this.walletData.status;
+      let walletKeys = this.walletData.length;
+      let walletPlan = this.walletData.plan;
+      this.purchaseError.status = false;
+      this.purchaseError.message = null;
       if (wallet === true) {
         if (walletKeys === true) {
           this.purchaseError.status = true;
-          this.purchaseError.reason = "You reached the limit of Plans in the Wallet"
+          this.purchaseError.reason =
+            "You reached the limit of Plans in the Wallet";
         } else {
-          if(card === true)
-          {
-            if(walletPlan === plan)
-            {
-              this.purchaseError.status = true
-              this.purchaseError.reason = "Can't have 2 Plans of the same Type in the Wallet"
+          if (card === true) {
+            if (walletPlan === plan) {
+              this.purchaseError.status = true;
+              this.purchaseError.reason =
+                "Can't have 2 Plans of the same Type in the Wallet";
             } else {
-              if(plan === "Monthly Student")
-              {
-                if(student === "approved")
-                {
+              if (plan === "Monthly Student") {
+                if (student === "approved") {
                   this.purchaseNotification = false;
                   firebase
                     .database()
@@ -925,7 +896,9 @@ export default {
                     });
                   firebase
                     .database()
-                    .ref("History/Purchase/" + this.$store.getters.user.uid + "/")
+                    .ref(
+                      "History/Purchase/" + this.$store.getters.user.uid + "/"
+                    )
                     .push({
                       Type: plan,
                       Time: this.curtime(),
@@ -934,42 +907,11 @@ export default {
                     });
                   this.purchaseNotification = true;
                 } else {
-                  this.purchaseError.status = true
-                  this.purchaseError.reason = "You don't have an approved student ID"
+                  this.purchaseError.status = true;
+                  this.purchaseError.reason =
+                    "You don't have an approved student ID";
                 }
               } else {
-                this.purchaseNotification = false
-                firebase
-                  .database()
-                  .ref("Wallet/" + this.$store.getters.user.uid + "/" + plan)
-                  .set({
-                    Activated: "false",
-                    Purchased: this.curday("-")
-                  });
-                firebase
-                  .database()
-                  .ref("History/Purchase/" + this.$store.getters.user.uid + "/")
-                  .push({
-                    Type: plan,
-                    Time: this.curtime(),
-                    Date: this.curday("-"),
-                    Cost: cost
-                  });
-                this.purchaseNotification = true
-              }
-            }
-          } else {
-            this.purchaseError.status = true
-            this.purchaseError.reason = "You don't have a Card linked to your Account"
-          }
-        }
-      } else {
-        if(card === true)
-          {
-            if(plan === "Monthly Student")
-            {
-              if(student === "approved")
-              {
                 this.purchaseNotification = false;
                 firebase
                   .database()
@@ -988,12 +930,19 @@ export default {
                     Cost: cost
                   });
                 this.purchaseNotification = true;
-              } else {
-                this.purchaseError.status = true
-                this.purchaseError.reason = "You don't have an approved student ID"
               }
-            } else {
-              this.purchaseNotification = false
+            }
+          } else {
+            this.purchaseError.status = true;
+            this.purchaseError.reason =
+              "You don't have a Card linked to your Account";
+          }
+        }
+      } else {
+        if (card === true) {
+          if (plan === "Monthly Student") {
+            if (student === "approved") {
+              this.purchaseNotification = false;
               firebase
                 .database()
                 .ref("Wallet/" + this.$store.getters.user.uid + "/" + plan)
@@ -1010,12 +959,37 @@ export default {
                   Date: this.curday("-"),
                   Cost: cost
                 });
-              this.purchaseNotification = true
+              this.purchaseNotification = true;
+            } else {
+              this.purchaseError.status = true;
+              this.purchaseError.reason =
+                "You don't have an approved student ID";
             }
           } else {
-            this.purchaseError.status = true
-            this.purchaseError.reason = "You don't have a Card linked to your Account"
+            this.purchaseNotification = false;
+            firebase
+              .database()
+              .ref("Wallet/" + this.$store.getters.user.uid + "/" + plan)
+              .set({
+                Activated: "false",
+                Purchased: this.curday("-")
+              });
+            firebase
+              .database()
+              .ref("History/Purchase/" + this.$store.getters.user.uid + "/")
+              .push({
+                Type: plan,
+                Time: this.curtime(),
+                Date: this.curday("-"),
+                Cost: cost
+              });
+            this.purchaseNotification = true;
           }
+        } else {
+          this.purchaseError.status = true;
+          this.purchaseError.reason =
+            "You don't have a Card linked to your Account";
+        }
       }
     }
   }
@@ -1180,7 +1154,7 @@ export default {
   height: 95%;
   display: flex;
   justify-content: center;
-  background-color: rgb(0,0,0,0.2)
+  background-color: rgb(0, 0, 0, 0.2);
 }
 
 .student-upload-button {
@@ -1197,5 +1171,4 @@ export default {
   font-weight: 500;
   font-size: 1rem;
 }
-
 </style>

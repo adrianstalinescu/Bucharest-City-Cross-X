@@ -457,8 +457,7 @@ export default {
         this.imageUrl = fileReader.result;
       });
       fileReader.readAsDataURL(selectedFile);
-      this.imageUrl = selectedFile;
-      console.log(this.imageUrl)
+      this.imageUrl = selectedFile
       this.profilePicture = this.imageUrl
       this.image = URL.createObjectURL(selectedFile)
     },
