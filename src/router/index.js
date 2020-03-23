@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import AuthGuard from '../router/AuthGuard'
+import AdminGuard from '../router/AdminGuard'
 import Router from 'vue-router'
 import Entrance from '../components/Entrance'
+import Admin from '../components/Admin'
 import Check from '../components/Check'
 import Home from '../components/Home'
 import Maps from '../components/Maps'
@@ -31,6 +33,12 @@ export default new Router({
             name: 'Home',
             component: Home,
             beforeEnter: AuthGuard
+        },
+        {
+            path: '/admin',
+            name: 'Admin',
+            component: Admin,
+            beforeEnter: AdminGuard
         },
         {
             path: '/map',

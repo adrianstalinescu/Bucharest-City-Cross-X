@@ -11,6 +11,7 @@ export default new Vuex.Store({
         user: null,
         userName: null,
         userPhone: null,
+        userRole: null,
         profilePicture: null,
         profilePictureRegister: null,
         notifications: null,
@@ -28,6 +29,9 @@ export default new Vuex.Store({
         },
         setUserPhone(state, payload) {
             state.userPhone = payload
+        },
+        setRole(state, payload) {
+            state.userRole = payload
         },
         setUserProfilePicture(state, payload) {
             state.profilePicture = payload
@@ -58,6 +62,7 @@ export default new Vuex.Store({
                                         const myObj = snap.val()
                                         commit("setUserName", myObj.Name)
                                         commit("setUserPhone", myObj.Phone)
+                                        commit("setRole", myObj.Role)
                                         if (myObj.Notifications) {
                                             commit('setNotificationsCount', Object.keys(myObj.Notifications))
                                             commit('setNotifications', myObj.Notifications)
@@ -76,6 +81,7 @@ export default new Vuex.Store({
                                 const myObj = snap.val()
                                 commit("setUserName", myObj.Name)
                                 commit("setUserPhone", myObj.Phone)
+                                commit("setRole", myObj.Role)
                                 if (myObj.Notifications) {
                                     commit('setNotificationsCount', Object.keys(myObj.Notifications))
                                     commit('setNotifications', myObj.Notifications)
@@ -95,6 +101,7 @@ export default new Vuex.Store({
                     commit('setUser', null)
                     commit('setUserName', null)
                     commit('setUserPhone', null)
+                    commit("setRole", null)
                     commit('setUserProfilePicture', null)
                     commit('setUserProfilePictureRegister', null)
                     commit('setNotifications', null)
@@ -153,6 +160,7 @@ export default new Vuex.Store({
                             Name: payload.Name,
                             Phone: payload.Phone,
                             Created: payload.Created,
+                            Role: payload.Role,
                             Birthdate: payload.Birthdate,
                             GDPR: payload.GDPR
                         })
@@ -183,6 +191,7 @@ export default new Vuex.Store({
         user: state => state.user,
         userName: state => state.userName,
         userPhone: state => state.userPhone,
+        userRole: state => state.userRole,
         profilePicture: state => state.profilePicture,
         notifications: state => state.notifications,
         notificationsCount: state => state.notificationsCount

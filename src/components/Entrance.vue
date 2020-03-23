@@ -502,6 +502,7 @@ export default {
       let name = this.name
       let phone = this.phone
       let created = this.curday("/")
+      let role = "user"
       let birthday = this.birthFormat(this.date)
       let gdpr = true
 
@@ -515,6 +516,7 @@ export default {
         Name: name,
         Phone: phone,
         Created: created,
+        Role: role,
         Birthdate: birthday,
         GDPR: gdpr
       });

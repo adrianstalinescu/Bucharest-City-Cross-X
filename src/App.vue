@@ -8,13 +8,18 @@
             <v-icon color="white" size="20" class="ma-2">mdi-home</v-icon>
           </v-tab>
           <v-divider inset vertical></v-divider>
+          <v-tab v-if="this.$store.getters.userRole === 'admin'" to="/admin">
+            Admin
+            <v-icon color="white" size="20" class="ma-2">mdi-view-dashboard-variant</v-icon>
+          </v-tab>
+          <v-divider inset vertical></v-divider>
           <v-tab to="/map">
             Transit
             <v-icon color="white" size="20" class="ma-2">mdi-map</v-icon>
           </v-tab>
           <v-divider inset vertical></v-divider>
           <v-tab to="/plans">
-            Travel Plans
+            Plans
             <v-icon color="white" size="20" class="ma-2">mdi-ticket</v-icon>
           </v-tab>
           <v-divider inset vertical></v-divider>
