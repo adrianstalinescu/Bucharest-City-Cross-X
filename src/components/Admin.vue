@@ -4,7 +4,7 @@
         <v-card color="blue-grey lighten-3" elevation="0" class="mt-2 mx-2 custom-card-grid">
             <v-icon class="menu-icon" dark size="30">mdi-chart-arc</v-icon>
             <span class="menu-title">Statistics</span>
-            <v-btn fab class="menu-button" elevation="0">
+            <v-btn fab class="menu-button" elevation="0" @click="statisticsWrapper()">
                 <v-icon>mdi-chevron-right</v-icon>
             </v-btn>
         </v-card>
@@ -12,7 +12,7 @@
         <v-card color="blue-grey lighten-3" elevation="0" class="mt-2 mx-2 custom-card-grid">
             <v-icon class="menu-icon" dark size="25">mdi-account-search-outline</v-icon>
             <span class="menu-title">Student Validation</span>
-            <v-btn fab class="menu-button" elevation="0">
+            <v-btn fab class="menu-button" elevation="0" @click="studentValidationWrapper()">
                 <v-icon>mdi-chevron-right</v-icon>
             </v-btn>
         </v-card>
@@ -34,8 +34,17 @@
         </v-card>
         <v-divider class="mb-2 mt-2"></v-divider>
     </v-card>
-    <div class="custom-content-wrapper">
-        <!--code -->
+    <div v-if="emptyWrap" class="custom-content-wrapper">
+    </div>
+    <div v-if="statistics" class="custom-content-wrapper">
+        <h4 style="display:none">{{ this.searchHistoryPiechart() }}</h4>
+        <h4 style="display:none">{{ this.purchaseHistoryPieChart() }}</h4>
+        <h4 style="display:none">{{ this.walletPieChart() }}</h4>
+        <h4 style="display:none">{{ this.SUTPieChart() }}</h4>
+        <h4 style="display:none">{{ this.cardsPieChart() }}</h4>
+        <h4 style="display:none">{{ this.gendersPieChart() }}</h4>
+        <h4 style="display:none">{{ this.studentsPieChart() }}</h4>
+        <h4 style="display:none">{{ this.agePieChart() }}</h4>
         <div class="statistics-grid">
             <div id="historyChart"></div>
             <div id="purchaseChart"></div>
@@ -51,6 +60,22 @@
         <div class="statistics-grid">
             <div id="studentsChart"></div>
         </div>
+        <div id="ageChart"></div>
+    </div>
+    <div v-if="studentValidation" class="custom-content-wrapper">
+        <v-expansion-panels v-for="ps in students.keys" :key="ps" class="custom-student-wrapper">
+            <v-expansion-panel>
+                <v-expansion-panel-header>
+                    <div class="custom-header-grid">
+                        <v-icon color="deep-orange lighten-2" size="30">mdi-account-search-outline</v-icon>
+                        <!-- <span>{{ps}}</span>  -->
+                        <span class="align-center student-title">{{students.data[ps].Name}}</span>
+                    </div>
+                </v-expansion-panel-header>
+                <v-expansion-panel-content>
+                </v-expansion-panel-content>
+            </v-expansion-panel>
+        </v-expansion-panels>
     </div>
   </div>
 </template>
@@ -62,7 +87,13 @@ export default {
   name: "Admin",
   data() {
     return {
-
+        emptyWrap: true,
+        statistics: false,
+        studentValidation: false,
+        students: {
+            keys: null,
+            data: null
+        },
     };
   },
 
@@ -72,19 +103,23 @@ export default {
   },
 
   mounted() {
-    this.searchHistoryPiechart()
-    this.purchaseHistoryPieChart()
-    this.walletPieChart()
-    this.SUTPieChart()
-    this.cardsPieChart()
-    this.gendersPieChart()
-    this.studentsPieChart()
   },
 
   computed: {
   },
 
   methods: {
+    statisticsWrapper() {
+        this.emptyWrap = false
+        this.studentValidation = false
+        this.statistics = true
+    },
+    studentValidationWrapper() {
+        this.emptyWrap = false
+        this.statistics = false
+        this.studentValidation = true
+        this.pendingStudents()
+    },
     searchHistoryPiechart() {
       var myObjwith = []
       var myObj = []
@@ -211,17 +246,13 @@ export default {
       }})
     },
     gendersPieChart() {
-      let myObj = []
       let male = 0
       let female = 0
       let unspecified = 0
       firebase.database().ref('Users')
         .on('value', snap => {
-          myObj = snap.val()
-        }), error => {
-        console.log('Error: ' + error.message)
-      }
-      Object.keys(myObj).forEach(element => {
+          let myObj = snap.val()
+          Object.keys(myObj).forEach(element => {
           if(myObj[element].Gender === 'Male')
           {
               male++
@@ -233,6 +264,9 @@ export default {
                   unspecified++
               }
           }
+        }), error => {
+        console.log('Error: ' + error.message)
+      }
       });
       google.charts.load('visualization', '1.0',
      { packages: ['corechart', 'bar', 'table'], callback: () => {
@@ -242,26 +276,25 @@ export default {
           ['Male', male],
           ['Female', female],
           ['Unspecified', unspecified]
-        ]), { is3D: false, colors: ['#D50000', '#C2185B', '#4A148C']})
+        ]), { is3D: false, colors: ['#D50000', '#FF4081', '#4A148C']})
       }})
     },
     studentsPieChart() {
-      let myObj = []
       let regularUser = 0
       let studentUser = 0
       firebase.database().ref('Users')
         .on('value', snap => {
-          myObj = snap.val()
-        }), error => {
-        console.log('Error: ' + error.message)
-      }
-      Object.keys(myObj).forEach(element => {
+          let myObj = snap.val()
+          Object.keys(myObj).forEach(element => {
           if(myObj[element].Student)
           {
               studentUser++
           } else {
               regularUser++
           }
+        }), error => {
+        console.log('Error: ' + error.message)
+      }
       });
       google.charts.load('visualization', '1.0',
      { packages: ['corechart', 'bar', 'table'], callback: () => {
@@ -272,6 +305,70 @@ export default {
           ['Student Users', studentUser]
         ]), { is3D: false, colors: ['#7CB342', '#64DD17']})
       }})
+    },
+    agePieChart() {
+        let ages = []
+        let x = []
+        firebase.database().ref('Users')
+            .on('value', snap => {
+            let myObj = snap.val()
+            Object.keys(myObj).forEach(element => {
+                let today = new Date();
+                let birthDate = new Date(myObj[element].Birthdate);
+                let age = today.getFullYear() - birthDate.getFullYear();
+                let m = today.getMonth() - birthDate.getMonth();
+                if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                    age = age - 1;
+                }
+            ages.push(age)
+            }), error => {
+            console.log('Error: ' + error.message)
+            }
+            let a = []
+            let b = []
+            let prev
+            let color = '#D84315'
+            ages.sort()
+            for ( let i = 0; i < ages.length; i++ ) {
+                if ( ages[i] !== prev ) {
+                    a.push(ages[i])
+                    b.push(1)
+                } else {
+                    b[b.length-1]++
+                }
+                prev = ages[i]
+            }
+            x = [[ 'Age', 'Frequency', { role: 'style' } ]]
+            for (let i = 0; i < a.length; i++) {
+                x.push([a[i], b[i], color])
+            }
+        });
+        google.charts.load('visualization', '1.0',
+        { packages: ['corechart', 'bar', 'table'], callback: () => {
+            let data = window.google.visualization.arrayToDataTable(x)
+            let view = new window.google.visualization.DataView(data)
+            view.setColumns([0, 1,
+                { calc: 'stringify',
+                sourceColumn: 1,
+                type: 'string',
+                role: 'annotation' },2])
+            let chart = new window.google.visualization.ColumnChart(document.getElementById('ageChart'))
+            chart.draw(view, {
+             height: 500,
+             bar: {groupWidth: '95%'},
+            legend: { position: 'none' }})
+        }})
+    },
+    pendingStudents() {
+      firebase
+        .database()
+        .ref("StudentValidation")
+        .on("value", snap => {
+          let myObj = snap.val();
+          let keys = Object.keys(snap.val());
+          this.students.keys = keys;
+          this.students.data = myObj;
+        });
     },
   },
 
@@ -297,6 +394,18 @@ export default {
   overflow-y: auto;
   top: 0;
   background: white;
+}
+
+.custom-student-wrapper {
+    width: 500px;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.custom-header-grid {
+    display: grid;
+    grid-template-columns:  1fr 10fr;
 }
 
 .custom-menu-wrapper {
@@ -328,5 +437,15 @@ export default {
     align-self: center;
     font-weight: 500;
     font-size: 1rem;
+}
+
+.student-title {
+    margin-left: 5px;
+    font-weight: 500;
+    font-size: 1.2rem;
+}
+
+.align-center {
+    align-self: center;
 }
 </style>
