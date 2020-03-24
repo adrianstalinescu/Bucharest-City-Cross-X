@@ -20,7 +20,7 @@
         <v-card color="blue-grey lighten-3" elevation="0" class="mt-2 mx-2 custom-card-grid">
             <v-icon class="menu-icon" dark size="25">mdi-subway</v-icon>
             <span class="menu-title">Metro Status</span>
-            <v-btn fab class="menu-button" elevation="0">
+            <v-btn fab class="menu-button" elevation="0" @click="metroStatusWrapper()">
                 <v-icon>mdi-chevron-right</v-icon>
             </v-btn>
         </v-card>
@@ -28,7 +28,7 @@
         <v-card color="blue-grey lighten-3" elevation="0" class="mt-2 mx-2 custom-card-grid">
             <v-icon class="menu-icon" dark size="25">mdi-message-text-clock-outline</v-icon>
             <span class="menu-title">Notifications</span>
-            <v-btn fab class="menu-button" elevation="0">
+            <v-btn fab class="menu-button" elevation="0" @click="notificationSenderWrapper()">
                 <v-icon>mdi-chevron-right</v-icon>
             </v-btn>
         </v-card>
@@ -138,13 +138,13 @@
             />
           </div>
           <v-text-field
-              single-line
-              label="Rejection notification message"
-              v-model="studentApproval.notification"
-              outlined
-              hide-details
-              class="ma-2"
-            />
+            single-line
+            label="Rejection notification message"
+            v-model="studentApproval.notification"
+            outlined
+            hide-details
+            class="ma-2"
+          />
           <div class="student-buttons-grid">
             <v-btn
               rounded
@@ -176,8 +176,86 @@
         </div>
       </div>
     </div>
+    <div v-if="metroStatus" class="custom-content-wrapper">
+      <v-card outlined class="custom-metro-line-info">
+        <div class="custom-metro-card-grid">
+          <v-select
+            :items="metro.keys" 
+            v-model="metro.line"
+            label="Select line"
+            class="mx-2"
+          >
+          </v-select>
+          <v-select
+            :items="metro.options" 
+            v-model="metro.status"
+            label="Select status"
+            class="mx-2"
+          >
+          </v-select>
+          <v-btn
+            rounded
+            small
+            dark
+            color="success"
+            outlined
+            class="align-center justify-center ma-1"
+            elevation="0"
+            @click="metroStatusUpdate()"
+          >
+            <span>Update</span>
+          </v-btn>
+        </div>
+      </v-card>
+    </div>
+    <div v-if="notificationSender" class="custom-content-wrapper">
+      <div>
+        <v-text-field
+          single-line
+          label="Notification title"
+          v-model="notification.title"
+          outlined
+          hide-details
+          class="ma-2"
+        />
+      </div>
+      <div>
+        <v-select
+          :items="notification.options" 
+          v-model="notification.type"
+          label="Select notification type"
+          class="mx-2"
+        >
+        </v-select>
+      </div>
+      <div>
+        <v-textarea v-model="notification.content" outlined class="mx-2">
+        </v-textarea>
+      </div>
+      <div class="display-flex justify-content-center">
+        <v-btn
+          rounded
+          small
+          dark
+          color="success"
+          outlined
+          class="align-center ma-1"
+          elevation="0"
+          @click="notificationSend()"
+        >
+          <span>Send Notification</span>
+          <v-icon right size="20">mdi-send</v-icon>
+        </v-btn>
+      </div>
+    </div>
     <v-snackbar v-model="studentNotification" :timeout="2000" color="success">
-      <span class="student-notification">The Student ID has been Approved</span>
+      <span class="custom-notification">The Student ID has been Approved</span>
+    </v-snackbar>
+    <v-snackbar v-model="metro.notification" :timeout="2000" color="success">
+      <span class="custom-notification">Status updated</span>
+    </v-snackbar>
+    <v-snackbar v-model="notification.notif" :timeout="2000" color="success">
+      <span class="custom-notification">Notification sent</span>
     </v-snackbar>
   </div>
 </template>
@@ -192,10 +270,31 @@ export default {
         emptyWrap: true,
         statistics: false,
         studentValidation: false,
+        metroStatus: false,
+        notificationSender: false,
         studentSelected: false,
+        users: {
+          keys: null,
+          data: null
+        },
         students: {
             keys: null,
             data: null
+        },
+        metro: {
+          keys: null,
+          data: null,
+          options: ["Good Service","Minor Delays","Major Delays","Suspended"],
+          line: null,
+          status: null,
+          notification: false
+        },
+        notification:{
+          title: null,
+          options: ["alert","info"],
+          content: null,
+          type: null,
+          notif: false
         },
         studentPics:{
           front: null,
@@ -224,15 +323,34 @@ export default {
 
   methods: {
     statisticsWrapper() {
-        this.emptyWrap = false
-        this.studentValidation = false
-        this.statistics = true
+      this.emptyWrap = false
+      this.studentValidation = false
+      this.metroStatus = false
+      this.notificationSender = false
+      this.statistics = true
     },
     studentValidationWrapper() {
-        this.emptyWrap = false
-        this.statistics = false
-        this.studentValidation = true
-        this.pendingStudents()
+      this.emptyWrap = false
+      this.statistics = false
+      this.metroStatus = false
+      this.notificationSender = false
+      this.studentValidation = true
+      this.pendingStudents()
+    },
+    metroStatusWrapper() {
+      this.emptyWrap = false
+      this.studentValidation = false
+      this.statistics = false
+      this.notificationSender = false
+      this.metroStatus = true
+      this.metroLoader()
+    },
+    notificationSenderWrapper() {
+      this.emptyWrap = false
+      this.studentValidation = false
+      this.statistics = false
+      this.metroStatus = false
+      this.notificationSender = true
     },
     searchHistoryPiechart() {
       var myObjwith = []
@@ -511,30 +629,85 @@ export default {
     studentApprove() {
       this.studentNotification = false
       firebase
-          .database()
-          .ref("Users/" + this.studentSelected + "/Student")
-          .set({
-            ID: this.studentApproval.id,
-            Status: "approved",
-            Valid: this.studentApproval.valid
-          })
+        .database()
+        .ref("Users/" + this.studentSelected + "/Student")
+        .set({
+          ID: this.studentApproval.id,
+          Status: "approved",
+          Valid: this.studentApproval.valid
+        })
       firebase
-          .database()
-          .ref("Users/" + this.studentSelected + "/Notifications")
-          .push({
-            Title: "Student ID was Approved",
-            Type: "info",
-            Content: "Your Student ID has been validated. Now you can buy Student dedicated Plans.",
-            Time: this.curtime(),
-            Date: this.curday('-')
-          })
+        .database()
+        .ref("Users/" + this.studentSelected + "/Notifications")
+        .push({
+          Title: "Student ID was Approved",
+          Type: "info",
+          Content: "Your Student ID has been validated. Now you can buy Student dedicated Plans.",
+          Time: this.curtime(),
+          Date: this.curday('-')
+        })
       firebase
-          .database()
-          .ref("StudentValidation/" + this.studentSelected).remove().then(() => {
-            this.studentSelected = false
-            this.studentNotification = true
-          })
+        .database()
+        .ref("StudentValidation/" + this.studentSelected).remove().then(() => {
+          this.studentSelected = false
+          this.studentNotification = true
+        })
       
+    },
+    metroLoader() {
+      firebase
+        .database()
+        .ref("MetroLine")
+        .on("value", snap => {
+          let myObj = snap.val();
+          let keys = Object.keys(snap.val());
+          this.metro.keys = keys;
+          this.metro.data = myObj;
+        });
+    },
+    metroStatusUpdate() {
+      this.metro.notification = false
+      firebase
+        .database()
+        .ref("MetroLine/" + this.metro.line)
+        .update({
+          Status: this.metro.status
+        }).then(()=>{this.metro.notification = true})
+    },
+    notificationSend() {
+      this.notification.notif = false
+      firebase
+        .database()
+        .ref("Users")
+        .on("value", snap => {
+          let myObj = snap.val();
+          let keys = Object.keys(snap.val());
+          this.users.keys = keys;
+          this.users.data = myObj;
+        });
+      firebase
+        .database()
+        .ref("News")
+        .push({
+          Title: this.notification.title,
+          Type: this.notification.type,
+          Content: this.notification.content,
+          Time: this.curtime(),
+          Date: this.curday('-')
+        }).then(()=>{
+          this.users.keys.forEach(user => {
+            firebase
+              .database()
+              .ref("Users/" + user + "/Notifications")
+              .push({
+                Title: this.notification.title,
+                Type: this.notification.type,
+                Content: this.notification.content,
+                Time: this.curtime(),
+                Date: this.curday('-')
+              }).then(()=>{this.notification.notif = true})
+        })
+      });
     }
   },
 
@@ -636,10 +809,26 @@ export default {
     font-size: 1.2rem;
 }
 
-.student-notification {
+.custom-notification {
   margin-left: auto;
   margin-right: auto;
   font-size: 1rem;
+}
+
+.custom-metro-line-info {
+  width: 40vw;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+}
+
+.custom-metro-card-grid {
+  margin-left: auto;
+  margin-right: auto;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1.8fr 4fr 1.3fr;
 }
 
 .display-flex {
@@ -654,11 +843,32 @@ export default {
   justify-self: center !important;
 }
 
+.justify-content-center {
+  justify-content: center !important;
+}
+
+.margin-L-R {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .width-carousel {
   width: 710px;
 }
 
 .overflow-y {
   overflow-y: auto;
+}
+
+.custom-line-number {
+  padding: 0px;
+  margin-bottom: 0px !important;
+  align-self: center;
+  justify-content: start;
+  text-overflow: ellipsis;
+  width: -webkit-fill-available;
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: inherit;
 }
 </style>

@@ -30,7 +30,7 @@
             :color="lines.data[lk].color"
           >mdi-bus</v-icon>
           <div class="custom-line-details">
-            <v-chip :color="lines.data[lk].color" class="ml-1 custom-info-line" outlined>
+            <v-chip :color="lines.data[lk].color" class="ml-1" outlined>
               <span class="custom-line-number">{{lines.data[lk].name}}</span>
               <v-icon size="28" :color="lines.data[lk].color">mdi-chevron-right</v-icon>
               <span class="custom-line-number">{{lines.data[lk].direction_name}}</span>
