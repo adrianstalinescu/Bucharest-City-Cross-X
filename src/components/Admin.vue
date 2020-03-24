@@ -59,11 +59,13 @@
         </div>
         <div class="statistics-grid">
             <div id="studentsChart"></div>
-            <div id="ageChart"></div>
+        </div>
+        <div class="statistics-grid-full-line">
+          <div id="ageChart"></div>
         </div>
     </div>
     <div v-if="studentValidation" class="custom-content-wrapper display-flex">
-      <v-card class="custom-student-wrapper" outlined elevation="0">
+      <v-card v-if="students.keys" class="custom-student-wrapper" outlined elevation="0">
         <v-card v-for="ps in students.keys" :key="ps" outlined class="mt-2 mx-2 custom-card-grid">
             <v-icon class="menu-icon" color="#ff8a65" size="30">mdi-account-search-outline</v-icon>
             <span class="menu-title">{{students.data[ps].Name}}</span>
@@ -72,7 +74,7 @@
             </v-btn>
         </v-card>
       </v-card>
-      <div class="custom-student-data">
+      <div v-if="students.keys" class="custom-student-data">
         <v-card
           v-if="!studentSelected"
           class="custom-notification-card"
@@ -174,6 +176,20 @@
             </v-btn>
           </div>
         </div>
+      </div>
+      <div v-if="!students.keys" class="custom-student-empty-data">
+        <v-card
+          class="custom-notification-empty-card"
+          outlined
+          elevation="0"
+        >
+          <div class="custom-notification-empty-card-wrap align-center">
+            <v-avatar elevation="0" color="light-blue lighten-3" class="align-center justify-center">
+              <v-icon color="light-blue darken-1" size="30">mdi-exclamation-thick</v-icon>
+            </v-avatar>
+            <v-card-title class="custom-notification-empty-title" disabled>No requests</v-card-title>
+          </div>
+        </v-card>
       </div>
     </div>
     <div v-if="metroStatus" class="custom-content-wrapper">
@@ -597,9 +613,14 @@ export default {
         .ref("StudentValidation")
         .on("value", snap => {
           let myObj = snap.val();
-          let keys = Object.keys(snap.val());
-          this.students.keys = keys;
-          this.students.data = myObj;
+          if(myObj !== null)
+          {
+            let keys = Object.keys(snap.val());
+            this.students.keys = keys;
+            this.students.data = myObj;
+          } else {
+            this.students.keys = null
+          }
         });
     },
     loadStudentData(id) {
@@ -737,15 +758,25 @@ export default {
 
 .custom-student-wrapper {
   align-self: center;
-  overflow-y: auto;
   width: 35vw;
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
 }
 
+.custom-student-empty-wrapper {
+  display: flex;
+  width: 35vw;
+  height: 100%;
+}
+
 .custom-student-data {
   width: 60vw;
+  display: flex;
+}
+
+.custom-student-empty-data {
+  width: 100%;
   display: flex;
 }
 
@@ -755,6 +786,19 @@ export default {
   align-self: center;
   margin-right: auto;
   width: 20vw;
+}
+
+.custom-notification-empty-card {
+  margin-left: auto;
+  justify-self: center;
+  align-self: center;
+  margin-right: auto;
+  width: 17vw;
+}
+
+.custom-notification-empty-card-wrap {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
 }
 
 .custom-notification-card-wrap {
@@ -782,6 +826,11 @@ export default {
 .statistics-grid {
   display: grid;
   grid-template-columns:  1fr 1fr;
+}
+
+.statistics-grid-full-line {
+  display: grid;
+  grid-template-columns:  1fr;
 }
 
 .student-buttons-grid {

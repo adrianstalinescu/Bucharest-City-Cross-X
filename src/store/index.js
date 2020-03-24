@@ -7,7 +7,6 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        gdpr: null,
         user: null,
         userName: null,
         userPhone: null,
@@ -18,9 +17,6 @@ export default new Vuex.Store({
         notificationsCount: null
     },
     mutations: {
-        setGDPR(state, payload) {
-            state.gdpr = payload
-        },
         setUser(state, payload) {
             state.user = payload
         },
@@ -119,17 +115,6 @@ export default new Vuex.Store({
         }, payload) {
             commit('setUserProfilePictureRegister', payload.Picture)
         },
-        gdpr({
-            commit
-        }) {
-            firebase
-                .database()
-                .ref("Agreements/")
-                .on("value", snap => {
-                    let myObj = snap.val()
-                    commit('setGDPR', myObj.Content)
-                });
-        },
         signIn({
             commit
         }, payload) {
@@ -187,7 +172,6 @@ export default new Vuex.Store({
         },
     },
     getters: {
-        gdpr: state => state.gdpr,
         user: state => state.user,
         userName: state => state.userName,
         userPhone: state => state.userPhone,

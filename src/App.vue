@@ -370,7 +370,6 @@ export default {
 
   created() {
     this.$store.dispatch("AuthChange");
-    this.$store.dispatch("gdpr");
   },
 
   watch: {
