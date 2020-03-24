@@ -59,24 +59,126 @@
         </div>
         <div class="statistics-grid">
             <div id="studentsChart"></div>
+            <div id="ageChart"></div>
         </div>
-        <div id="ageChart"></div>
     </div>
-    <div v-if="studentValidation" class="custom-content-wrapper">
-        <v-expansion-panels v-for="ps in students.keys" :key="ps" class="custom-student-wrapper">
-            <v-expansion-panel>
-                <v-expansion-panel-header>
-                    <div class="custom-header-grid">
-                        <v-icon color="deep-orange lighten-2" size="30">mdi-account-search-outline</v-icon>
-                        <!-- <span>{{ps}}</span>  -->
-                        <span class="align-center student-title">{{students.data[ps].Name}}</span>
-                    </div>
-                </v-expansion-panel-header>
-                <v-expansion-panel-content>
-                </v-expansion-panel-content>
-            </v-expansion-panel>
-        </v-expansion-panels>
+    <div v-if="studentValidation" class="custom-content-wrapper display-flex">
+      <v-card class="custom-student-wrapper" outlined elevation="0">
+        <v-card v-for="ps in students.keys" :key="ps" outlined class="mt-2 mx-2 custom-card-grid">
+            <v-icon class="menu-icon" color="#ff8a65" size="30">mdi-account-search-outline</v-icon>
+            <span class="menu-title">{{students.data[ps].Name}}</span>
+            <v-btn fab color="#E0E0E0" class="menu-button" elevation="0" @click="loadStudentData(ps)">
+                <v-icon>mdi-chevron-right</v-icon>
+            </v-btn>
+        </v-card>
+      </v-card>
+      <div class="custom-student-data">
+        <v-card
+          v-if="!studentSelected"
+          class="custom-notification-card"
+          outlined
+          elevation="0"
+        >
+          <div class="custom-notification-card-wrap align-center">
+            <v-avatar elevation="0" color="light-blue lighten-3" class="align-center justify-center">
+              <v-icon color="light-blue darken-1" size="30">mdi-exclamation-thick</v-icon>
+            </v-avatar>
+            <v-card-title class="custom-notification-empty-title" disabled>Make a selection</v-card-title>
+          </div>
+        </v-card>
+        <div v-if="studentSelected" class="width-carousel overflow-y">
+          <v-carousel hide-delimiters height="400">
+            <v-carousel-item
+              reverse-transition="fade-transition"
+              transition="fade-transition"
+            >
+              <img
+              :src="studentPics.front.i"
+              height="400px"
+              class="student-id-image"
+            />
+            </v-carousel-item>
+            <v-carousel-item
+              reverse-transition="fade-transition"
+              transition="fade-transition"
+            >
+             <img
+              :src="studentPics.back.i"
+              height="400px"
+              class="student-id-image"
+            />
+            </v-carousel-item>
+            <v-carousel-item
+              reverse-transition="fade-transition"
+              transition="fade-transition"
+            >
+             <img
+              :src="studentPics.selfie.i"
+              height="400px"
+              class="student-id-image"
+            />
+            </v-carousel-item>
+          </v-carousel>
+          <div class="student-buttons-grid">
+            <v-text-field
+              single-line
+              label="Student ID"
+              v-model="studentApproval.id"
+              outlined
+              hide-details
+              class="ma-2"
+            />
+            <v-text-field
+              single-line
+              label="Validity"
+              v-model="studentApproval.valid"
+              outlined
+              hide-details
+              class="ma-2"
+            />
+          </div>
+          <v-text-field
+              single-line
+              label="Rejection notification message"
+              v-model="studentApproval.notification"
+              outlined
+              hide-details
+              class="ma-2"
+            />
+          <div class="student-buttons-grid">
+            <v-btn
+              rounded
+              small
+              dark
+              color="error"
+              class="align-center justify-center ma-1"
+              outlined
+              elevation="0"
+              @click="studentReject()"
+            >
+              <v-icon class="mr-1" dark size="20">mdi-close</v-icon>
+              <span class="mr-1">Reject</span>
+            </v-btn>
+            <v-btn
+              rounded
+              small
+              dark
+              color="success"
+              class="align-center justify-center ma-1"
+              outlined
+              elevation="0"
+              @click="studentApprove()"
+            >
+              <v-icon class="mr-1" dark size="20">mdi-check</v-icon>
+              <span class="mr-1">Approve</span>
+            </v-btn>
+          </div>
+        </div>
+      </div>
     </div>
+    <v-snackbar v-model="studentNotification" :timeout="2000" color="success">
+      <span class="student-notification">The Student ID has been Approved</span>
+    </v-snackbar>
   </div>
 </template>
 
@@ -90,10 +192,22 @@ export default {
         emptyWrap: true,
         statistics: false,
         studentValidation: false,
+        studentSelected: false,
         students: {
             keys: null,
             data: null
         },
+        studentPics:{
+          front: null,
+          back: null,
+          selfie: null
+        },
+        studentApproval: {
+          id: null,
+          valid: null,
+          notification: null
+        },
+        studentNotification: false
     };
   },
 
@@ -370,6 +484,58 @@ export default {
           this.students.data = myObj;
         });
     },
+    loadStudentData(id) {
+      this.studentPics.front = firebase.storage().ref("/" + id + "/studentID/front").getDownloadURL()
+      this.studentPics.back = firebase.storage().ref("/" + id + "/studentID/back").getDownloadURL()
+      this.studentPics.selfie = firebase.storage().ref("/" + id + "/studentID/selfie").getDownloadURL()
+      this.studentSelected = id
+    },
+    curday(sp) {
+      let today = new Date();
+      let dd = today.getDate();
+      let mm = today.getMonth() + 1;
+      let yyyy = today.getFullYear();
+      if (dd < 10) dd = "0" + dd;
+      if (mm < 10) mm = "0" + mm;
+      return dd + sp + mm + sp + yyyy;
+    },
+    curtime() {
+      let today = new Date();
+      let hh = today.getHours();
+      let mm = today.getMinutes();
+      if (hh < 10) hh = "0" + hh;
+      if (mm < 10) mm = "0" + mm;
+      let time = hh + ":" + mm;
+      return time;
+    },
+    studentApprove() {
+      this.studentNotification = false
+      firebase
+          .database()
+          .ref("Users/" + this.studentSelected + "/Student")
+          .set({
+            ID: this.studentApproval.id,
+            Status: "approved",
+            Valid: this.studentApproval.valid
+          })
+      firebase
+          .database()
+          .ref("Users/" + this.studentSelected + "/Notifications")
+          .push({
+            Title: "Student ID was Approved",
+            Type: "info",
+            Content: "Your Student ID has been validated. Now you can buy Student dedicated Plans.",
+            Time: this.curtime(),
+            Date: this.curday('-')
+          })
+      firebase
+          .database()
+          .ref("StudentValidation/" + this.studentSelected).remove().then(() => {
+            this.studentSelected = false
+            this.studentNotification = true
+          })
+      
+    }
   },
 
 };
@@ -397,15 +563,35 @@ export default {
 }
 
 .custom-student-wrapper {
-    width: 500px;
-    margin-top: 10px;
-    margin-left: auto;
-    margin-right: auto;
+  align-self: center;
+  overflow-y: auto;
+  width: 35vw;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.custom-student-data {
+  width: 60vw;
+  display: flex;
+}
+
+.custom-notification-card {
+  margin-left: auto;
+  justify-self: center;
+  align-self: center;
+  margin-right: auto;
+  width: 20vw;
+}
+
+.custom-notification-card-wrap {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
 }
 
 .custom-header-grid {
-    display: grid;
-    grid-template-columns:  1fr 10fr;
+  display: grid;
+  grid-template-columns:  1fr 10fr;
 }
 
 .custom-menu-wrapper {
@@ -421,8 +607,13 @@ export default {
 }
 
 .statistics-grid {
-    display: grid;
-    grid-template-columns:  1fr 1fr;
+  display: grid;
+  grid-template-columns:  1fr 1fr;
+}
+
+.student-buttons-grid {
+  display: grid;
+  grid-template-columns:  1fr 1fr;
 }
 
 .menu-button {
@@ -445,7 +636,29 @@ export default {
     font-size: 1.2rem;
 }
 
+.student-notification {
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 1rem;
+}
+
+.display-flex {
+  display: flex;
+}
+
 .align-center {
     align-self: center;
+}
+
+.justify-center {
+  justify-self: center !important;
+}
+
+.width-carousel {
+  width: 710px;
+}
+
+.overflow-y {
+  overflow-y: auto;
 }
 </style>

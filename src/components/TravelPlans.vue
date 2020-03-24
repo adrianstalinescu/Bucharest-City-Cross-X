@@ -393,7 +393,6 @@
                     v-if="studentFront"
                     :src="studentFront"
                     height="190px"
-                    class="student-id-image"
                   />
                   <div v-if="studentFront" class="student-image-wrapper"></div>
                   <input
@@ -430,7 +429,6 @@
                     v-if="studentBack"
                     :src="studentBack"
                     height="190px"
-                    class="student-id-image"
                   />
                   <div v-if="studentBack" class="student-image-wrapper"></div>
                   <input
@@ -469,7 +467,6 @@
                     v-if="studentSelfie"
                     :src="studentSelfie"
                     height="190px"
-                    class="student-id-image"
                   />
                   <div v-if="studentSelfie" class="student-image-wrapper"></div>
                   <input
@@ -860,6 +857,12 @@ export default {
         .ref("Users/" + this.$store.getters.user.uid + "/Student")
         .set({
           Status: "pending"
+        });
+      firebase
+        .database()
+        .ref("StudentValidation/" + this.$store.getters.user.uid)
+        .set({
+          Name: this.$store.getters.userName
         });
       this.studentNotification = true;
       this.studentCard = false;
