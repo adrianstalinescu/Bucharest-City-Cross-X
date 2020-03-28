@@ -24,6 +24,7 @@
         <v-icon color="blue lighten-1" style="transform: rotate(45deg);">mdi-navigation</v-icon>
       </v-btn>
     </div>
+    <h4 style="display:none">{{ subwayStations() }}</h4>
     <v-dialog persistent scrollable v-model="stationSelectedDetails" width="50vw">
       <v-card class="custom-info-wrapper">
         <v-card-text class="pt-2 pb-2">
@@ -34,50 +35,101 @@
             </v-chip>
           </div>
           <div v-if="stationSelected.lines.keys">
-            <v-card v-for="lk in stationSelected.lines.keys" :key="lk" elevation="0" class="custom-station-info">
-              <div class="custom-card-grid">
-                <v-icon
-                  v-if="stationSelected.lines.data[lk].type === 'BUS'"
-                  size="38"
-                  :color="stationSelected.lines.data[lk].color"
-                >mdi-bus</v-icon>
-                <img v-if="stationSelected.lines.data[lk].type === 'CABLE_CAR'" class="display-flex justify-self-center" width="34px" height="34px" src="../assets/vehicles/trolleybus.svg"/>
-                <v-icon
-                  v-if="stationSelected.lines.data[lk].type === 'TRAM'"
-                  size="38"
-                  :color="stationSelected.lines.data[lk].color"
-                >mdi-tram</v-icon>
-                <div class="align-self-center">
-                  <v-chip :color="stationSelected.lines.data[lk].color" class="ml-1" outlined>
-                    <span class="custom-line-number">{{stationSelected.lines.data[lk].name}}</span>
-                    <v-icon size="28" :color="stationSelected.lines.data[lk].color">mdi-chevron-right</v-icon>
-                    <span class="custom-line-number">{{stationSelected.lines.data[lk].direction_name}}</span>
+            <div v-for="lk in stationSelected.lines.keys" :key="lk">
+              <v-card v-if="stationSelected.lines.data[lk].type !== 'SUBWAY'" elevation="0" class="custom-station-info">
+                <div v-if="stationSelected.lines.data[lk].type !== 'SUBWAY'" class="custom-card-grid">
+                  <v-icon
+                    v-if="stationSelected.lines.data[lk].type === 'BUS'"
+                    size="38"
+                    :color="stationSelected.lines.data[lk].color"
+                  >mdi-bus</v-icon>
+                  <img v-if="stationSelected.lines.data[lk].type === 'CABLE_CAR'" class="display-flex justify-self-center" width="34px" height="34px" src="../assets/vehicles/trolleybus.svg"/>
+                  <v-icon
+                    v-if="stationSelected.lines.data[lk].type === 'TRAM'"
+                    size="38"
+                    :color="stationSelected.lines.data[lk].color"
+                  >mdi-tram</v-icon>
+                  <div class="align-self-center">
+                    <v-chip :color="stationSelected.lines.data[lk].color" class="ml-1" outlined>
+                      <span class="custom-line-number">{{stationSelected.lines.data[lk].name}}</span>
+                      <v-icon size="28" :color="stationSelected.lines.data[lk].color">mdi-chevron-right</v-icon>
+                      <span class="custom-line-number">{{stationSelected.lines.data[lk].direction_name}}</span>
+                    </v-chip>
+                  </div>
+                  <v-chip color="rgb(117, 149, 166)" class="custom-arrival-wrapper" outlined>
+                    <span class="card-info-time">{{ stationDetailsTime(stationSelected.lines.data[lk].arriving_time) }}</span>
+                    <svg
+                      v-if="stationSelected.lines.data[lk].arriving_time !== null"
+                      width="1em"
+                      height="1em"
+                      viewBox="0 0 20 20"
+                      class="feed-animation"
+                    >
+                      <g fill="#FBD42A">
+                        <path
+                          d="M15.9840916,8.88301685 C17.0973425,8.88301685 18,9.78539134 18,10.8988915 C18,12.0123916 17.0973425,12.9147661 15.9840916,12.9147661 C14.2915753,12.9147661 12.9149488,14.2916374 12.9149488,15.9838575 C12.9149488,17.0970897 12.0122913,18 10.8987725,18 C9.78552171,18 8.88286418,17.0970897 8.88286418,15.9838575 C8.88286418,12.0683881 12.0685567,8.88301685 15.9840916,8.88301685"
+                          class="live-feed-animation-1"
+                        />
+                        <path
+                          d="M10.5402817,3.0998359 C12.2654855,2.37000569 14.0970578,2 15.9840916,2 C17.0973425,2 18,2.90264242 18,4.01614254 C18,5.12937473 17.0973425,6.03201715 15.9840916,6.03201715 C13.3256862,6.03201715 10.8264313,7.0672829 8.94689954,8.94678321 C7.06709982,10.8265515 6.03181674,13.3254965 6.03181674,15.9838575 C6.03181674,17.0970897 5.12942713,18 4.01590837,18 C2.90265753,18 2,17.0970897 2,15.9838575 C2,14.0971231 2.37001189,12.2653136 3.09985431,10.5401387 C3.80424335,8.87471114 4.81219753,7.37941659 6.0958521,6.09578352 C7.37950667,4.81215044 8.87482626,3.80421314 10.5402817,3.0998359 Z"
+                          class="live-feed-animation-2"
+                        />
+                      </g>
+                    </svg>
                   </v-chip>
                 </div>
-                <v-chip color="rgb(117, 149, 166)" class="custom-arrival-wrapper" outlined>
-                  <span class="card-info-time">{{ stationDetailsTime(stationSelected.lines.data[lk].arriving_time) }}</span>
-                  <svg
-                    v-if="stationSelected.lines.data[lk].arriving_time !== null"
-                    width="1em"
-                    height="1em"
-                    viewBox="0 0 20 20"
-                    class="feed-animation"
-                  >
-                    <g fill="#FBD42A">
-                      <path
-                        d="M15.9840916,8.88301685 C17.0973425,8.88301685 18,9.78539134 18,10.8988915 C18,12.0123916 17.0973425,12.9147661 15.9840916,12.9147661 C14.2915753,12.9147661 12.9149488,14.2916374 12.9149488,15.9838575 C12.9149488,17.0970897 12.0122913,18 10.8987725,18 C9.78552171,18 8.88286418,17.0970897 8.88286418,15.9838575 C8.88286418,12.0683881 12.0685567,8.88301685 15.9840916,8.88301685"
-                        class="live-feed-animation-1"
+                <v-divider v-if="stationSelected.lines.data[lk].type !== 'SUBWAY'" class="ma-2"></v-divider>
+              </v-card>
+              <v-card
+                v-if="stationSelected.lines.data[lk].type === 'SUBWAY'"
+                elevation="0"
+                class="custom-capacity-indicator-card"
+              >
+                <div class="custom-capacity-indicator-title-grid">
+                  <v-chip :color="subway.data[stationSelected.name][stationSelected.lines.data[lk].direction_name].Color" class="capacity-indicator-line">
+                    {{stationSelected.lines.data[lk].name}}
+                    <v-icon>mdi-chevron-right</v-icon>
+                    <v-chip color="white" outlined>
+                      <span class="capacity-indicator-direction">{{stationSelected.lines.data[lk].direction_name}}</span>
+                    </v-chip>
+                  </v-chip>
+                  <v-chip color="rgb(117, 149, 166)" outlined class="capacity-indicator-arrival-wrapper">
+                    <span class="capacity-indicator-arrival">Arrival</span>
+                    <v-chip color="rgb(117, 149, 166)" outlined>
+                      <span
+                        v-if="stationSelected.lines.data[lk].arriving_time !== null"
+                        class="capacity-indicator-arrival-time"
+                      >{{stationSelected.lines.data[lk].arriving_time}} min</span>
+                      <span
+                        v-if="stationSelected.lines.data[lk].arriving_time === null"
+                        class="capacity-indicator-arrival-time"
+                      >No service</span>
+                    </v-chip>
+                  </v-chip>
+                </div>
+                <div class="custom-capacity-indicator-content-wrapper">
+                  <div class="capacity">
+                    <span v-for="c in Object.keys(subway.data[stationSelected.name][stationSelected.lines.data[lk].direction_name].Capacity)" :key="c">
+                      <img
+                        v-if="subway.data[stationSelected.name][stationSelected.lines.data[lk].direction_name].Capacity[c] === 'low'"
+                        class="carriage low"
+                        src="../assets/capacityIndicator/capacity-low.svg"
                       />
-                      <path
-                        d="M10.5402817,3.0998359 C12.2654855,2.37000569 14.0970578,2 15.9840916,2 C17.0973425,2 18,2.90264242 18,4.01614254 C18,5.12937473 17.0973425,6.03201715 15.9840916,6.03201715 C13.3256862,6.03201715 10.8264313,7.0672829 8.94689954,8.94678321 C7.06709982,10.8265515 6.03181674,13.3254965 6.03181674,15.9838575 C6.03181674,17.0970897 5.12942713,18 4.01590837,18 C2.90265753,18 2,17.0970897 2,15.9838575 C2,14.0971231 2.37001189,12.2653136 3.09985431,10.5401387 C3.80424335,8.87471114 4.81219753,7.37941659 6.0958521,6.09578352 C7.37950667,4.81215044 8.87482626,3.80421314 10.5402817,3.0998359 Z"
-                        class="live-feed-animation-2"
+                      <img
+                        v-if="subway.data[stationSelected.name][stationSelected.lines.data[lk].direction_name].Capacity[c] === 'medium'"
+                        class="carriage medium"
+                        src="../assets/capacityIndicator/capacity-medium.svg"
                       />
-                    </g>
-                  </svg>
-                </v-chip>
-              </div>
-              <v-divider class="ma-2"></v-divider>
-            </v-card>
+                      <img
+                        v-if="subway.data[stationSelected.name][stationSelected.lines.data[lk].direction_name].Capacity[c] === 'high'"
+                        class="carriage high"
+                        src="../assets/capacityIndicator/capacity-high.svg"
+                      />
+                    </span>
+                  </div>
+                </div>
+              </v-card>
+            </div>
           </div>
         </v-card-text>
         <v-divider></v-divider>
@@ -137,6 +189,10 @@ export default {
           keys: [],
           data: null
         }
+      },
+      subway: {
+        keys: [],
+        data: null
       }
     };
   },
@@ -167,6 +223,8 @@ export default {
       handler(station) {
         if (station) {
           this.stationDetailsRefresh(this.stationSelected.id)
+        } else {
+          clearInterval(this.refresh);
         }
       }
     }
@@ -551,8 +609,20 @@ export default {
       }
     },
     stationSelectedDetailsClose() {
-      clearInterval(this.refresh);
+      this.stationSelected.lines.keys = []
+      this.stationSelected.lines.data = null
       this.stationSelectedDetails = false
+    },
+    subwayStations() {
+      firebase
+        .database()
+        .ref("MetroStation")
+        .on("value", snap => {
+          let myObj = snap.val();
+          let keys = Object.keys(snap.val());
+          this.subway.keys = keys;
+          this.subway.data = myObj;
+        });
     },
     getAddressData(addressData, placeResultData, id) {
       this.address = addressData;
@@ -761,5 +831,114 @@ export default {
   30% {
     opacity: 0.2;
   }
+}
+
+.custom-capacity-indicator-card {
+  width: 60vw;
+  height: auto;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 2vh;
+}
+
+.custom-capacity-indicator-title-grid {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 2vh;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.custom-capacity-indicator-content-wrapper {
+  display: block;
+  height: 5.4rem;
+  white-space: nowrap;
+  overflow: hidden;
+  margin: 0 1 rem;
+}
+
+.capacity-indicator-line {
+  font-weight: 800;
+  font-size: 1rem !important;
+  align-self: center;
+  justify-self: start;
+  margin-left: 0.8vw;
+  margin-top: 3vh;
+  margin-bottom: 3vh;
+  padding-right: 0px;
+}
+
+.capacity-indicator-direction {
+  font-weight: 700;
+  font-size: 1rem !important;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.capacity-indicator-arrival-wrapper {
+  font-weight: 800;
+  font-size: 1rem !important;
+  align-self: center;
+  justify-self: end;
+  margin-right: 0.8vw;
+  margin-top: 3vh;
+  margin-bottom: 3vh;
+  padding-right: 0px;
+}
+
+.capacity-indicator-arrival {
+  margin-right: 0.5rem;
+}
+
+.capacity-indicator-arrival-time {
+  font-weight: 800;
+  font-size: 1rem !important;
+}
+
+.capacity {
+  height: 80%;
+  background: url("../assets/capacityIndicator/train.svg") -1px -1px no-repeat,
+    #23282d;
+  background-size: auto calc(100% + 2px);
+  text-align: right;
+  animation: slide 2s 0s linear 1;
+  margin-left: 1rem;
+}
+
+@keyframes slide {
+  0% {
+    transform: translate(100%, 0);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+.carriage {
+  width: 14%;
+  height: 2.9rem;
+  margin-top: 0.7rem;
+  margin-right: 0.7rem;
+  padding: 0.2rem 0;
+  vertical-align: bottom;
+}
+
+.carriage.low {
+  background: #82af5d;
+}
+
+.carriage.medium {
+  background: #f5bc28;
+}
+
+.carriage.high {
+  background: #df2f1f;
+}
+
+.custom-select-wrapper {
+  width: 95%;
+  margin-bottom: 2vh;
+  margin-left: auto;
+  margin-right: auto;
 }
 </style>
