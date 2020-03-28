@@ -413,7 +413,7 @@ export default {
           let infowindow = new google.maps.InfoWindow();
           let i;
           var image = {
-            url: require('@/assets/vehicles/station.png'),
+            url: require('@/assets/vehicles/station-backup.png'),
             scaledSize: new google.maps.Size(15, 15),
             origin: new google.maps.Point(0, 0),
             anchor: new google.maps.Point(7, 7)

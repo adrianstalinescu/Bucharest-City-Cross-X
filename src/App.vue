@@ -37,11 +37,6 @@
             Lines
             <v-icon color="white" size="20" class="ma-2">mdi-transit-connection-variant</v-icon>
           </v-tab>
-          <v-divider inset vertical></v-divider>
-          <v-tab to="/stations">
-            Stations
-            <v-icon color="white" size="20" class="ma-2">mdi-bus-stop-covered</v-icon>
-          </v-tab>
         </v-tabs>
         <v-divider class="mr-2" vertical></v-divider>
         <div class="custom-badges">
