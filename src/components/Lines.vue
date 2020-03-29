@@ -481,7 +481,7 @@ export default {
 .custom-lines-menu-wrapper {
   align-self: center;
   overflow-y: auto;
-  width: 28vw;
+  width: 20vw;
   height: 100%;
 }
 
