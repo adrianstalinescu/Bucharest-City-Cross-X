@@ -61,8 +61,10 @@
     <div class="custom-search-wrap">
       <v-card v-if="drawerReturn === false" class="search-card" elevation="0">
         <div class="display-flex mr-2">
+          <transition name="fade" mode="out-in">
             <v-icon v-if="drawer === true" @click="drawer = false" size="25">mdi-menu</v-icon>
-            <v-icon v-if="drawer === false" @click="drawer = true" size="25">mdi-menu</v-icon>
+            <v-icon v-if="drawer === false" @click="drawer = true" size="25">mdi-menu-open</v-icon>
+          </transition>
         </div>
         <vue-google-autocomplete
           ref="address"
@@ -327,8 +329,7 @@ export default {
     }
   },
 
-  computed: {
-  },
+  computed: {},
 
   mounted() {
     this.createMap();
@@ -363,6 +364,8 @@ export default {
       this.askGeolocation();
     },
     geolocate() {
+      this.defaultLocation.lat = null
+      this.defaultLocation.lng = null
       navigator.geolocation.getCurrentPosition(position => {
         this.defaultLocation.lat = position.coords.latitude
         this.defaultLocation.lng = position.coords.longitude

@@ -318,7 +318,6 @@ export default {
   position: absolute;
   overflow-y: auto;
   top: 0;
-  background: url("https://picsum.photos/1920/1080?random");
 }
 
 .custom-card-grid {

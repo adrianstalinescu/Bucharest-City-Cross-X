@@ -1,29 +1,36 @@
 <template>
   <v-dialog v-model="entrance" fullscreen>
-    <div class="entrance-wrapper" v-if="entranceWrap" style="background: white">
+    <section>
+      <div class="wave wave1"></div>
+      <div class="wave wave2"></div>
+      <div class="wave wave3"></div>
+      <div class="wave wave4"></div>
+    </section>
+    <div class="entrance-wrapper" v-if="entranceWrap">
+      <img class="train" src="../assets/background/train.svg">
       <v-card width="35vw" elevation="0" color="transparent" class="margin-L-R align-self-center">
         <v-card-actions>
           <v-btn
             fab
-            outlined
+            
             elevation="0"
-            color="success"
+            color="amber"
             class="entrance-buttons"
             @click="signupWrapper()"
           >
-            <span>Join</span>
+            <span class="entrance-buttons-text">Join</span>
             <v-icon right>mdi-plus-circle-outline</v-icon>
           </v-btn>
           <v-spacer></v-spacer>
           <v-btn
             fab
-            outlined
+            
             elevation="0"
-            color="success"
+            color="amber"
             class="entrance-buttons"
             @click="loginWrapper()"
           >
-            <span>Login</span>
+            <span class="entrance-buttons-text">Login</span>
             <v-icon right>mdi-location-enter</v-icon>
           </v-btn>
         </v-card-actions>
@@ -31,12 +38,12 @@
           <v-btn
             rounded
             outlined
-            color="success"
+            color="amber"
             elevation="0"
             @click="recoverWrapper()"
             class="margin-L-R"
           >
-            <span class="mx-1">Forgot password?</span>
+            <span class="mx-1 entrance-buttons-text">Forgot password?</span>
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -535,8 +542,72 @@ export default {
 </script>
 
 <style scoped>
+section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: url('../assets/background/skyline.svg') no-repeat;
+  background-size: auto 63vh;
+  background-position: 45% 40vh;
+  background-color: #27aae1;
+  overflow: hidden;
+}
+
+section .wave {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width:100%;
+  height: 15vh;
+  transform: scaleY(-1);
+  background: url('../assets/background/wave.png');
+  background-size: 73.2vw 15vh;
+}
+
+section .wave.wave1 {
+  animation: animate 30s linear infinite;
+  z-index:1000;
+  opacity: 1;
+  animation-delay: 0s;
+  top:0;
+}
+
+section .wave.wave2 {
+  animation: animate 15s linear infinite;
+  animation-direction: reverse;
+  z-index: 999;
+  opacity: 0.5;
+  animation-delay: -5s;
+  top: 1.5vh;
+}
+
+section .wave.wave3 {
+  animation: animate 30s linear infinite;
+  z-index: 998;
+  opacity: 0.2;
+  animation-delay: -2s;
+  top: 2.3vh;
+}
+
+section .wave.wave4 {
+  animation: animate 17s linear infinite;
+  animation-direction: reverse;
+  z-index: 997;
+  opacity: 0.7;
+  animation-delay: -5s;
+  top: 3.1vh;
+}
+
+@keyframes animate {
+  0% {
+    background-position-x: 0;
+  }
+  100% {
+    background-position-x: 73.2vw;
+  }
+}
+
 .entrance-wrapper {
-  background: white;
   display: flex;
   width: 100%;
   height: 100%;
@@ -570,6 +641,10 @@ export default {
   height: 10vw !important;
 }
 
+.entrance-buttons-text{
+  font-size: 1rem;
+}
+
 .align-self-center {
   align-self: center;
 }
@@ -589,5 +664,26 @@ export default {
 
 .width-100 {
   width: 100%;
+}
+
+.train {
+  height: 5vh;
+  position: absolute;
+  bottom: 1.8vh;
+  left: 50%;
+  transform: translateX(-46vw);
+  animation: train-move 13s infinite;
+}
+
+@keyframes train-move {
+  0% {
+    transform: translateX(-47vw);
+  }
+  50% {
+    transform: translateX(20.5vw);
+  }
+  100% {
+    transform: translateX(-47vw);
+  }
 }
 </style>

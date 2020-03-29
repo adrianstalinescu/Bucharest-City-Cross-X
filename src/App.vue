@@ -620,13 +620,21 @@ export default {
   color: transparent;
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.6s;
+.fade-enter-active{
+  transition: all 0.4s;
 }
-.fade-enter,
+
+.fade-leave-active {
+  transition: all 0.5s;
+}
+
+.fade-enter {
+  opacity: 0;
+  /* transform: translateY(-10%) */
+}
 .fade-leave-to {
   opacity: 0;
+  /* transform: translateY(10%) */
 }
 
 .custom-switcher {
