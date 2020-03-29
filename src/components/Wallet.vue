@@ -1,7 +1,5 @@
 <template>
     <div class="plans-wrapper">
-      <h4 style="display:none">{{ plansData }}</h4>
-      <h4 style="display:none">{{ SUTData }}</h4>
       <v-card
         v-for="pk in plansKeys"
         :key="pk"
@@ -45,23 +43,57 @@
           </v-btn>
         </div>
       </v-card>
-      <v-card class="custom-card-wrapper" width="40vw" outlined elevation="0">
-        <div class="custom-plan-card-wrap ma-2">
-          <v-card-title class="custom-plan-title ml-3 mr-3">
-            <v-icon left color="deep-orange lighten-2" size="30">mdi-ticket</v-icon>Single Use Ticket (SUT) history
-          </v-card-title>
-        </div>
-        <div class="custom-plan-card-wrap ma-3">
-          <v-data-table
-            :footer-props="footer_props"
-            :headers="headers"
-            :items="SUT"
-            :items-per-page="5"
-            class="custom-wallet-sut-table"
-            disable-sort
-          ></v-data-table>
-        </div>
-      </v-card>
+      <div class="display-flex">
+        <v-card class="custom-history-card-wrapper ml-6" outlined elevation="0">
+          <div class="custom-history-title-wrap ma-2">
+            <v-card-title class="custom-history-title">
+              <v-icon left color="deep-orange lighten-2" size="30">mdi-ticket</v-icon>Single Use Ticket (SUT) history
+            </v-card-title>
+          </div>
+          <div class="custom-plan-card-wrap ma-3">
+            <v-data-table
+              :footer-props="footer_props"
+              :headers="headers"
+              :items="SUT"
+              :items-per-page="5"
+              class="custom-wallet-sut-table"
+              disable-sort
+            ></v-data-table>
+          </div>
+        </v-card>
+        <v-card class="custom-history-card-wrapper mx-6" outlined elevation="0">
+          <div class="custom-history-title-wrap ma-2">
+            <v-card-title class="custom-history-title">
+              <v-icon left color="rgb(117, 149, 166)" size="30">mdi-progress-clock</v-icon>Purchase History
+            </v-card-title>
+          </div>
+          <div class="custom-history-table-wrap ma-3">
+            <v-data-table
+              :footer-props="footer_props"
+              :headers="headerPurchased"
+              :items="purchased"
+              class="custom-history-table"
+              disable-sort
+            ></v-data-table>
+          </div>
+        </v-card>
+        <v-card class="custom-history-card-wrapper mr-6" outlined elevation="0">
+          <div class="custom-history-title-wrap ma-2">
+            <v-card-title class="custom-history-title">
+              <v-icon left color="rgb(117, 149, 166)" size="30">mdi-map-clock</v-icon>Search History
+            </v-card-title>
+          </div>
+          <div class="custom-history-table-wrap ma-3">
+            <v-data-table
+              :footer-props="footer_props"
+              :headers="headerSearched"
+              :items="searched"
+              class="custom-history-table"
+              disable-sort
+            ></v-data-table>
+          </div>
+        </v-card>
+      </div>
       <v-snackbar v-model="plansActivateSuccess" :timeout="1500" color="success">
         <span class="plan-activate">The plan was activated</span>
       </v-snackbar>
@@ -105,7 +137,30 @@ export default {
         { text: "Amount", sortable: false, value: "amount" }
       ],
       SUT: [
-      ]
+      ],
+      headerPurchased: [
+        {
+          text: "Type",
+          align: "left",
+          sortable: false,
+          value: "type"
+        },
+        { text: "Date", sortable: false, value: "date" },
+        { text: "Time", sortable: true, value: "time" },
+        { text: "Amount", sortable: false, value: "amount" }
+      ],
+      purchased: [],
+      headerSearched: [
+        {
+          text: "Title",
+          align: "left",
+          sortable: false,
+          value: "title"
+        },
+        { text: "Date", sortable: false, value: "date" },
+        { text: "Time", sortable: true, value: "time" },
+      ],
+      searched: []
     };
   },
 
@@ -113,44 +168,14 @@ export default {
 
   watch: {},
 
-  computed: {
-    plansData() {
-      firebase
-        .database()
-        .ref("Wallet/" + this.$store.getters.user.uid)
-        .on("value", snap => {
-          let myObj = snap.val();
-          this.plansDetails = myObj;
-          if (myObj !== null) {
-            let keys = Object.keys(snap.val());
-            this.plansKeys = keys;
-          }
-        });
-    },
-    SUTData() {
-      firebase
-        .database()
-        .ref("SUT/" + this.$store.getters.user.uid)
-        .on("value", snap => {
-          let myObj = snap.val();
-          if (myObj !== null) {
-            this.SUT = []
-            let keys = Object.keys(snap.val());
-            keys.forEach(key => {
-              this.SUT.push({
-                type: myObj[key].Type,
-                line: myObj[key].Line,
-                date: myObj[key].Date,
-                time: myObj[key].Time,
-                amount: myObj[key].Cost
-              })
-            });
-          }
-        });
-    }
-  },
+  computed: {},
 
-  mounted() {},
+  mounted() {
+    this.plansData()
+    this.purchasedData()
+    this.searchedData()
+    this.SUTData()
+  },
 
   methods: {
     curday(sp, day, month) {
@@ -208,6 +233,79 @@ export default {
         } else {
           this.plansActivateError = true
         }
+    },
+    plansData() {
+      firebase
+        .database()
+        .ref("Wallet/" + this.$store.getters.user.uid)
+        .on("value", snap => {
+          let myObj = snap.val();
+          this.plansDetails = myObj;
+          if (myObj !== null) {
+            let keys = Object.keys(snap.val());
+            this.plansKeys = keys;
+          }
+        });
+    },
+    SUTData() {
+      firebase
+        .database()
+        .ref("SUT/" + this.$store.getters.user.uid)
+        .on("value", snap => {
+          let myObj = snap.val();
+          if (myObj !== null) {
+            this.SUT = []
+            let keys = Object.keys(snap.val());
+            keys.forEach(key => {
+              this.SUT.push({
+                type: myObj[key].Type,
+                line: myObj[key].Line,
+                date: myObj[key].Date,
+                time: myObj[key].Time,
+                amount: myObj[key].Cost
+              })
+            });
+          }
+        });
+    },
+    purchasedData() {
+      firebase
+        .database()
+        .ref("History/Purchase/" + this.$store.getters.user.uid)
+        .on("value", snap => {
+          let myObj = snap.val();
+          if (myObj !== null) {
+            this.purchased = []
+            let keys = Object.keys(snap.val());
+            keys.forEach(key => {
+              this.purchased.unshift({
+                type: myObj[key].Type,
+                date: myObj[key].Date,
+                time: myObj[key].Time,
+                amount: myObj[key].Cost
+              })
+            });
+          }
+        });
+    },
+    searchedData() {
+      firebase
+        .database()
+        .ref("History/Search/" + this.$store.getters.user.uid)
+        .on("value", snap => {
+          let myObj = snap.val();
+          if (myObj !== null) {
+            this.searched = []
+            let keys = Object.keys(snap.val());
+            keys.forEach(key => {
+              this.searched.unshift({
+                title: myObj[key].Title,
+                date: myObj[key].Date,
+                time: myObj[key].Time
+              })
+            });
+          }
+        });
     }
   }
 };
@@ -247,6 +345,13 @@ export default {
   height: auto;
 }
 
+.custom-history-card-wrapper {
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+  width: 100%;
+  height: auto;
+}
+
 .card-info {
   font-weight: 600;
   font-size: 1.2rem;
@@ -266,6 +371,8 @@ export default {
 .custom-plan-title {
   padding: 0px;
   margin-bottom: 0px !important;
+  margin-left: auto;
+  margin-right: auto;
   align-self: center;
   justify-content: start;
   text-overflow: ellipsis;
@@ -293,5 +400,35 @@ export default {
   margin-left: auto;
   margin-right: auto;
   font-size: 1rem;
+}
+
+.display-flex {
+  display: flex;
+}
+
+.custom-history-title-wrap {
+  display: flex;
+  height: auto;
+}
+
+.custom-history-table-wrap {
+  display: flex;
+  height: auto;
+}
+
+.custom-history-title {
+  padding: 0px;
+  margin-bottom: 0px !important;
+  margin-left: auto;
+  margin-right: auto;
+  align-self: center;
+  justify-content: start;
+  text-overflow: ellipsis;
+  font-weight: 600;
+}
+
+.custom-history-table {
+  width: 100%;
+  height: 100%;
 }
 </style>
