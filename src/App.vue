@@ -1,8 +1,8 @@
 <template>
   <v-app id="app">
-    <!-- <v-app-bar app color="#0f4c81" dense flat dark>
+    <v-app-bar app color="rgba(0, 0, 0, 0.26)" dense flat dark>
       <div class="custom-app-toolbar">
-        <v-tabs fixed-tabs background-color="#0f4c81">
+        <v-tabs fixed-tabs background-color="transparent">
           <v-tab to="/home">
             Home
             <v-icon color="white" size="20" class="ma-2">mdi-home</v-icon>
@@ -68,46 +68,8 @@
           </v-btn>
         </div>
       </div>
-    </v-app-bar> -->
-    <div class="custom-badges">
-      <v-chip color="rgba(255, 255, 255, 0.7)" text-color="black" class="custom-weather">
-        <img
-          v-if="weather.icon"
-          class="custom-weather-icon"
-          :src="require('./assets/weather/' + weather.icon + '.png')"
-        />
-        <span
-          v-if="weather.temperature"
-          class="custom-weather-temperature"
-        >{{ this.weather.temperature }}°C</span>
-        <span
-          v-if="!weather.icon || !weather.temperature"
-          class="mx-2"
-          style="font-weight: 500;"
-        >No Weather</span>
-      </v-chip>
-      <v-btn
-        fab
-        dark
-        color="blue-grey"
-        elevation="0"
-        class="custom-profile-avatar"
-        @click="profile = true"
-      >
-        <v-icon v-if="!this.$store.getters.profilePicture" dark size="25">mdi-account-circle</v-icon>
-        <img
-          v-if="this.$store.getters.profilePicture"
-          :src="this.$store.getters.profilePicture"
-          class="custom-profile-picture-image"
-        />
-      </v-btn>
-    </div>
-    <div class="custom-menu">
-      <v-btn class="custom-menu-button" fab elevation="0">
-        <v-icon>mdi-menu</v-icon>
-      </v-btn>
-    </div>
-    <v-content>
+    </v-app-bar>
+    <v-content >
       <v-dialog persistent scrollable v-model="profile" width="35vw">
         <v-card>
           <v-card-text style="height: 80vh;">
@@ -406,8 +368,7 @@ export default {
     }
   },
 
-  computed: {
-  },
+  computed: {},
 
   mounted() {
     this.weatherLoad()
@@ -657,8 +618,9 @@ export default {
 
 <style scoped>
 #app {
-  background-color: grey;
+  background: #0f4c81;
 }
+
 .router-link-transparency {
   color: transparent;
 }
@@ -688,35 +650,16 @@ export default {
 }
 
 .custom-badges {
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 8vh;
-  width: 11vw;
+  height: 100%;
+  width: 140px;
+  margin-left: 5px;
   display: grid;
   grid-template-columns: 2fr 1fr;
-  z-index: 999;
-}
-
-.custom-menu {
-  position: absolute;
-  top: 8vh;
-  right: 0;
-  height: 8vh;
-  width: 3.7vw;
-  display: flex;
-  z-index: 999;
-  justify-content: center;
-}
-
-.custom-menu-button {
-  height: 6vh !important;
-  width: 2.8vw !important;
 }
 
 .custom-profile-avatar {
-  height: 6vh !important;
-  width: 2.8vw !important;
+  height: 38px !important;
+  width: 38px !important;
   align-self: center;
   justify-self: center;
 }
@@ -728,29 +671,15 @@ export default {
 }
 
 .custom-weather {
-  width: 7.1vw;
-  height: 5.1vh !important;
   align-self: center;
   justify-self: center;
   padding: 0px !important;
 }
 
-.custom-weather-icon {
-  height: 6.3vh;
-  width: 3vw;
-  margin-left: 0.3vw;
-}
-
 .custom-weather-temperature {
-  margin-right: 0.8vw;
+  margin-right: 10px;
   font-weight: 500;
-  font-size: 3vh;
-}
-
-.custom-profile-picture-image {
-  border-radius: 50%;
-  width: 2.8vw;
-  height: 6vh;
+  font-size: 1rem;
 }
 
 .data-modify {
