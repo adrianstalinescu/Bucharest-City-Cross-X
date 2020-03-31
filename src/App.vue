@@ -1,8 +1,8 @@
 <template>
   <v-app id="app">
-    <v-app-bar app color="rgba(0, 0, 0, 0.26)" dense flat dark>
+    <v-app-bar v-if="this.$store.getters.user" app color="rgba(0, 0, 0, 0.26)" dense flat dark>
       <div class="custom-app-toolbar">
-        <v-tabs fixed-tabs background-color="transparent">
+        <v-tabs class="custom-toolbar-buttons" fixed-tabs background-color="transparent">
           <v-tab to="/home">
             Home
             <v-icon color="white" size="20" class="ma-2">mdi-home</v-icon>
@@ -28,21 +28,26 @@
             <v-icon color="white" size="20" class="ma-2">mdi-wallet</v-icon>
           </v-tab>
         </v-tabs>
-        <v-divider class="mr-2" vertical></v-divider>
+        <!-- <div class="custom-toolbar-buttons">
+          <v-btn
+            rounded
+            elevation="0"
+          >
+            <span>Home</span>
+            <v-icon color="white" size="20" class="ml-2">mdi-home</v-icon>
+          </v-btn>
+        </div> -->
         <div class="custom-badges">
-          <v-chip color="rgba(255, 255, 255, 0.7)" text-color="black" class="mr-2 custom-weather">
-            <h4 style="display:none">{{ weatherLoad }}</h4>
+          <v-chip color="rgba(0, 0, 0, 0.2)" text-color="white" class="custom-weather">
             <img
               v-if="weather.icon"
-              height="40px"
-              width="40px"
-              style="margin-left: 5px;"
+              class="custom-weather-icon"
               :src="require('./assets/weather/' + weather.icon + '.png')"
             />
             <span
               v-if="weather.temperature"
               class="custom-weather-temperature"
-            >{{ this.weather.temperature }}°C</span>
+            >{{this.weather.temperature}}°C</span>
             <span
               v-if="!weather.icon || !weather.temperature"
               class="mx-2"
@@ -61,9 +66,7 @@
             <img
               v-if="this.$store.getters.profilePicture"
               :src="this.$store.getters.profilePicture"
-              style="border-radius: 50%;"
-              width="38px"
-              height="38px"
+              class="custom-profile-button-picture"
             />
           </v-btn>
         </div>
@@ -618,7 +621,7 @@ export default {
 
 <style scoped>
 #app {
-  background: #0f4c81;
+  background: #27aae1;
 }
 
 .router-link-transparency {
@@ -649,19 +652,29 @@ export default {
   font-weight: 700;
 }
 
+.custom-toolbar-buttons {
+  width: 87.6vw;
+  height: 100%;
+}
+
 .custom-badges {
   height: 100%;
-  width: 140px;
-  margin-left: 5px;
+  width: 11vw;
   display: grid;
   grid-template-columns: 2fr 1fr;
 }
 
 .custom-profile-avatar {
-  height: 38px !important;
-  width: 38px !important;
+  height: 6vh !important;
+  width: 2.8vw !important;
   align-self: center;
   justify-self: center;
+}
+
+.custom-profile-button-picture {
+  border-radius: 50%;
+  height: 6vh !important;
+  width: 2.8vw !important;
 }
 
 .custom-app-toolbar {
@@ -671,15 +684,22 @@ export default {
 }
 
 .custom-weather {
+  width: auto;
+  height: 5.1vh !important;
   align-self: center;
   justify-self: center;
-  padding: 0px !important;
+  padding: 0px 1vw 0px 0.5vw !important;
+}
+
+.custom-weather-icon {
+  height: 6.3vh;
+  width: 3vw;
+  margin-right: 0.3vw;
 }
 
 .custom-weather-temperature {
-  margin-right: 10px;
   font-weight: 500;
-  font-size: 1rem;
+  font-size: 3vh;
 }
 
 .data-modify {

@@ -9,66 +9,64 @@
     <div class="entrance-wrapper" v-if="entranceWrap">
       <img class="train" src="../assets/background/train.svg">
       <transition appear name="fade">
-        <v-card width="45vw" elevation="0" color="transparent" class="margin-L-R entrance-buttons-position align-self-center">
-          <svg height="31.5vh" width="10px" class="entrance-buttons-line-1">
-            <line x1="0" y1="0" x2="0" y2="31.5vh" style="stroke:rgb(247, 236, 199);stroke-width:10px" />
+        <div class="entrance-buttons-wrapper">
+          <svg height="31.5vh" width="0.7vw" class="entrance-buttons-line-1">
+            <line x1="0" y1="0" x2="0" y2="31.5vh" style="stroke:rgb(247, 236, 199);stroke-width:0.7vw" />
           </svg>
-          <svg height="31.5vh" width="10px" class="entrance-buttons-line-2">
-            <line x1="0" y1="0" x2="0" y2="31.5vh" style="stroke:rgb(247, 236, 199);stroke-width:10px" />
+          <svg height="31.5vh" width="0.7vw" class="entrance-buttons-line-2">
+            <line x1="0" y1="0" x2="0" y2="31.5vh" style="stroke:rgb(247, 236, 199);stroke-width:0.7vw" />
           </svg>
-          <svg height="31.5vh" width="10px" class="entrance-buttons-line-3">
-            <line x1="0" y1="0" x2="0" y2="31.5vh" style="stroke:rgb(247, 236, 199);stroke-width:10px" />
+          <svg height="31.5vh" width="0.7vw" class="entrance-buttons-line-3">
+            <line x1="0" y1="0" x2="0" y2="31.5vh" style="stroke:rgb(247, 236, 199);stroke-width:0.7vw" />
           </svg>
-          <v-card-actions>
-            <v-btn
-              fab
-              dark
-              elevation="0"
-              color="#2a809d"
-              class="entrance-buttons"
-              @click="signupWrapper()"
-              @mouseover="hover.register = true"
-              @mouseleave="hover.register = false"
-            >
-            <transition name="fade-entrance-buttons" mode="out-in">
-              <span v-if="hover.register === true" class="entrance-buttons-text-register">Join</span>
-              <v-icon v-if="hover.register === false" class="entrance-buttons-icon">mdi-plus-circle-outline</v-icon>
-            </transition>
-            </v-btn>
-            <v-spacer></v-spacer>
-            <v-btn
-              fab
-              dark
-              color="#2a809d"
-              elevation="0"
-              @click="recoverWrapper()"
-              @mouseover="hover.recover = true"
-              @mouseleave="hover.recover = false"
-              class="entrance-buttons"
-            >
-            <transition name="fade-entrance-buttons" mode="out-in">
-              <span v-if="hover.recover === true" class="entrance-buttons-text-recover">Recover<br>password</span>
-              <v-icon v-if="hover.recover === false" class="entrance-buttons-icon">mdi-backup-restore</v-icon>
-            </transition>
-            </v-btn>
-            <v-spacer></v-spacer>
-            <v-btn
-              fab
-              dark
-              elevation="0"
-              color="#2a809d"
-              class="entrance-buttons"
-              @click="loginWrapper()"
-              @mouseover="hover.login = true"
-              @mouseleave="hover.login = false"
-            >
-            <transition name="fade-entrance-buttons" mode="out-in">
-              <span v-if="hover.login === true" class="entrance-buttons-text-login">Login</span>
-              <v-icon v-if="hover.login === false" class="entrance-buttons-icon">mdi-location-enter</v-icon>
-            </transition>
-            </v-btn>
-          </v-card-actions>
-        </v-card>
+          <v-btn
+            fab
+            dark
+            elevation="0"
+            color="#2a809d"
+            class="entrance-buttons entrance-button-position-1"
+            @click="signupWrapper()"
+            @mouseover="hover.register = true"
+            @mouseleave="hover.register = false"
+          >
+          <transition name="fade-entrance-buttons" mode="out-in">
+            <span v-if="hover.register === true" class="entrance-buttons-text-register">Join</span>
+            <v-icon v-if="hover.register === false" class="entrance-buttons-icon">mdi-plus-circle-outline</v-icon>
+          </transition>
+          </v-btn>
+          <v-spacer></v-spacer>
+          <v-btn
+            fab
+            dark
+            color="#2a809d"
+            elevation="0"
+            @click="recoverWrapper()"
+            @mouseover="hover.recover = true"
+            @mouseleave="hover.recover = false"
+            class="entrance-buttons entrance-button-position-2"
+          >
+          <transition name="fade-entrance-buttons" mode="out-in">
+            <span v-if="hover.recover === true" class="entrance-buttons-text-recover">Recover<br>password</span>
+            <v-icon v-if="hover.recover === false" class="entrance-buttons-icon">mdi-backup-restore</v-icon>
+          </transition>
+          </v-btn>
+          <v-spacer></v-spacer>
+          <v-btn
+            fab
+            dark
+            elevation="0"
+            color="#2a809d"
+            class="entrance-buttons entrance-button-position-3"
+            @click="loginWrapper()"
+            @mouseover="hover.login = true"
+            @mouseleave="hover.login = false"
+          >
+          <transition name="fade-entrance-buttons" mode="out-in">
+            <span v-if="hover.login === true" class="entrance-buttons-text-login">Login</span>
+            <v-icon v-if="hover.login === false" class="entrance-buttons-icon">mdi-location-enter</v-icon>
+          </transition>
+          </v-btn>
+        </div>
       </transition>
     </div>
     <transition appear name="slide-up">
@@ -455,7 +453,6 @@ export default {
   },
 
   created() {
-    this.$store.dispatch("AuthChange");
   },
 
   watch: {
@@ -698,8 +695,28 @@ section .wave.wave4 {
   height: 10vw !important;
 }
 
-.entrance-buttons-position {
-  top: -13%;
+.entrance-button-position-1{
+  position: absolute;
+  top: 30vh;
+  left: 25%;
+}
+
+.entrance-button-position-2{
+  position: absolute;
+  top: 30vh;
+  left: 45%;
+}
+
+.entrance-button-position-3{
+  position: absolute;
+  top: 30vh;
+  left: 65%;
+}
+
+.entrance-buttons-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
 }
 
 .entrance-buttons-text-register{
@@ -720,20 +737,20 @@ section .wave.wave4 {
 
 .entrance-buttons-line-1 {
   position: absolute !important;
-  top: -24vh !important;
-  left: 5.4vw !important;
+  top: 0vh !important;
+  left: 29.8vw !important;
 }
 
 .entrance-buttons-line-2 {
   position: absolute !important;
-  top: -24vh !important;
-  left: 22.4vw !important;
+  top: 0vh !important;
+  left: 49.8vw !important;
 }
 
 .entrance-buttons-line-3 {
   position: absolute !important;
-  top: -24vh !important;
-  left: 39.3vw !important;
+  top: 0vh !important;
+  left: 69.9vw !important;
 }
 
 .align-self-center {

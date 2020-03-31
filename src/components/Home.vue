@@ -149,6 +149,7 @@ export default {
   position: absolute;
   overflow-y: auto;
   top: 0;
+  background: grey;
 }
 
 .custom-notification-card {

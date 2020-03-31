@@ -91,7 +91,7 @@
         </v-chip>
       </div>
     </div>
-    <div class="gps-custom-button" @click="geolocate()">
+    <div v-if="drawerReturn === false" class="gps-custom-button" @click="geolocate()">
       <v-btn class="ma-2" fab dark small color="white" elevation="0">
         <v-icon color="blue lighten-1" style="transform: rotate(45deg);">mdi-navigation</v-icon>
       </v-btn>
