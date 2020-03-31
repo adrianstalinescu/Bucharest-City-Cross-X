@@ -9,63 +9,66 @@
     <div class="entrance-wrapper" v-if="entranceWrap">
       <img class="train" src="../assets/background/train.svg">
       <transition appear name="fade">
+      <!-- <transition> -->
         <div class="entrance-buttons-wrapper">
-          <svg height="31.5vh" width="0.7vw" class="entrance-buttons-line-1">
-            <line x1="0" y1="0" x2="0" y2="31.5vh" style="stroke:rgb(247, 236, 199);stroke-width:0.7vw" />
-          </svg>
-          <svg height="31.5vh" width="0.7vw" class="entrance-buttons-line-2">
-            <line x1="0" y1="0" x2="0" y2="31.5vh" style="stroke:rgb(247, 236, 199);stroke-width:0.7vw" />
-          </svg>
-          <svg height="31.5vh" width="0.7vw" class="entrance-buttons-line-3">
-            <line x1="0" y1="0" x2="0" y2="31.5vh" style="stroke:rgb(247, 236, 199);stroke-width:0.7vw" />
-          </svg>
-          <v-btn
-            fab
-            dark
-            elevation="0"
-            color="#2a809d"
-            class="entrance-buttons entrance-button-position-1"
-            @click="signupWrapper()"
-            @mouseover="hover.register = true"
-            @mouseleave="hover.register = false"
-          >
-          <transition name="fade-entrance-buttons" mode="out-in">
-            <span v-if="hover.register === true" class="entrance-buttons-text-register">Join</span>
-            <v-icon v-if="hover.register === false" class="entrance-buttons-icon">mdi-plus-circle-outline</v-icon>
-          </transition>
-          </v-btn>
-          <v-spacer></v-spacer>
-          <v-btn
-            fab
-            dark
-            color="#2a809d"
-            elevation="0"
-            @click="recoverWrapper()"
-            @mouseover="hover.recover = true"
-            @mouseleave="hover.recover = false"
-            class="entrance-buttons entrance-button-position-2"
-          >
-          <transition name="fade-entrance-buttons" mode="out-in">
-            <span v-if="hover.recover === true" class="entrance-buttons-text-recover">Recover<br>password</span>
-            <v-icon v-if="hover.recover === false" class="entrance-buttons-icon">mdi-backup-restore</v-icon>
-          </transition>
-          </v-btn>
-          <v-spacer></v-spacer>
-          <v-btn
-            fab
-            dark
-            elevation="0"
-            color="#2a809d"
-            class="entrance-buttons entrance-button-position-3"
-            @click="loginWrapper()"
-            @mouseover="hover.login = true"
-            @mouseleave="hover.login = false"
-          >
-          <transition name="fade-entrance-buttons" mode="out-in">
-            <span v-if="hover.login === true" class="entrance-buttons-text-login">Login</span>
-            <v-icon v-if="hover.login === false" class="entrance-buttons-icon">mdi-location-enter</v-icon>
-          </transition>
-          </v-btn>
+          <div class="entrance-buttons-lines-animation-wrapper">
+              <svg height="31.5vh" width="0.7vw" class="entrance-buttons-line-1">
+                <line x1="0" y1="0" x2="0" y2="31.5vh" style="stroke:rgb(247, 236, 199);stroke-width:0.7vw" />
+              </svg>
+              <svg height="31.5vh" width="0.7vw" class="entrance-buttons-line-2">
+                <line x1="0" y1="0" x2="0" y2="31.5vh" style="stroke:rgb(247, 236, 199);stroke-width:0.7vw" />
+              </svg>
+              <svg height="31.5vh" width="0.7vw" class="entrance-buttons-line-3">
+                <line x1="0" y1="0" x2="0" y2="31.5vh" style="stroke:rgb(247, 236, 199);stroke-width:0.7vw" />
+              </svg>
+          </div>
+          <div class="entrance-buttons-animation-wrapper">
+            <v-btn
+              fab
+              dark
+              elevation="0"
+              color="#2a809d"
+              class="entrance-buttons entrance-button-position-1"
+              @click="signupWrapper()"
+              @mouseover="hover.register = true"
+              @mouseleave="hover.register = false"
+            >
+              <transition name="fade-entrance-buttons" mode="out-in">
+                <span v-if="hover.register === true" class="entrance-buttons-text-register">Join</span>
+                <v-icon v-if="hover.register === false" class="entrance-buttons-icon">mdi-plus-circle-outline</v-icon>
+              </transition>
+            </v-btn>
+            <v-btn
+              fab
+              dark
+              color="#2a809d"
+              elevation="0"
+              @click="recoverWrapper()"
+              @mouseover="hover.recover = true"
+              @mouseleave="hover.recover = false"
+              class="entrance-buttons entrance-button-position-2"
+            >
+            <transition name="fade-entrance-buttons" mode="out-in">
+              <span v-if="hover.recover === true" class="entrance-buttons-text-recover">Recover<br>password</span>
+              <v-icon v-if="hover.recover === false" class="entrance-buttons-icon">mdi-backup-restore</v-icon>
+            </transition>
+            </v-btn>
+            <v-btn
+              fab
+              dark
+              elevation="0"
+              color="#2a809d"
+              class="entrance-buttons entrance-button-position-3"
+              @click="loginWrapper()"
+              @mouseover="hover.login = true"
+              @mouseleave="hover.login = false"
+            >
+            <transition name="fade-entrance-buttons" mode="out-in">
+              <span v-if="hover.login === true" class="entrance-buttons-text-login">Login</span>
+              <v-icon v-if="hover.login === false" class="entrance-buttons-icon">mdi-location-enter</v-icon>
+            </transition>
+            </v-btn>
+          </div>
         </div>
       </transition>
     </div>
@@ -586,11 +589,11 @@ export default {
 
 <style scoped>
 section {
-  position: relative;
+  position: absolute;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   background: url('../assets/background/skyline.svg') no-repeat;
-  background-size: auto 63vh;
+  background-size: 167vw 63vh;
   background-position: 45% 40vh;
   overflow: hidden;
 }
@@ -695,6 +698,52 @@ section .wave.wave4 {
   height: 10vw !important;
 }
 
+@keyframes rope {
+  0% {
+    transform: translateY(-32vh);
+  }
+  100% {
+    transform: translateY(0vh);
+  }
+}
+
+@keyframes button-fall {
+  0% {
+    transform: translateY(-32vh);
+  }
+  100% {
+    transform: translateY(0vh);
+  }
+}
+
+.entrance-buttons-lines-animation-wrapper svg {
+  animation: rope 1.3s linear;
+  animation-fill-mode: both;
+}
+
+.entrance-buttons-animation-wrapper button {
+  animation: button-fall 1.3s linear;
+  animation-fill-mode: both;
+}
+
+.entrance-buttons-line-1 {
+  position: absolute !important;
+  top: 0vh !important;
+  left: 29.8vw !important;
+}
+
+.entrance-buttons-line-2 {
+  position: absolute !important;
+  top: 0vh !important;
+  left: 49.8vw !important;
+}
+
+.entrance-buttons-line-3 {
+  position: absolute !important;
+  top: 0vh !important;
+  left: 69.9vw !important;
+}
+
 .entrance-button-position-1{
   position: absolute;
   top: 30vh;
@@ -712,6 +761,13 @@ section .wave.wave4 {
   top: 30vh;
   left: 65%;
 }
+
+.entrance-buttons-lines-animation-wrapper svg:nth-child(1) {animation-delay: .5s}
+.entrance-buttons-lines-animation-wrapper svg:nth-child(2) {animation-delay: .2s}
+.entrance-buttons-lines-animation-wrapper svg:nth-child(3) {animation-delay: .8s}
+.entrance-buttons-animation-wrapper button:nth-child(1) {animation-delay: .5s}
+.entrance-buttons-animation-wrapper button:nth-child(2) {animation-delay: .2s}
+.entrance-buttons-animation-wrapper button:nth-child(3) {animation-delay: .8s}
 
 .entrance-buttons-wrapper {
   width: 100%;
@@ -733,24 +789,6 @@ section .wave.wave4 {
 
 .entrance-buttons-icon{
   font-size: 3.5vw !important;
-}
-
-.entrance-buttons-line-1 {
-  position: absolute !important;
-  top: 0vh !important;
-  left: 29.8vw !important;
-}
-
-.entrance-buttons-line-2 {
-  position: absolute !important;
-  top: 0vh !important;
-  left: 49.8vw !important;
-}
-
-.entrance-buttons-line-3 {
-  position: absolute !important;
-  top: 0vh !important;
-  left: 69.9vw !important;
 }
 
 .align-self-center {
@@ -778,40 +816,36 @@ section .wave.wave4 {
   height: 5vh;
   position: absolute;
   bottom: 1.8vh;
-  left: 50%;
-  transform: translateX(-46vw);
+  left: 37%;
+  transform: translateX(-35vw);
   animation: train-move 13s infinite;
 }
 
 @keyframes train-move {
   0% {
-    transform: translateX(-47vw);
+    transform: translateX(-35vw);
   }
   50% {
-    transform: translateX(20.5vw);
+    transform: translateX(35vw);
   }
   100% {
-    transform: translateX(-47vw);
+    transform: translateX(-35vw);
   }
 }
 
 .fade-enter-active{
   transition: all 0.5s;
-  transition-delay: 0.2s
 }
 
 .fade-leave-active {
   transition: all 0.5s;
-  transition-delay: 0.2s
 }
 
 .fade-enter {
   opacity: 0;
-  /* transform: translateY(-10%) */
 }
 .fade-leave-to {
   opacity: 0;
-  /* transform: translateY(10%) */
 }
 
 .slide-up-enter-active{
