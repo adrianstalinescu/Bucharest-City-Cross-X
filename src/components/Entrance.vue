@@ -9,29 +9,29 @@
     <div class="entrance-wrapper" v-if="entranceWrap">
       <img class="train" src="../assets/background/train.svg">
       <transition appear name="fade">
-      <!-- <transition> -->
         <div class="entrance-buttons-wrapper">
           <div class="entrance-buttons-lines-animation-wrapper">
-              <svg height="31.5vh" width="0.7vw" class="entrance-buttons-line-1">
+              <svg id="rope-1" height="31.5vh" width="0.7vw" class="entrance-buttons-line-1">
                 <line x1="0" y1="0" x2="0" y2="31.5vh" style="stroke:rgb(247, 236, 199);stroke-width:0.7vw" />
               </svg>
-              <svg height="31.5vh" width="0.7vw" class="entrance-buttons-line-2">
+              <svg id="rope-2" height="31.5vh" width="0.7vw" class="entrance-buttons-line-2">
                 <line x1="0" y1="0" x2="0" y2="31.5vh" style="stroke:rgb(247, 236, 199);stroke-width:0.7vw" />
               </svg>
-              <svg height="31.5vh" width="0.7vw" class="entrance-buttons-line-3">
+              <svg id="rope-3" height="31.5vh" width="0.7vw" class="entrance-buttons-line-3">
                 <line x1="0" y1="0" x2="0" y2="31.5vh" style="stroke:rgb(247, 236, 199);stroke-width:0.7vw" />
               </svg>
           </div>
           <div class="entrance-buttons-animation-wrapper">
             <v-btn
+              id="button-1"
               fab
               dark
               elevation="0"
               color="#2a809d"
               class="entrance-buttons entrance-button-position-1"
               @click="signupWrapper()"
-              @mouseover="hover.register = true"
-              @mouseleave="hover.register = false"
+              @mouseover="buttonHoverON1()"
+              @mouseleave="buttonHoverOFF1()"
             >
               <transition name="fade-entrance-buttons" mode="out-in">
                 <span v-if="hover.register === true" class="entrance-buttons-text-register">Join</span>
@@ -39,34 +39,36 @@
               </transition>
             </v-btn>
             <v-btn
+              id="button-2"
               fab
               dark
               color="#2a809d"
               elevation="0"
               @click="recoverWrapper()"
-              @mouseover="hover.recover = true"
-              @mouseleave="hover.recover = false"
+              @mouseover="buttonHoverON2()"
+              @mouseleave="buttonHoverOFF2()"
               class="entrance-buttons entrance-button-position-2"
             >
-            <transition name="fade-entrance-buttons" mode="out-in">
-              <span v-if="hover.recover === true" class="entrance-buttons-text-recover">Recover<br>password</span>
-              <v-icon v-if="hover.recover === false" class="entrance-buttons-icon">mdi-backup-restore</v-icon>
-            </transition>
+              <transition name="fade-entrance-buttons" mode="out-in">
+                <span v-if="hover.recover === true" class="entrance-buttons-text-recover">Recover<br>password</span>
+                <v-icon v-if="hover.recover === false" class="entrance-buttons-icon">mdi-backup-restore</v-icon>
+              </transition>
             </v-btn>
             <v-btn
+              id="button-3"
               fab
               dark
               elevation="0"
               color="#2a809d"
               class="entrance-buttons entrance-button-position-3"
               @click="loginWrapper()"
-              @mouseover="hover.login = true"
-              @mouseleave="hover.login = false"
+              @mouseover="buttonHoverON3()"
+              @mouseleave="buttonHoverOFF3()"
             >
-            <transition name="fade-entrance-buttons" mode="out-in">
-              <span v-if="hover.login === true" class="entrance-buttons-text-login">Login</span>
-              <v-icon v-if="hover.login === false" class="entrance-buttons-icon">mdi-location-enter</v-icon>
-            </transition>
+              <transition name="fade-entrance-buttons" mode="out-in">
+                <span v-if="hover.login === true" class="entrance-buttons-text-login">Login</span>
+                <v-icon v-if="hover.login === false" class="entrance-buttons-icon">mdi-location-enter</v-icon>
+              </transition>
             </v-btn>
           </div>
         </div>
@@ -473,6 +475,78 @@ export default {
   mounted() {},
 
   methods: {
+    buttonHoverON1() {
+      this.hover.register = true 
+      let button = document.getElementById("button-1")
+      let rope = document.getElementById("rope-1")
+      clearTimeout(this.timeoutHoverOFF1)
+      this.timeoutHoverON1 = setTimeout((hoverON1) => {
+        button.classList.remove("button-hover-slide-back");
+        rope.classList.remove("button-hover-slide-back");
+        button.classList.add("button-hover-slide");
+        rope.classList.add("button-hover-slide");
+      }, 100)
+    },
+    buttonHoverOFF1() {
+      this.hover.register = false 
+      let button = document.getElementById("button-1")
+      let rope = document.getElementById("rope-1")
+      clearTimeout(this.timeoutHoverON1)
+      this.timeoutHoverOFF1 = setTimeout((hoverOFF1) => {
+        button.classList.add("button-hover-slide-back");
+        rope.classList.add("button-hover-slide-back");
+        button.classList.remove("button-hover-slide");
+        rope.classList.remove("button-hover-slide");
+      }, 100)
+    },
+    buttonHoverON2() {
+      this.hover.recover = true 
+      let button = document.getElementById("button-2")
+      let rope = document.getElementById("rope-2")
+      clearTimeout(this.timeoutHoverOFF2)
+      this.timeoutHoverON2 = setTimeout((hoverON2) => {
+        button.classList.remove("button-hover-slide-back");
+        rope.classList.remove("button-hover-slide-back");
+        button.classList.add("button-hover-slide");
+        rope.classList.add("button-hover-slide");
+      }, 100)
+    },
+    buttonHoverOFF2() {
+      this.hover.recover = false 
+      let button = document.getElementById("button-2")
+      let rope = document.getElementById("rope-2")
+      clearTimeout(this.timeoutHoverON2)
+      this.timeoutHoverOFF2 = setTimeout((hoverOFF2) => {
+        button.classList.add("button-hover-slide-back");
+        rope.classList.add("button-hover-slide-back");
+        button.classList.remove("button-hover-slide");
+        rope.classList.remove("button-hover-slide");
+      }, 100)
+    },
+    buttonHoverON3() {
+      this.hover.login = true 
+      let button = document.getElementById("button-3")
+      let rope = document.getElementById("rope-3")
+      clearTimeout(this.timeoutHoverOFF3)
+      this.timeoutHoverON3 = setTimeout((hoverON3) => {
+        button.classList.remove("button-hover-slide-back");
+        rope.classList.remove("button-hover-slide-back");
+        button.classList.add("button-hover-slide");
+        rope.classList.add("button-hover-slide");
+      }, 100)
+    },
+    buttonHoverOFF3() {
+      this.hover.login = false 
+      let button = document.getElementById("button-3")
+      let rope = document.getElementById("rope-3")
+      clearTimeout(this.timeoutHoverON3)
+      this.timeoutHoverOFF3 = setTimeout((hoverOFF3) => {
+        button.classList.add("button-hover-slide-back");
+        rope.classList.add("button-hover-slide-back");
+        button.classList.remove("button-hover-slide");
+        rope.classList.remove("button-hover-slide");
+      }, 100)
+    },
     curday(sp) {
       let today = new Date();
       let dd = today.getDate();
@@ -714,6 +788,81 @@ section .wave.wave4 {
   100% {
     transform: translateY(0vh);
   }
+}
+
+@keyframes hover-slide-1 {
+  to {
+    transform: translateY(-3vh);
+  }
+}
+
+@keyframes hover-slide-back-1 {
+  from {
+    transform: translateY(-3vh);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes hover-slide-2 {
+  to {
+    transform: translateY(4vh);
+  }
+}
+
+@keyframes hover-slide-back-2 {
+  from {
+    transform: translateY(4vh);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes hover-slide {
+  to {
+    transform: translateY(-5vh);
+  }
+}
+
+@keyframes hover-slide-back {
+  from {
+    transform: translateY(-5vh);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.button-hover-slide-1 {
+  animation: hover-slide-1 0.2s linear !important;
+  animation-fill-mode: forwards !important;
+}
+
+.button-hover-slide-back-1 {
+  animation: hover-slide-back-1 0.2s linear !important;
+  animation-fill-mode: forwards !important;
+}
+
+.button-hover-slide-2 {
+  animation: hover-slide-2 0.2s linear !important;
+  animation-fill-mode: forwards !important;
+}
+
+.button-hover-slide-back-2 {
+  animation: hover-slide-back-2 0.2s linear !important;
+  animation-fill-mode: forwards !important;
+}
+
+.button-hover-slide {
+  animation: hover-slide 0.2s linear !important;
+  animation-fill-mode: forwards !important;
+}
+
+.button-hover-slide-back {
+  animation: hover-slide-back 0.2s linear !important;
+  animation-fill-mode: forwards !important;
 }
 
 .entrance-buttons-lines-animation-wrapper svg {
