@@ -2,26 +2,14 @@
   <div class="home-wrapper">
     <!-- log out button -->
     <v-btn
-      fab
-      dark
-      color="error"
-      elevation="0"
-      class="custom-notification-button-wrapper"
-      @click="SignOut()"
-    >
-      <v-icon size="20">mdi-bell</v-icon>
-    </v-btn>
-    <!-- notification button -->
-    <v-btn
       rounded
       dark
-      color="error"
+      color="#D95033"
       elevation="0"
       class="custom-log-out-button"
       @click="SignOut()"
     >
-      <span class="font-size-logout-text">Log Out</span>
-      <v-icon class="font-size-logout-icon">mdi-logout</v-icon>
+      <span class="font-size-logout-text">LogOut</span>
     </v-btn>
     <!-- subway status -->
       <!-- <div class="custom-subway-wrapper">
@@ -42,27 +30,53 @@
         </div>
       </div> -->
     <!-- profile button -->
-    <div class="custom-profile-wrapper">
-      <div class="align-self-center">
-        <div class="ma-0 display-flex justify-content-center">
-          <v-btn
-            fab
-            dark
-            color="blue-grey"
-            elevation="0"
-            class="custom-profile-avatar"
-            @click="profile = true"
-          >
-            <v-icon v-if="!this.$store.getters.profilePicture" dark class="font-size-profile-icon">mdi-account-circle</v-icon>
-            <img
-              v-if="this.$store.getters.profilePicture"
-              :src="this.$store.getters.profilePicture"
-              class="custom-profile-button-picture"
-            />
-          </v-btn>
-        </div>
-        <div class="ma-0">
-          <span class="custom-welcome-message">Welcome, {{this.$store.getters.userName}} !</span>
+    <div class="custom-profile-info-window-wrapper">
+      <div class="custom-profile-wrapper">
+        <div class="align-self-center">
+          <div class="ma-0 display-flex justify-content-center">
+            <v-btn
+              fab
+              elevation="0"
+              class="custom-profile-avatar"
+              @click="profile = true"
+            >
+              <v-icon v-if="!this.$store.getters.profilePicture" class="font-size-profile-icon">mdi-account-circle</v-icon>
+              <img
+                v-if="this.$store.getters.profilePicture"
+                :src="this.$store.getters.profilePicture"
+                class="custom-profile-button-picture"
+              />
+            </v-btn>
+          </div>
+          <div class="ma-0 display-flex justify-content-center">
+            <v-btn
+              rounded
+              dark
+              color="#d95033"
+              elevation="0"
+              @click="SignOut()"
+            >
+              <v-icon size="20">mdi-bell</v-icon>
+              <span>1</span>
+            </v-btn>
+            <!-- <span class="custom-welcome-message">Welcome!</span> -->
+            <!-- <v-chip outlined color="rgb(217,80,51)" text-color="rgba(0,0,0,0.8)" class="custom-weather">
+              <img
+                v-if="weather.icon"
+                class="custom-weather-icon"
+                :src="require('../assets/weather/' + weather.icon + '.png')"
+              />
+              <span
+                v-if="weather.temperature"
+                class="custom-weather-temperature"
+              >{{this.weather.temperature}}°C</span>
+              <span
+                v-if="!weather.icon || !weather.temperature"
+                class="mx-2"
+                style="font-weight: 500;"
+              >No Weather</span>
+            </v-chip> -->
+          </div>
         </div>
       </div>
     </div>
@@ -450,6 +464,10 @@ export default {
   name: "Home",
   data() {
     return {
+      weather: {
+        icon: null,
+        temperature: null
+      },
       profile: false,
       user: {
         profilePicture: null,
@@ -498,10 +516,177 @@ export default {
   },
 
   mounted() {
-    this.metroStatus();
+    this.weatherLoad()
+    // this.metroStatus();
   },
 
   methods: {
+    weatherLoad() {
+      var apikey = "VSbxFwm7S4kz8tyvaBiFAVxCbsBlnvtm";
+      const latlong = "44.4268006,26.1025036";
+      const vremea = new XMLHttpRequest();
+      vremea.open(
+        "GET",
+        "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=" +
+          apikey +
+          "&q=" +
+          latlong +
+          "&details=true",
+        true
+      );
+      vremea.onload = () => {
+        const locationKey = JSON.parse(vremea.responseText);
+        const key1 = locationKey.Key;
+        const vremeaStatus = new XMLHttpRequest();
+        vremeaStatus.open(
+          "GET",
+          "https://dataservice.accuweather.com/currentconditions/v1/" +
+            key1 +
+            "?apikey=" +
+            apikey +
+            "&details=true",
+          true
+        );
+        vremeaStatus.send();
+        vremeaStatus.onload = () => {
+          const stareVreme = JSON.parse(vremeaStatus.responseText);
+          const iconVreme = stareVreme[0].WeatherIcon;
+          switch (iconVreme) {
+            case 1:
+              this.weather.icon = "sun";
+              break;
+            case 2:
+              this.weather.icon = "sun";
+              break;
+            case 3:
+              this.weather.icon = "cloud-2";
+              break;
+            case 4:
+              this.weather.icon = "cloud-2";
+              break;
+            case 5:
+              this.weather.icon = "cloud-2";
+              break;
+            case 6:
+              this.weather.icon = "cloud-2";
+              break;
+            case 7:
+              this.weather.icon = "cloud-1";
+              break;
+            case 8:
+              this.weather.icon = "cloud-1";
+              break;
+            case 9:
+              this.weather.icon = "cloud-1";
+              break;
+            case 11:
+              this.weather.icon = "cloud-1";
+              break;
+            case 12:
+              this.weather.icon = "rain-3";
+              break;
+            case 13:
+              this.weather.icon = "rain-3";
+              break;
+            case 14:
+              this.weather.icon = "rain-3";
+              break;
+            case 15:
+              this.weather.icon = "storm";
+              break;
+            case 16:
+              this.weather.icon = "rain-3";
+              break;
+            case 17:
+              this.weather.icon = "rain-3";
+              break;
+            case 18:
+              this.weather.icon = "rain";
+              break;
+            case 19:
+              this.weather.icon = "cloud-2";
+              break;
+            case 20:
+              this.weather.icon = "cloud-2";
+              break;
+            case 21:
+              this.weather.icon = "cloud-2";
+              break;
+            case 22:
+              this.weather.icon = "snow";
+              break;
+            case 23:
+              this.weather.icon = "snow";
+              break;
+            case 24:
+              this.weather.icon = "snow-1";
+              break;
+            case 25:
+              this.weather.icon = "cloud-1";
+              break;
+            case 26:
+              this.weather.icon = "cloud-1";
+              break;
+            case 27:
+              this.weather.icon = "cloud-1";
+              break;
+            case 28:
+              this.weather.icon = "cloud-1";
+              break;
+            case 29:
+              this.weather.icon = "cloud-1";
+              break;
+            case 30:
+              this.weather.icon = "sun";
+              break;
+            case 31:
+              this.weather.icon = "snow-1";
+              break;
+            case 32:
+              this.weather.icon = "cloud-1";
+              break;
+            case 33:
+              this.weather.icon = "moon";
+              break;
+            case 34:
+              this.weather.icon = "moon";
+              break;
+            case 35:
+              this.weather.icon = "moon";
+              break;
+            case 36:
+              this.weather.icon = "moon";
+              break;
+            case 37:
+              this.weather.icon = "moon";
+              break;
+            case 38:
+              this.weather.icon = "cloud";
+              break;
+            case 39:
+              this.weather.icon = "rain-2";
+              break;
+            case 40:
+              this.weather.icon = "rain-2";
+              break;
+            case 41:
+              this.weather.icon = "storm";
+              break;
+            case 42:
+              this.weather.icon = "storm";
+              break;
+            case 43:
+              this.weather.icon = "cloud";
+              break;
+            case 44:
+              this.weather.icon = "snow";
+          }
+          const tempVreme = stareVreme[0].Temperature.Metric.Value;
+          this.weather.temperature = tempVreme.toFixed(0);
+        };
+      };
+      vremea.send();
+    },
     metroStatus() {
       firebase
         .database()
@@ -619,11 +804,36 @@ export default {
   align-self: center;
 }
 
+.custom-weather {
+  width: auto;
+  height: 5.1vh !important;
+  align-self: center;
+  justify-self: center;
+  padding: 0px 1vw 0px 0.5vw !important;
+  border: solid 0.7vh #D95033 !important;
+}
+
+.custom-weather-icon {
+  height: 6.3vh;
+  width: 3vw;
+  margin-right: 0.3vw;
+}
+
+.custom-weather-temperature {
+  font-weight: 600;
+  font-size: 3vh;
+}
+
 .custom-navigation-buttons-wrapper {
   display:flex;
   width: 100%;
   height: 45vh;
+  position: absolute;
+  bottom: 10vh;
   justify-content: space-around;
+  background: url("../assets/background/connector-line.svg") no-repeat;
+  background-size: 100% 5vh;
+  background-position: center;
 }
 
 .custom-navigation-button {
@@ -631,28 +841,21 @@ export default {
   width: 10.98vw !important;
   height: 23.62vh !important;
   padding: 0px !important;
-}
-
-.custom-notification-button-wrapper {
-  position: absolute;
-  top: 1vh;
-  right: 0.5vw;
-  width: 2.92vw !important;
-  height: 6.29vh !important;
-  padding: 0px !important;
+  border: solid 2vh #D95033;
 }
 
 .custom-log-out-button {
   position: absolute;
-  top: 1vh;
-  left: 0.5vw;
-  width: 8.5vw !important;
-  height: 5vh !important;
+  bottom: 2vh;
+  left: 45.8vw;
+  width: 8vw !important;
+  height: 6vh !important;
   padding: 0px !important;
 }
 
 .font-size-profile-icon {
-  font-size: 10vh !important;
+  font-size: 14vh !important;
+  color: white !important;
 }
 
 .font-size-logout-text {
@@ -669,8 +872,9 @@ export default {
   height: 100%;
   position: absolute;
   overflow-y: auto;
-  top: 0;
-  background: grey;
+  background: url('../assets/background/city-skyline-home.svg') no-repeat;
+  background-size: 120% 210%;
+  background-position: 50%;
 }
 
 .custom-notification-card {
@@ -774,27 +978,38 @@ export default {
   display: flex;
 }
 
+.custom-profile-info-window-wrapper {
+  width: 100%;
+  height: 70vh;
+  position: absolute;
+  top: 0;
+  background: url('../assets/background/user-welcome-info-window.svg') no-repeat;
+  background-position: 50% 4vh;
+  background-size: auto 40vh;
+}
+
 .custom-profile-avatar {
   height: 23.6vh !important;
   width: 11vw !important;
-  margin-top: 1vh;
   margin-bottom: 3vh;
   align-self: center;
   justify-self: center;
+  background-color: #D95033 !important;
 }
 
 .custom-profile-button-picture {
   border-radius: 50%;
   height: 23.6vh !important;
   width: 11vw !important;
-  border: none;
+  border: solid 1.2vh #D95033;
 }
 
 .custom-welcome-message {
   display: flex;
-  font-size: 3vh;
+  justify-self: center;
+  font-size: 4vh;
   font-weight: 500;
-  color: white;
+  color: rgba(0, 0, 0, 0.87);
 }
 
 .data-modify {
