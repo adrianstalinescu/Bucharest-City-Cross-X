@@ -54,28 +54,13 @@
               dark
               color="#d95033"
               elevation="0"
-              @click="SignOut()"
+              class="custom-notification-button"
+              @click="notificationDrawer = true"
             >
-              <v-icon size="20">mdi-bell</v-icon>
-              <span>1</span>
+              <v-icon class="custom-notification-button-icon">mdi-bell</v-icon>
+              <span v-if="this.$store.getters.notificationsCount" class="custom-notification-button-text">{{this.$store.getters.notificationsCount.length}}</span>
+              <span v-if="!this.$store.getters.notificationsCount" class="custom-notification-button-text">0</span>
             </v-btn>
-            <!-- <span class="custom-welcome-message">Welcome!</span> -->
-            <!-- <v-chip outlined color="rgb(217,80,51)" text-color="rgba(0,0,0,0.8)" class="custom-weather">
-              <img
-                v-if="weather.icon"
-                class="custom-weather-icon"
-                :src="require('../assets/weather/' + weather.icon + '.png')"
-              />
-              <span
-                v-if="weather.temperature"
-                class="custom-weather-temperature"
-              >{{this.weather.temperature}}°C</span>
-              <span
-                v-if="!weather.icon || !weather.temperature"
-                class="mx-2"
-                style="font-weight: 500;"
-              >No Weather</span>
-            </v-chip> -->
           </div>
         </div>
       </div>
@@ -133,7 +118,7 @@
           </div>
         </v-btn>
       </router-link>
-      <!-- <router-link v-if="this.$store.getters.userRole === 'admin'" :to="'admin'" class="custom-router-link-transparency">
+      <router-link v-if="this.$store.getters.userRole === 'admin'" :to="'admin'" class="custom-router-link-transparency">
         <v-btn 
           fab 
           elevation="0" 
@@ -149,7 +134,7 @@
             </div>
           </div>
         </v-btn>
-      </router-link> -->
+      </router-link>
     </div>
     <!-- notifications -->
       <!-- <v-card
@@ -218,10 +203,97 @@
         </div>
         <div class="custom-notification-card-wrap ma-3">{{notificationsData[n].Content}}</div>
       </v-card> -->
+    <!-- notifications dialog -->
+    <v-dialog persistent scrollable v-model="notificationDrawer" width="50vw">
+      <v-card>
+        <v-card-text class="min-height-50">
+          <v-card
+            v-if="!notificationsKeys"
+            class="custom-notification-card"
+            width="25vw"
+            outlined
+            elevation="0"
+          >
+            <div class="custom-notification-empty-card-wrap ma-2">
+              <v-avatar elevation="0" color="success" class="mr-4 ml-2">
+                <v-icon dark size="30">mdi-check</v-icon>
+              </v-avatar>
+              <v-card-title class="custom-notification-empty-title" disabled>There are no notifications</v-card-title>
+            </div>
+          </v-card>
+          <v-card
+            v-for="n in notificationsKeys"
+            :key="n"
+            class="custom-notification-card"
+            width="50vw"
+            min-height="80px"
+            outlined
+            elevation="0"
+          >
+            <div class="custom-notification-card-wrap mt-2">
+              <v-avatar
+                v-if="notificationsData[n].Type === 'alert'"
+                elevation="0"
+                color="orange lighten-1"
+                class="custom-notification-avatar ml-4"
+              >
+                <v-icon color="orange darken-4" size="30">mdi-alert-outline</v-icon>
+              </v-avatar>
+              <v-avatar
+                v-if="notificationsData[n].Type === 'info'"
+                elevation="0"
+                color="light-blue lighten-3"
+                class="custom-notification-avatar ml-4"
+              >
+                <v-icon color="light-blue darken-1" size="30">mdi-exclamation-thick</v-icon>
+              </v-avatar>
+              <input
+                :value="notificationsData[n].Title"
+                disabled
+                class="custom-notification-title ml-3 mr-3"
+              />
+              <v-btn
+                fab
+                small
+                elevation="0"
+                color="transparent"
+                class="custom-notification-avatar mr-4"
+                @click="deleteNotification(n)"
+              >
+                <v-icon color="red" size="30">mdi-delete</v-icon>
+              </v-btn>
+            </div>
+            <div class="custom-notification-card-wrap ma-1">
+              <v-chip class="ma-1" color="#7595a6" outlined style="font-weight: 700">
+                <v-icon size="20" class="mr-2">mdi-message-text-clock-outline</v-icon>
+                {{notificationsData[n].Date}}
+                <v-icon size="20">mdi-chevron-right</v-icon>
+                {{notificationsData[n].Time}}
+              </v-chip>
+            </div>
+            <div class="custom-notification-card-wrap ma-3">{{notificationsData[n].Content}}</div>
+          </v-card>
+        </v-card-text>
+        <v-card-actions>
+          <v-row justify="center" class="ma-1">
+            <v-btn
+              rounded
+              small
+              dark
+              color="#D95033"
+              elevation="0"
+              @click="notificationDrawer = false"
+            >
+              <v-icon dark size="25">mdi-arrow-left</v-icon>
+            </v-btn>
+          </v-row>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <!-- profile dialog -->
     <v-dialog persistent scrollable v-model="profile" width="35vw">
       <v-card>
-        <v-card-text style="height: 80vh;">
+        <v-card-text class="min-height-50">
           <v-row justify="space-around" class="mt-3">
             <v-avatar
               v-if="!this.$store.getters.profilePicture"
@@ -469,6 +541,7 @@ export default {
         temperature: null
       },
       profile: false,
+      notificationDrawer: false,
       user: {
         profilePicture: null,
         mail: null,
@@ -867,12 +940,25 @@ export default {
   font-size: 3.1vh !important;
 }
 
+.min-height-50 {
+  min-height: 33vh;
+  height:auto;
+}
+
+.custom-notification-dialog-wrapper {
+  z-index: 999;
+  /* width: 50vw;
+  height: 80vh; */
+  /* background: white; */
+  /* display: flex; */
+}
+
 .home-wrapper {
   width: 100%;
   height: 100%;
   position: absolute;
   overflow-y: auto;
-  background: url('../assets/background/city-skyline-home.svg') no-repeat;
+  background: url('../assets/background/map-home.svg') no-repeat;
   background-size: 120% 210%;
   background-position: 50%;
 }
@@ -889,7 +975,21 @@ export default {
   display: flex;
 }
 
-.custom-notification-button {
+.custom-notification-button{
+  width: 3vw !important;
+  height: 5vh !important;
+}
+
+.custom-notification-button-icon{
+  font-size: 2.8vh !important;
+}
+
+.custom-notification-button-text{
+  font-size: 2.5vh !important;
+  margin-left: 0.2vw;
+}
+
+.custom-notification-avatar {
   align-self: center !important;
 }
 
@@ -915,7 +1015,7 @@ export default {
   text-overflow: ellipsis;
   width: -webkit-fill-available;
   font-weight: 600;
-  color: rgba(0, 0, 0, 0.87);
+  color: rgba(0, 0, 0, 0.8);
 }
 
 .notification-delete {
