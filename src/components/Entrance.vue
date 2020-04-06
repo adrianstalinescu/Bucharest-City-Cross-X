@@ -633,9 +633,12 @@ export default {
       let birthday = this.birthFormat(this.date)
       let gdpr = true
 
-      this.$store.dispatch("profilePictureRegister", {
-        Picture: picture
-      })
+      if(this.profilePicture)
+      {
+        this.$store.dispatch("profilePictureRegister", {
+          Picture: picture
+        })
+      }
       this.$store.dispatch("register", {
         Email: email,
         Password: password,

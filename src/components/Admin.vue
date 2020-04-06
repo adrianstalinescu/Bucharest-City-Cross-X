@@ -1,38 +1,46 @@
 <template>
   <div class="admin-wrapper">
+    <div class="custom-back-button">
+      <router-link :to="'home'" class="custom-router-link-transparency">
+        <v-btn class="ma-2" rounded dark color="#D95033" elevation="0">
+          <span class="mr-1">HOME</span>
+          <v-icon>mdi-arrow-right</v-icon>
+        </v-btn>
+      </router-link>
+    </div>
     <v-card class="custom-menu-wrapper" outlined elevation="0">
-        <v-card color="blue-grey lighten-3" elevation="0" class="mt-2 mx-2 custom-card-grid">
-            <v-icon class="menu-icon" dark size="30">mdi-chart-arc</v-icon>
-            <span class="menu-title">Statistics</span>
-            <v-btn fab class="menu-button" elevation="0" @click="statisticsWrapper()">
-                <v-icon>mdi-chevron-right</v-icon>
-            </v-btn>
-        </v-card>
-        <v-divider class="mb-2 mt-2"></v-divider>
-        <v-card color="blue-grey lighten-3" elevation="0" class="mt-2 mx-2 custom-card-grid">
-            <v-icon class="menu-icon" dark size="25">mdi-account-search-outline</v-icon>
-            <span class="menu-title">Student Validation</span>
-            <v-btn fab class="menu-button" elevation="0" @click="studentValidationWrapper()">
-                <v-icon>mdi-chevron-right</v-icon>
-            </v-btn>
-        </v-card>
-        <v-divider class="mb-2 mt-2"></v-divider>
-        <v-card color="blue-grey lighten-3" elevation="0" class="mt-2 mx-2 custom-card-grid">
-            <v-icon class="menu-icon" dark size="25">mdi-subway</v-icon>
-            <span class="menu-title">Metro Status</span>
-            <v-btn fab class="menu-button" elevation="0" @click="metroStatusWrapper()">
-                <v-icon>mdi-chevron-right</v-icon>
-            </v-btn>
-        </v-card>
-        <v-divider class="mb-2 mt-2"></v-divider>
-        <v-card color="blue-grey lighten-3" elevation="0" class="mt-2 mx-2 custom-card-grid">
-            <v-icon class="menu-icon" dark size="25">mdi-message-text-clock-outline</v-icon>
-            <span class="menu-title">Notifications</span>
-            <v-btn fab class="menu-button" elevation="0" @click="notificationSenderWrapper()">
-                <v-icon>mdi-chevron-right</v-icon>
-            </v-btn>
-        </v-card>
-        <v-divider class="mb-2 mt-2"></v-divider>
+      <v-card color="blue-grey lighten-3" elevation="0" class="mt-2 mx-2 custom-card-grid">
+          <v-icon class="menu-icon" dark size="30">mdi-chart-arc</v-icon>
+          <span class="menu-title">Statistics</span>
+          <v-btn fab class="menu-button" elevation="0" @click="statisticsWrapper()">
+              <v-icon>mdi-chevron-right</v-icon>
+          </v-btn>
+      </v-card>
+      <v-divider class="mb-2 mt-2"></v-divider>
+      <v-card color="blue-grey lighten-3" elevation="0" class="mt-2 mx-2 custom-card-grid">
+          <v-icon class="menu-icon" dark size="25">mdi-account-search-outline</v-icon>
+          <span class="menu-title">Student Validation</span>
+          <v-btn fab class="menu-button" elevation="0" @click="studentValidationWrapper()">
+              <v-icon>mdi-chevron-right</v-icon>
+          </v-btn>
+      </v-card>
+      <v-divider class="mb-2 mt-2"></v-divider>
+      <v-card color="blue-grey lighten-3" elevation="0" class="mt-2 mx-2 custom-card-grid">
+          <v-icon class="menu-icon" dark size="25">mdi-subway</v-icon>
+          <span class="menu-title">Metro Status</span>
+          <v-btn fab class="menu-button" elevation="0" @click="metroStatusWrapper()">
+              <v-icon>mdi-chevron-right</v-icon>
+          </v-btn>
+      </v-card>
+      <v-divider class="mb-2 mt-2"></v-divider>
+      <v-card color="blue-grey lighten-3" elevation="0" class="mt-2 mx-2 custom-card-grid">
+          <v-icon class="menu-icon" dark size="25">mdi-message-text-clock-outline</v-icon>
+          <span class="menu-title">Notifications</span>
+          <v-btn fab class="menu-button" elevation="0" @click="notificationSenderWrapper()">
+              <v-icon>mdi-chevron-right</v-icon>
+          </v-btn>
+      </v-card>
+      <v-divider class="mb-2 mt-2"></v-divider>
     </v-card>
     <div v-if="emptyWrap" class="custom-content-wrapper">
     </div>
@@ -737,6 +745,19 @@ export default {
 </script>
 
 <style scoped>
+.custom-router-link-transparency {
+  color: transparent;
+  height: 25vh !important;
+  align-self: center;
+}
+
+.custom-back-button {
+  z-index: 1000;
+  position: absolute;
+  left: 6vw;
+  bottom: 0vh;
+}
+
 .custom-content-wrapper {
   width: 100%;
   height: 100%;

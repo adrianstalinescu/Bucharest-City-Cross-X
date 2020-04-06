@@ -96,6 +96,14 @@
         <v-icon color="blue lighten-1" style="transform: rotate(45deg);">mdi-navigation</v-icon>
       </v-btn>
     </div>
+    <div v-if="drawerReturn === false" class="custom-back-button">
+      <router-link :to="'home'" class="custom-router-link-transparency">
+        <v-btn class="ma-2" rounded dark color="#D95033" elevation="0">
+          <span class="mr-1">HOME</span>
+          <v-icon>mdi-arrow-right</v-icon>
+        </v-btn>
+      </router-link>
+    </div>
     <v-dialog persistent scrollable v-model="stationSelectedDetails" width="60vw">
       <v-card class="custom-info-wrapper">
         <v-card-text class="custom-station-wrapper">
@@ -1154,6 +1162,12 @@ export default {
 </script>
 
 <style scoped>
+.custom-router-link-transparency {
+  color: transparent;
+  height: 25vh !important;
+  align-self: center;
+}
+
 .map-wrapper {
   width: 100%;
   height: 100%;
@@ -1216,6 +1230,12 @@ export default {
   position: absolute;
   right: 0.5vw;
   bottom: 3vh;
+}
+
+.custom-back-button {
+  position: absolute;
+  right: 0.5vw;
+  top: 0vh;
 }
 
 .align-self-center {

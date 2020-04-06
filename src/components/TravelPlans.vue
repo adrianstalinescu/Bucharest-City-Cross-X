@@ -1,8 +1,13 @@
 <template>
   <div class="plans-wrapper">
-    <h4 style="display:none">{{ cardDetail }}</h4>
-    <h4 style="display:none">{{ plansSUT }}</h4>
-    <h4 style="display:none">{{ walletDataCheck }}</h4>
+    <div class="custom-back-button">
+      <router-link :to="'home'" class="custom-router-link-transparency">
+        <v-btn class="ma-2" rounded dark color="#D95033" elevation="0">
+          <span class="mr-1">HOME</span>
+          <v-icon>mdi-arrow-right</v-icon>
+        </v-btn>
+      </router-link>
+    </div>
     <v-expansion-panels class="custom-sut-wrapper">
       <v-expansion-panel>
         <v-expansion-panel-header class="custom-sut-header">
@@ -52,7 +57,6 @@
         </v-btn>
       </div>
     </v-card>
-    <h4 style="display:none">{{ studentData }}</h4>
     <v-card
       v-if="isStudent === false"
       class="custom-card-wrapper"
@@ -115,7 +119,6 @@
         <span class="student-card-details">Valid until {{studentValid}}</span>
       </div>
     </v-card>
-    <h4 style="display:none">{{ plansRegular }}</h4>
     <v-expansion-panels v-for="pr in planRegularKeys" :key="pr" class="custom-card-wrapper">
       <v-expansion-panel>
         <v-expansion-panel-header class="custom-plan-header">
@@ -164,7 +167,6 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
-    <h4 style="display:none">{{ plansDiscount }}</h4>
     <v-expansion-panels v-for="pd in planDiscountKeys" :key="pd" class="custom-card-wrapper">
       <v-expansion-panel>
         <v-expansion-panel-header class="custom-plan-header">
@@ -213,7 +215,6 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
-    <h4 style="display:none">{{years}}</h4>
     <v-dialog persistent scrollable v-model="cardAdd" width="40vw">
       <v-card>
         <v-card-text class="pb-10">
@@ -508,7 +509,6 @@
             <v-icon dark size="25">mdi-close</v-icon>
           </v-btn>
           <v-spacer></v-spacer>
-          <h4 style="display:none">{{ studentSubmitDisable }}</h4>
           <v-btn
             fab
             small
@@ -629,93 +629,20 @@ export default {
     };
   },
 
-  created() {},
+  created() {
+    this.cardDetail();
+    this.plansSUT();
+    this.walletDataCheck();
+    this.studentData();
+    this.plansRegular();
+    this.plansDiscount();
+    this.years();
+    this.studentSubmitDisable();
+  },
 
   watch: {},
 
   computed: {
-    plansRegular() {
-      firebase
-        .database()
-        .ref("TravelPlans/Regular")
-        .on("value", snap => {
-          let myObj = snap.val();
-          let keys = Object.keys(snap.val());
-          this.planRegularKeys = keys;
-          this.planRegularDetails = myObj;
-        });
-    },
-    plansDiscount() {
-      firebase
-        .database()
-        .ref("TravelPlans/Discount")
-        .on("value", snap => {
-          let myObj = snap.val();
-          let keys = Object.keys(snap.val());
-          this.planDiscountKeys = keys;
-          this.planDiscountDetails = myObj;
-        });
-    },
-    plansSUT() {
-      firebase
-        .database()
-        .ref("TravelPlans/SUT")
-        .on("value", snap => {
-          let myObj = snap.val();
-          this.SUT.Description = myObj.Description;
-          this.SUT.Title = myObj.Title;
-          this.SUT.Cost = myObj.Cost;
-        });
-    },
-    cardDetail() {
-      firebase
-        .database()
-        .ref("CardDetails/" + this.$store.getters.user.uid)
-        .on("value", snap => {
-          if (snap.val() == null) {
-            this.card = false;
-          } else {
-            this.card = true;
-            let myObj = snap.val();
-            let keys = Object.keys(snap.val());
-            keys.forEach(key => {
-              switch (key) {
-                case "CardNumber":
-                  let digits = myObj[key].toString();
-                  this.cardLastDigits = digits.substr(digits.length - 4);
-                  break;
-                case "Expiry":
-                  this.cardExpiry = myObj[key];
-              }
-            });
-          }
-        });
-    },
-    studentData() {
-      firebase
-        .database()
-        .ref("Users/" + this.$store.getters.user.uid + "/Student")
-        .on("value", snap => {
-          let myObj = snap.val();
-          if (myObj !== null) {
-            this.isStudent = myObj.Status;
-            this.studentID = myObj.ID;
-            this.studentValid = myObj.Valid;
-          } else {
-            this.isStudent = false;
-            this.stundetID = null;
-            this.studentValid = null;
-          }
-        });
-    },
-    years() {
-      const year = new Date().getFullYear();
-      let years = Array.from(
-        { length: year - 2010 },
-        (value, index) => 2020 + index
-      );
-      this.YearList = years.reverse();
-    },
     studentSubmitDisable() {
       if (this.studentFront !== null) {
         if (this.studentBack !== null) {
@@ -730,26 +657,6 @@ export default {
       } else {
         this.studentSubmitDisabled = true;
       }
-    },
-    walletDataCheck() {
-      firebase
-        .database()
-        .ref("Wallet/" + this.$store.getters.user.uid)
-        .on("value", snap => {
-          let myObj = snap.val();
-          if (myObj !== null) {
-            this.walletData.status = true;
-            let keys = Object.keys(snap.val());
-            if (keys.length >= 2) {
-              this.walletData.length = true;
-            } else {
-              this.walletData.length = false;
-              this.walletData.plan = keys[0];
-            }
-          } else {
-            this.walletData.status = false;
-          }
-        });
     }
   },
 
@@ -994,12 +901,126 @@ export default {
             "You don't have a Card linked to your Account";
         }
       }
+    },
+    plansRegular() {
+      firebase
+        .database()
+        .ref("TravelPlans/Regular")
+        .on("value", snap => {
+          let myObj = snap.val();
+          let keys = Object.keys(snap.val());
+          this.planRegularKeys = keys;
+          this.planRegularDetails = myObj;
+        });
+    },
+    plansDiscount() {
+      firebase
+        .database()
+        .ref("TravelPlans/Discount")
+        .on("value", snap => {
+          let myObj = snap.val();
+          let keys = Object.keys(snap.val());
+          this.planDiscountKeys = keys;
+          this.planDiscountDetails = myObj;
+        });
+    },
+    plansSUT() {
+      firebase
+        .database()
+        .ref("TravelPlans/SUT")
+        .on("value", snap => {
+          let myObj = snap.val();
+          this.SUT.Description = myObj.Description;
+          this.SUT.Title = myObj.Title;
+          this.SUT.Cost = myObj.Cost;
+        });
+    },
+    cardDetail() {
+      firebase
+        .database()
+        .ref("CardDetails/" + this.$store.getters.user.uid)
+        .on("value", snap => {
+          if (snap.val() == null) {
+            this.card = false;
+          } else {
+            this.card = true;
+            let myObj = snap.val();
+            let keys = Object.keys(snap.val());
+            keys.forEach(key => {
+              switch (key) {
+                case "CardNumber":
+                  let digits = myObj[key].toString();
+                  this.cardLastDigits = digits.substr(digits.length - 4);
+                  break;
+                case "Expiry":
+                  this.cardExpiry = myObj[key];
+              }
+            });
+          }
+        });
+    },
+    studentData() {
+      firebase
+        .database()
+        .ref("Users/" + this.$store.getters.user.uid + "/Student")
+        .on("value", snap => {
+          let myObj = snap.val();
+          if (myObj !== null) {
+            this.isStudent = myObj.Status;
+            this.studentID = myObj.ID;
+            this.studentValid = myObj.Valid;
+          } else {
+            this.isStudent = false;
+            this.stundetID = null;
+            this.studentValid = null;
+          }
+        });
+    },
+    years() {
+      const year = new Date().getFullYear();
+      let years = Array.from(
+        { length: year - 2010 },
+        (value, index) => 2020 + index
+      );
+      this.YearList = years.reverse();
+    },
+    walletDataCheck() {
+      firebase
+        .database()
+        .ref("Wallet/" + this.$store.getters.user.uid)
+        .on("value", snap => {
+          let myObj = snap.val();
+          if (myObj !== null) {
+            this.walletData.status = true;
+            let keys = Object.keys(snap.val());
+            if (keys.length >= 2) {
+              this.walletData.length = true;
+            } else {
+              this.walletData.length = false;
+              this.walletData.plan = keys[0];
+            }
+          } else {
+            this.walletData.status = false;
+          }
+        });
     }
   }
 };
 </script>
 
 <style scoped>
+.custom-router-link-transparency {
+  color: transparent;
+  height: 25vh !important;
+  align-self: center;
+}
+
+.custom-back-button {
+  position: absolute;
+  right: 0.5vw;
+  top: 0vh;
+}
+
 .plans-wrapper {
   width: 100%;
   height: 100%;

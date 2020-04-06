@@ -1,6 +1,5 @@
 <template>
     <div>
-        <h4 style="display:none">{{ user }}</h4>
         <v-dialog fullscreen v-model="progress">
             <div class="check-wrapper">
                 <v-progress-circular
@@ -26,7 +25,10 @@ export default {
     };
   },
 
-    computed: {
+    created() {
+        this.user();
+    },
+    methods: {
         user() {
             this.progress = true
             firebase.auth().onAuthStateChanged((user) => {

@@ -35,7 +35,6 @@
       </div>
     </v-app-bar> -->
     <v-content >
-     
       <transition name="fade" mode="out-in">
         <router-view></router-view>
       </transition>
@@ -52,9 +51,6 @@ export default {
 
   data() {
     return {
-      
-     
-      
     };
   },
 
@@ -63,7 +59,6 @@ export default {
   },
 
   watch: {
-    
   },
 
   computed: {},

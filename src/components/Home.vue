@@ -399,20 +399,18 @@
             </v-btn>
           </v-row>
         </v-card-text>
-        <v-divider></v-divider>
         <v-card-actions>
           <v-row justify="space-around" class="ma-1">
             <v-btn
-              fab
+              rounded
               small
               dark
-              color="blue-grey lighten-1"
+              color="#D95033"
               elevation="0"
               @click="profile = false"
             >
-              <v-icon dark size="25">mdi-close</v-icon>
+              <v-icon dark size="25">mdi-arrow-left</v-icon>
             </v-btn>
-            <v-spacer></v-spacer>
           </v-row>
         </v-card-actions>
       </v-card>
