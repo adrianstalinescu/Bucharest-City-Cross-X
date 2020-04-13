@@ -3,8 +3,8 @@
     <div class="custom-back-button">
       <router-link :to="'home'" class="custom-router-link-transparency">
         <v-btn class="ma-2" rounded dark color="#D95033" elevation="0">
+          <v-icon>mdi-arrow-left</v-icon>
           <span class="mr-1">HOME</span>
-          <v-icon>mdi-arrow-right</v-icon>
         </v-btn>
       </router-link>
     </div>
@@ -1017,7 +1017,7 @@ export default {
 
 .custom-back-button {
   position: absolute;
-  right: 0.5vw;
+  left: 0.5vw;
   top: 0vh;
 }
 

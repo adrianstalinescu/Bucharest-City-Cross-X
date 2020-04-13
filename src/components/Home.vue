@@ -1,16 +1,7 @@
 <template>
   <div class="home-wrapper">
     <!-- log out button -->
-    <v-btn
-      rounded
-      dark
-      color="#D95033"
-      elevation="0"
-      class="custom-log-out-button"
-      @click="SignOut()"
-    >
-      <span class="font-size-logout-text">LogOut</span>
-    </v-btn>
+      
     <!-- subway status -->
       <!-- <div class="custom-subway-wrapper">
         <div class="custom-subway-card">
@@ -32,6 +23,29 @@
     <!-- profile button -->
     <div class="custom-profile-info-window-wrapper">
       <div class="custom-profile-wrapper">
+        <svg id="rope-profile" height="31.5vh" width="0.7vw" class="home-profile-rope">
+          <line x1="0" y1="0" x2="0" y2="16vh" style="stroke:#D95033;stroke-width:1.2vw" />
+        </svg>
+        <div class="home-user-welcome-message-wrapper">
+          <span> Welcome &#x1F91F; <br>{{this.$store.getters.userName}}</span>
+        </div>
+        <div class="home-weather-wrapper">
+          <img
+            v-if="weather.icon"
+            class="custom-weather-icon"
+            :src="require('../assets/weather/' + weather.icon + '.png')"
+          />
+          <span
+            v-if="weather.temperature"
+            class="custom-weather-temperature"
+          >{{ this.weather.temperature }}°C</span>
+        </div>
+        <div class="home-weather-empty-wrapper">
+          <span
+            v-if="!weather.icon || !weather.temperature"
+            class="custom-weather-empty"
+          >No Weather</span>
+        </div>
         <div class="align-self-center">
           <div class="ma-0 display-flex justify-content-center">
             <v-btn
@@ -39,8 +53,20 @@
               elevation="0"
               class="custom-profile-avatar"
               @click="profile = true"
+              @mouseover="profileHover = true"
+              @mouseleave="profileHover = false"
             >
-              <v-icon v-if="!this.$store.getters.profilePicture" class="font-size-profile-icon">mdi-account-circle</v-icon>
+              <v-overlay
+                :absolute="true"
+                :value="profileHover"
+                opacity="0.6"
+                class="custom-profile-overlay"
+              >
+                <v-icon v-if="profileHover" color="rgba(217, 80, 51, 0.9)" class="rotating" size="60">mdi-cog</v-icon>
+              </v-overlay>
+              <div v-if="!this.$store.getters.profilePicture" class="custom-profile-icon-empty">
+                <v-icon class="font-size-profile-icon">mdi-account-circle</v-icon>
+              </div>
               <img
                 v-if="this.$store.getters.profilePicture"
                 :src="this.$store.getters.profilePicture"
@@ -69,19 +95,16 @@
     <div class="custom-navigation-buttons-wrapper">
       <router-link :to="'map'" class="custom-router-link-transparency">
         <v-btn 
-          fab 
+          fab
           elevation="0" 
           class="custom-navigation-button"
+          @mouseover="buttonsHover.transit = true"
+          @mouseleave="buttonsHover.transit = false"
         >
-          <div>
-            <div>
-              <v-icon color="rgba(0,0,0,0.8)" size="60">mdi-map</v-icon>
-            </div>
-            <br>
-            <div>
-              <span style="font-size: 1.3rem;">TRANSIT</span>
-            </div>
-          </div>
+          <transition name="fade-home-buttons" mode="out-in">
+            <v-icon v-if="!buttonsHover.transit" color="#D95033" size="60">mdi-map</v-icon>
+            <span v-if="buttonsHover.transit" style="font-size: 1.3rem; color: #D95033;">TRANSIT</span>
+          </transition>
         </v-btn>
       </router-link>
       <router-link :to="'plans'" class="custom-router-link-transparency">
@@ -89,16 +112,13 @@
           fab 
           elevation="0" 
           class="custom-navigation-button"
+          @mouseover="buttonsHover.store = true"
+          @mouseleave="buttonsHover.store = false"
         >
-          <div>
-            <div>
-              <v-icon color="rgba(0,0,0,0.8)" size="60">mdi-ticket</v-icon>
-            </div>
-            <br>
-            <div>
-              <span style="font-size: 1.3rem;">PLANS</span>
-            </div>
-          </div>
+          <transition name="fade-home-buttons" mode="out-in">
+            <v-icon v-if="!buttonsHover.store" color="#D95033" size="60">mdi-cart-outline</v-icon>
+            <span v-if="buttonsHover.store" style="font-size: 1.3rem; color: #D95033;">STORE</span>
+          </transition>
         </v-btn>
       </router-link>
       <router-link :to="'wallet'" class="custom-router-link-transparency">
@@ -106,16 +126,13 @@
           fab 
           elevation="0" 
           class="custom-navigation-button"
+          @mouseover="buttonsHover.epass = true"
+          @mouseleave="buttonsHover.epass = false"
         >
-          <div>
-            <div>
-              <v-icon color="rgba(0,0,0,0.8)" size="60">mdi-wallet</v-icon>
-            </div>
-            <br>
-            <div>
-              <span style="font-size: 1.3rem;">WALLET</span>
-            </div>
-          </div>
+          <transition name="fade-home-buttons" mode="out-in">
+            <v-icon v-if="!buttonsHover.epass" color="#D95033" size="60">mdi-passport-biometric</v-icon>
+            <span v-if="buttonsHover.epass" style="font-size: 1.3rem; color: #D95033;">E-PASS</span>
+          </transition>
         </v-btn>
       </router-link>
       <router-link v-if="this.$store.getters.userRole === 'admin'" :to="'admin'" class="custom-router-link-transparency">
@@ -123,16 +140,13 @@
           fab 
           elevation="0" 
           class="custom-navigation-button"
+          @mouseover="buttonsHover.admin = true"
+          @mouseleave="buttonsHover.admin = false"
         >
-          <div>
-            <div>
-              <v-icon color="rgba(0,0,0,0.8)" size="60">mdi-view-dashboard-variant</v-icon>
-            </div>
-            <br>
-            <div>
-              <span style="font-size: 1.3rem;">ADMIN</span>
-            </div>
-          </div>
+          <transition name="fade-home-buttons" mode="out-in">
+            <v-icon v-if="!buttonsHover.admin" color="#D95033" size="60">mdi-view-dashboard-variant</v-icon>
+            <span v-if="buttonsHover.admin" style="font-size: 1.3rem; color: #D95033;">ADMIN</span>
+          </transition>
         </v-btn>
       </router-link>
     </div>
@@ -295,24 +309,6 @@
       <v-card>
         <v-card-text class="min-height-50">
           <v-row justify="space-around" class="mt-3">
-            <v-avatar
-              v-if="!this.$store.getters.profilePicture"
-              width="150px"
-              height="150px"
-              color="blue-grey"
-            >
-              <v-icon dark size="85">mdi-account-circle</v-icon>
-            </v-avatar>
-            <v-avatar
-              v-if="this.$store.getters.profilePicture"
-              width="150px"
-              height="150px"
-              color="white"
-            >
-              <img width="151px" height="151px" :src="this.$store.getters.profilePicture" />
-            </v-avatar>
-          </v-row>
-          <v-row justify="space-around">
             <input
               type="file"
               accept="image/*"
@@ -324,18 +320,42 @@
               :loading="loading"
               @click.native="loader = 'loading'"
               @click.exact="profilePictureUpdate()"
+              @mouseover="uploadHover = true"
+              @mouseleave="uploadHover = false"
               elevation="0"
-              rounded
+              fab
               outlined
-              color="blue-grey"
-              class="ma-4 white--text"
+              color="white"
+              class="custom-profile-upload-button"
             >
-              Upload
-              <v-icon right dark>mdi-cloud-upload</v-icon>
+              <v-overlay
+                :absolute="true"
+                :value="uploadHover"
+                opacity="0.6"
+                class="custom-profile-overlay"
+              >
+                <v-icon v-if="uploadHover" color="rgba(217, 80, 51, 0.9)" size="60">mdi-upload</v-icon>
+              </v-overlay>
+              <v-avatar
+                v-if="!this.$store.getters.profilePicture"
+                width="150px"
+                height="150px"
+                color="rgba(217, 80, 51, 0.9)"
+              >
+                <v-icon dark size="85">mdi-account-circle</v-icon>
+              </v-avatar>
+              <v-avatar
+                v-if="this.$store.getters.profilePicture"
+                width="150px"
+                height="150px"
+                color="white"
+              >
+                <img width="151px" height="151px" :src="this.$store.getters.profilePicture" />
+              </v-avatar>
             </v-btn>
           </v-row>
           <v-row justify="space-around">
-            <v-switch inset v-model="switcher" class="custom-switcher" label="Edit data"></v-switch>
+            <v-switch inset v-model="switcher" class="custom-switcher mt-3" label="Edit data"></v-switch>
           </v-row>
           <v-row>
             <v-col cols="12" class="pa-0">
@@ -396,6 +416,18 @@
             >
               <span>GDPR and Privacy Policy</span>
               <v-icon right dark size="20">mdi-file-multiple</v-icon>
+            </v-btn>
+          </v-row>
+          <v-row justify="space-around">
+            <v-btn
+              rounded
+              dark
+              color="#D95033"
+              elevation="0"
+              class="custom-log-out-button"
+              @click="SignOut()"
+            >
+              <span class="font-size-logout-text">LogOut</span>
             </v-btn>
           </v-row>
         </v-card-text>
@@ -501,11 +533,17 @@
             <li>By visiting this page on our website: www.city-cross-x.firebaseapp.com/home</li>
           </ul>
         </v-card-text>
-        <v-divider></v-divider>
         <v-card-actions>
           <v-row justify="space-around" class="ma-1">
-            <v-btn fab small dark color="blue-grey lighten-1" elevation="0" @click="gdpr = false">
-              <v-icon dark size="25">mdi-close</v-icon>
+             <v-btn
+              rounded
+              small
+              dark
+              color="#D95033"
+              elevation="0"
+              @click="gdpr = false"
+            >
+              <v-icon dark size="25">mdi-arrow-left</v-icon>
             </v-btn>
           </v-row>
         </v-card-actions>
@@ -539,6 +577,8 @@ export default {
         temperature: null
       },
       profile: false,
+      profileHover: false,
+      uploadHover: false,
       notificationDrawer: false,
       user: {
         profilePicture: null,
@@ -560,7 +600,13 @@ export default {
         keys: [],
         data: null
       },
-      snackbar: false
+      snackbar: false,
+      buttonsHover: {
+        transit: false,
+        store: false,
+        epass: false,
+        admin: false
+      }
     };
   },
 
@@ -875,24 +921,40 @@ export default {
   align-self: center;
 }
 
-.custom-weather {
-  width: auto;
-  height: 5.1vh !important;
-  align-self: center;
-  justify-self: center;
-  padding: 0px 1vw 0px 0.5vw !important;
-  border: solid 0.7vh #D95033 !important;
-}
-
 .custom-weather-icon {
-  height: 6.3vh;
-  width: 3vw;
-  margin-right: 0.3vw;
+  height: 14.17vh;
+  width: 6.58vw;
+  margin-right: 0.2vw;
 }
 
 .custom-weather-temperature {
   font-weight: 600;
-  font-size: 3vh;
+  font-size: 2.3rem;
+  color: white;
+}
+
+.custom-weather-empty {
+  font-weight: 600;
+  font-size: 1.7rem;
+  color: white;
+}
+
+.home-weather-empty-wrapper {
+  display: flex;
+  position: absolute;
+  top: 13vh;
+  right: 18vw;
+}
+
+.home-weather-wrapper {
+  display: flex;
+  position: absolute;
+  top: 10vh;
+  right: 18vw;
+}
+
+.home-weather-wrapper span{
+  align-self: center;
 }
 
 .custom-navigation-buttons-wrapper {
@@ -912,13 +974,11 @@ export default {
   width: 10.98vw !important;
   height: 23.62vh !important;
   padding: 0px !important;
-  border: solid 2vh #D95033;
+  border: solid 1.9vh #D95033;
 }
 
 .custom-log-out-button {
-  position: absolute;
-  bottom: 2vh;
-  left: 45.8vw;
+  margin-top: 2vh;
   width: 8vw !important;
   height: 6vh !important;
   padding: 0px !important;
@@ -926,7 +986,7 @@ export default {
 
 .font-size-profile-icon {
   font-size: 14vh !important;
-  color: white !important;
+  color: #D95033 !important;
 }
 
 .font-size-logout-text {
@@ -956,9 +1016,10 @@ export default {
   height: 100%;
   position: absolute;
   overflow-y: auto;
-  background: url('../assets/background/map-home.svg') no-repeat;
+  background: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(42,128,157,0.7399334733893557) 45%, rgba(30,109,135,1) 100%);
+  /* background: url('../assets/background/map-home.svg') no-repeat;
   background-size: 120% 210%;
-  background-position: 50%;
+  background-position: 50%; */
 }
 
 .custom-notification-card {
@@ -1092,14 +1153,29 @@ export default {
   margin-bottom: 3vh;
   align-self: center;
   justify-self: center;
-  background-color: #D95033 !important;
+}
+
+.custom-profile-upload-button {
+  height: 23.6vh !important;
+  width: 11vw !important;
+  align-self: center;
+  justify-self: center;
+  background-color: white !important;
+}
+
+.custom-profile-icon-empty {
+  width: 100%;
+  height: 23.5vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .custom-profile-button-picture {
   border-radius: 50%;
   height: 23.6vh !important;
   width: 11vw !important;
-  border: solid 1.2vh #D95033;
+  border: solid 1.4vh #D95033;
 }
 
 .custom-welcome-message {
@@ -1121,5 +1197,72 @@ export default {
   font-size: 0.9rem;
   align-self: center;
   justify-self: center;
+}
+
+.home-user-welcome-message-wrapper {
+  position: absolute;
+  top: 12vh;
+  left: 19vw;
+}
+
+.home-user-welcome-message-wrapper span{
+  font-size: 1.7rem;
+  color: white;
+  font-weight: 500;
+}
+
+.home-profile-rope {
+  position: absolute !important;
+  top: 0vh !important;
+  left: 49.8vw !important;
+}
+
+.fade-home-buttons-enter-active, .fade-home-buttons-leave-active {
+  transition: opacity .15s;
+}
+.fade-home-buttons-enter, .fade-home-buttons-leave-to {
+  opacity: 0;
+}
+
+.custom-profile-overlay {
+  border-radius: 500px !important;
+  border: solid 1.4vh #D95033;
+  height: 100%;
+}
+
+@-webkit-keyframes rotating /* Safari and Chrome */ {
+  from {
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes rotating {
+  from {
+    -ms-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -ms-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+.rotating {
+  -webkit-animation: rotating 3s linear infinite;
+  -moz-animation: rotating 3s linear infinite;
+  -ms-animation: rotating 3s linear infinite;
+  -o-animation: rotating 3s linear infinite;
+  animation: rotating 3s linear infinite;
 }
 </style>
