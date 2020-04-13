@@ -1,7 +1,5 @@
 <template>
   <div class="home-wrapper">
-    <!-- log out button -->
-      
     <!-- subway status -->
       <!-- <div class="custom-subway-wrapper">
         <div class="custom-subway-card">
@@ -27,7 +25,7 @@
           <line x1="0" y1="0" x2="0" y2="16vh" style="stroke:#D95033;stroke-width:1.2vw" />
         </svg>
         <div class="home-user-welcome-message-wrapper">
-          <span> Welcome &#x1F91F; <br>{{this.$store.getters.userName}}</span>
+          <span> Welcome {{this.welcomeEmoji}} <br>{{this.$store.getters.userName}}</span>
         </div>
         <div class="home-weather-wrapper">
           <img
@@ -93,7 +91,7 @@
     </div>
     <!-- component navigation -->
     <div class="custom-navigation-buttons-wrapper">
-      <router-link :to="'map'" class="custom-router-link-transparency">
+      <router-link :to="'transit'" class="custom-router-link-transparency">
         <v-btn 
           fab
           elevation="0" 
@@ -150,73 +148,6 @@
         </v-btn>
       </router-link>
     </div>
-    <!-- notifications -->
-      <!-- <v-card
-        v-if="!notificationsKeys"
-        class="custom-notification-card"
-        width="25vw"
-        outlined
-        elevation="0"
-      >
-        <div class="custom-notification-empty-card-wrap ma-2">
-          <v-avatar elevation="0" color="light-blue lighten-3" class="mr-4 ml-2">
-            <v-icon color="light-blue darken-1" size="30">mdi-exclamation-thick</v-icon>
-          </v-avatar>
-          <v-card-title class="custom-notification-empty-title" disabled>There are no notifications</v-card-title>
-        </div>
-      </v-card>
-      <v-card
-        v-for="n in notificationsKeys"
-        :key="n"
-        class="custom-notification-card"
-        width="50vw"
-        min-height="80px"
-        outlined
-        elevation="0"
-      >
-        <div class="custom-notification-card-wrap mt-2">
-          <v-avatar
-            v-if="notificationsData[n].Type === 'alert'"
-            elevation="0"
-            color="orange lighten-1"
-            class="custom-notification-button ml-4"
-          >
-            <v-icon color="orange darken-4" size="30">mdi-alert-outline</v-icon>
-          </v-avatar>
-          <v-avatar
-            v-if="notificationsData[n].Type === 'info'"
-            elevation="0"
-            color="light-blue lighten-3"
-            class="custom-notification-button ml-4"
-          >
-            <v-icon color="light-blue darken-1" size="30">mdi-exclamation-thick</v-icon>
-          </v-avatar>
-          <input
-            :value="notificationsData[n].Title"
-            disabled
-            class="custom-notification-title ml-3 mr-3"
-          />
-          <v-btn
-            fab
-            small
-            elevation="0"
-            color="transparent"
-            class="custom-notification-button mr-4"
-            @click="deleteNotification(n)"
-          >
-            <v-icon color="red" size="30">mdi-delete</v-icon>
-          </v-btn>
-        </div>
-        <div class="custom-notification-card-wrap ma-1">
-          <v-chip class="ma-1" color="#7595a6" outlined style="font-weight: 700">
-            <v-icon size="20" class="mr-2">mdi-message-text-clock-outline</v-icon>
-            {{notificationsData[n].Date}}
-            <v-icon size="20">mdi-chevron-right</v-icon>
-            {{notificationsData[n].Time}}
-          </v-chip>
-        </div>
-        <div class="custom-notification-card-wrap ma-3">{{notificationsData[n].Content}}</div>
-      </v-card> -->
     <!-- notifications dialog -->
     <v-dialog persistent scrollable v-model="notificationDrawer" width="50vw">
       <v-card>
@@ -572,6 +503,13 @@ export default {
   name: "Home",
   data() {
     return {
+      welcomeEmoji: null,
+      emojiList: [
+        '0x1F91F',
+        '0x1F389',
+        '0x1F496',
+        '0x2728'
+      ],
       weather: {
         icon: null,
         temperature: null
@@ -610,7 +548,9 @@ export default {
     };
   },
 
-  created() {},
+  created() {
+    this.randomEmoji();
+  },
 
   watch: {
     profile: {
@@ -638,6 +578,9 @@ export default {
   },
 
   methods: {
+    randomEmoji() {
+      this.welcomeEmoji = String.fromCodePoint(this.emojiList[Math.floor((Math.random() * 3))])
+    },
     weatherLoad() {
       var apikey = "VSbxFwm7S4kz8tyvaBiFAVxCbsBlnvtm";
       const latlong = "44.4268006,26.1025036";

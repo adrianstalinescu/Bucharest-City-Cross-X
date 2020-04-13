@@ -6,7 +6,9 @@ import Entrance from '../components/Entrance'
 import Admin from '../components/Admin'
 import Check from '../components/Check'
 import Home from '../components/Home'
-import Maps from '../components/Maps'
+import Transit from '../components/Transit'
+import Nearby from '../components/Nearby'
+import Route from '../components/Route'
 import Wallet from '../components/Wallet'
 import TravelPlans from '../components/TravelPlans'
 import History from '../components/History'
@@ -41,9 +43,21 @@ export default new Router({
             beforeEnter: AdminGuard
         },
         {
-            path: '/map',
-            name: 'Map',
-            component: Maps,
+            path: '/transit',
+            name: 'Transit',
+            component: Transit,
+            beforeEnter: AuthGuard
+        },
+        {
+            path: '/nearby',
+            name: 'Nearby',
+            component: Nearby,
+            beforeEnter: AuthGuard
+        },
+        {
+            path: '/route',
+            name: 'Route',
+            component: Route,
             beforeEnter: AuthGuard
         },
         {
