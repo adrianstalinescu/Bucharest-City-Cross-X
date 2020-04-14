@@ -1,23 +1,5 @@
 <template>
   <div class="home-wrapper">
-    <!-- subway status -->
-      <!-- <div class="custom-subway-wrapper">
-        <div class="custom-subway-card">
-          <v-chip
-            v-for="m in subway.keys"
-            :key="m"
-            class="ma-2 custom-subway-chip"
-            :color="subway.data[m].Color"
-            outlined
-          >
-            <div class="custom-chip-content-wrapper">
-              <span class="custom-subway-text">{{m}}</span>
-              <v-icon class="custom-subway-text">mdi-chevron-right</v-icon>
-              <span class="custom-subway-text-status">{{subway.data[m].Status}}</span>
-            </div>
-          </v-chip>
-        </div>
-      </div> -->
     <!-- profile button -->
     <div class="custom-profile-info-window-wrapper">
       <div class="custom-profile-wrapper">
@@ -25,7 +7,7 @@
           <line x1="0" y1="0" x2="0" y2="16vh" style="stroke:#D95033;stroke-width:1.2vw" />
         </svg>
         <div class="home-user-welcome-message-wrapper">
-          <span> Welcome {{this.welcomeEmoji}} <br>{{this.$store.getters.userName}}</span>
+          <span> Welcome {{welcomeEmoji}} <br>{{this.$store.getters.userName}}</span>
         </div>
         <div class="home-weather-wrapper">
           <img
@@ -105,7 +87,7 @@
           </transition>
         </v-btn>
       </router-link>
-      <router-link :to="'plans'" class="custom-router-link-transparency">
+      <router-link :to="'store'" class="custom-router-link-transparency">
         <v-btn 
           fab 
           elevation="0" 
@@ -506,7 +488,7 @@ export default {
       welcomeEmoji: null,
       emojiList: [
         '0x1F91F',
-        '0x1F389',
+        '0x1F973',
         '0x1F496',
         '0x2728'
       ],
@@ -574,7 +556,6 @@ export default {
 
   mounted() {
     this.weatherLoad()
-    // this.metroStatus();
   },
 
   methods: {
@@ -746,17 +727,6 @@ export default {
         };
       };
       vremea.send();
-    },
-    metroStatus() {
-      firebase
-        .database()
-        .ref("MetroLine")
-        .on("value", snap => {
-          let myObj = snap.val();
-          let keys = Object.keys(snap.val());
-          this.subway.keys = keys;
-          this.subway.data = myObj;
-        });
     },
     deleteNotification(notification) {
       firebase

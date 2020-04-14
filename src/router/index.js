@@ -9,8 +9,12 @@ import Home from '../components/Home'
 import Transit from '../components/Transit'
 import Nearby from '../components/Nearby'
 import Route from '../components/Route'
+import Info from '../components/Info'
+import Store from '../components/Store'
+import Air from '../components/Air'
+import Land from '../components/Land'
+import Water from '../components/Water'
 import Wallet from '../components/Wallet'
-import TravelPlans from '../components/TravelPlans'
 import History from '../components/History'
 import Lines from '../components/Lines'
 import Stations from '../components/Stations'
@@ -61,15 +65,39 @@ export default new Router({
             beforeEnter: AuthGuard
         },
         {
-            path: '/wallet',
-            name: 'Wallet',
-            component: Wallet,
+            path: '/info',
+            name: 'Info',
+            component: Info,
             beforeEnter: AuthGuard
         },
         {
-            path: '/plans',
-            name: 'Plans',
-            component: TravelPlans,
+            path: '/store',
+            name: 'Store',
+            component: Store,
+            beforeEnter: AuthGuard
+        },
+        {
+            path: '/air',
+            name: 'Air',
+            component: Air,
+            beforeEnter: AuthGuard
+        },
+        {
+            path: '/land',
+            name: 'Land',
+            component: Land,
+            beforeEnter: AuthGuard
+        },
+        {
+            path: '/water',
+            name: 'Water',
+            component: Water,
+            beforeEnter: AuthGuard
+        },
+        {
+            path: '/wallet',
+            name: 'Wallet',
+            component: Wallet,
             beforeEnter: AuthGuard
         },
         {

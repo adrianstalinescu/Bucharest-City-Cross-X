@@ -1,13 +1,18 @@
 <template>
   <div class="plans-wrapper">
-    <div class="custom-back-button">
-      <router-link :to="'home'" class="custom-router-link-transparency">
-        <v-btn class="ma-2" rounded dark color="#D95033" elevation="0">
+    <!-- back to store button -->
+    <router-link :to="'store'" class="custom-router-link-transparency">
+      <v-btn
+      rounded
+      dark
+      color="#D95033"
+      elevation="0"
+      class="custom-back-button"
+      >
           <v-icon>mdi-arrow-left</v-icon>
-          <span class="mr-1">HOME</span>
-        </v-btn>
-      </router-link>
-    </div>
+      </v-btn>
+    </router-link>
+    <!-- SUT description -->
     <v-expansion-panels class="custom-sut-wrapper">
       <v-expansion-panel>
         <v-expansion-panel-header class="custom-sut-header">
@@ -22,6 +27,7 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
+    <!-- Card details -->
     <v-card v-if="card" class="custom-card-wrapper" width="53vw" outlined elevation="0">
       <div class="custom-card-grid">
         <v-icon color="rgb(117, 149, 166)" size="40">mdi-credit-card-outline</v-icon>
@@ -30,7 +36,7 @@
         <v-btn
           rounded
           dark
-          color="teal darken-4"
+          color="#D95033"
           elevation="0"
           class="justify-center ma-1 mr-2 custom-card-button"
           @click="cardChange = true"
@@ -47,7 +53,7 @@
         <v-btn
           rounded
           dark
-          color="teal darken-4"
+          color="#D95033"
           elevation="0"
           class="justify-center ma-1 mr-2 custom-card-button"
           @click="cardAdd = true"
@@ -57,6 +63,7 @@
         </v-btn>
       </div>
     </v-card>
+    <!-- Student details -->
     <v-card
       v-if="isStudent === false"
       class="custom-card-wrapper"
@@ -72,7 +79,7 @@
         <v-btn
           rounded
           dark
-          color="teal darken-4"
+          color="#D95033"
           elevation="0"
           class="justify-center ma-1 mr-2"
           @click="studentCard = true"
@@ -119,6 +126,7 @@
         <span class="student-card-details">Valid until {{studentValid}}</span>
       </div>
     </v-card>
+    <!-- Plans details -->
     <v-expansion-panels v-for="pr in planRegularKeys" :key="pr" class="custom-card-wrapper">
       <v-expansion-panel>
         <v-expansion-panel-header class="custom-plan-header">
@@ -544,7 +552,7 @@
 import firebase from "@/firebase";
 /* eslint-disable */
 export default {
-  name: "TravelPlans",
+  name: "Land",
   data() {
     return {
       e6: 1,
@@ -1017,8 +1025,8 @@ export default {
 
 .custom-back-button {
   position: absolute;
-  left: 0.5vw;
-  top: 0vh;
+  top: 2vh;
+  left: 1.5vw;
 }
 
 .plans-wrapper {

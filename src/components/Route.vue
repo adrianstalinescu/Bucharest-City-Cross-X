@@ -1,63 +1,6 @@
 <template>
   <div class="map-wrapper">
     <div id="map" />
-    <!-- <v-navigation-drawer
-      v-model="drawer"
-      color="rgba(255, 255, 255, 0.8)"
-      absolute
-      class="custom-lines-menu-wrapper"
-    >
-      <v-expansion-panels multiple accordion>
-        <v-expansion-panel
-          v-for="lk in lines.keys"
-          :key="lk"
-          >
-          <v-expansion-panel-header class="pa-2">
-            <div class="custom-expansion-panel-header">
-              <v-icon :color="lines.data[lk].Color" size="30">{{lines.data[lk].Icon}}</v-icon>
-              <v-chip small :color="lines.data[lk].Color" class="ml-1" outlined>
-                <span class="custom-line-number">{{lines.data[lk].Type}}</span>
-                <v-icon size="20">mdi-chevron-right</v-icon>
-                <span class="custom-line-number">{{lk}}</span>
-              </v-chip>
-            </div>
-          </v-expansion-panel-header>
-          <v-expansion-panel-content class="custom-expansion-panel-dropdown">
-            <div class="custom-line ma-1">
-              <div>
-                <v-btn
-                  rounded
-                  dark
-                  elevation="0"
-                  outlined
-                  color="rgb(117, 149, 166)"
-                  class="custom-direction-button"
-                  @click="lineDetailsRefresh(lines.data[lk].ID, 0, lines.data[lk].CenterLat, lines.data[lk].CenterLng, lines.data[lk].CenterZoom, lines.data[lk].Color, lk, lines.data[lk].Icon, lines.data[lk].Type, lines.data[lk].T1)"
-                >
-                  <span class="custom-direction-text">{{lines.data[lk].T1}}</span>
-                </v-btn>
-              </div>
-              <div class="ma-1">
-                <v-icon>mdi-arrow-up-down</v-icon>
-              </div>
-              <div>
-                <v-btn
-                  rounded
-                  dark
-                  elevation="0"
-                  outlined
-                  color="rgb(117, 149, 166)"
-                  class="custom-direction-button"
-                  @click="lineDetailsRefresh(lines.data[lk].ID, 1, lines.data[lk].CenterLat, lines.data[lk].CenterLng, lines.data[lk].CenterZoom, lines.data[lk].Color, lk, lines.data[lk].Icon, lines.data[lk].Type, lines.data[lk].T2)"
-                >
-                  <span class="custom-direction-text">{{lines.data[lk].T2}}</span>
-                </v-btn>
-              </div>
-            </div>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-      </v-expansion-panels>
-    </v-navigation-drawer> -->
     <div class="custom-search-wrap">
       <v-card class="search-card" elevation="0">
         <div class="display-flex mr-2">

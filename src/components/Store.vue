@@ -1,5 +1,5 @@
 <template>
-  <div class="transit-wrapper">
+  <div class="store-wrapper">
     <!-- back home button -->
     <router-link :to="'home'" class="custom-router-link-transparency">
         <v-btn
@@ -14,7 +14,7 @@
     </router-link>
     <!-- component navigation -->
     <div class="custom-navigation-buttons-wrapper">
-      <router-link :to="'nearby'" class="custom-router-link-transparency">
+      <router-link :to="'air'" class="custom-router-link-transparency">
         <v-btn 
           fab
           elevation="0" 
@@ -23,12 +23,12 @@
           @mouseleave="buttonsHover.nearby = false"
         >
           <transition name="fade-home-buttons" mode="out-in">
-            <v-icon v-if="!buttonsHover.nearby" color="#D95033" size="60">mdi-map-marker-circle</v-icon>
-            <span v-if="buttonsHover.nearby" style="font-size: 1.3rem; color: #D95033;">NEARBY</span>
+            <v-icon v-if="!buttonsHover.nearby" color="#90A4AE" size="60">mdi-airplane-takeoff</v-icon>
+            <span v-if="buttonsHover.nearby" style="font-size: 1.3rem; color: #D95033;">AIR</span>
           </transition>
         </v-btn>
       </router-link>
-      <router-link :to="'route'" class="custom-router-link-transparency">
+      <router-link :to="'land'" class="custom-router-link-transparency">
         <v-btn 
           fab 
           elevation="0" 
@@ -37,12 +37,12 @@
           @mouseleave="buttonsHover.route = false"
         >
           <transition name="fade-home-buttons" mode="out-in">
-            <v-icon v-if="!buttonsHover.route" color="#D95033" size="60">mdi-map-marker-distance</v-icon>
-            <span v-if="buttonsHover.route" style="font-size: 1.3rem; color: #D95033;">ROUTE</span>
+            <v-icon v-if="!buttonsHover.route" color="#7CB342" size="60">mdi-image-filter-hdr</v-icon>
+            <span v-if="buttonsHover.route" style="font-size: 1.3rem; color: #D95033;">LAND</span>
           </transition>
         </v-btn>
       </router-link>
-      <router-link :to="'info'" class="custom-router-link-transparency">
+      <router-link :to="'water'" class="custom-router-link-transparency">
         <v-btn 
           fab 
           elevation="0" 
@@ -51,8 +51,8 @@
           @mouseleave="buttonsHover.info = false"
         >
           <transition name="fade-home-buttons" mode="out-in">
-            <v-icon v-if="!buttonsHover.info" color="#D95033" size="60">mdi-information-outline</v-icon>
-            <span v-if="buttonsHover.info" style="font-size: 1.3rem; color: #D95033;">INFO</span>
+            <v-icon v-if="!buttonsHover.info" color="#1976D2" size="60">mdi-waves</v-icon>
+            <span v-if="buttonsHover.info" style="font-size: 1.3rem; color: #D95033;">WATER</span>
           </transition>
         </v-btn>
       </router-link>
@@ -63,7 +63,7 @@
 <script>
 /* eslint-disable */
 export default {
-  name: "Transit",
+  name: "Store",
   data() {
     return {
       buttonsHover: {
@@ -108,7 +108,7 @@ export default {
   border: solid 1.9vh #D95033;
 }
 
-.transit-wrapper {
+.store-wrapper {
   width: 100%;
   height: 100%;
   position: absolute;
