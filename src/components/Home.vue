@@ -20,6 +20,18 @@
             class="custom-weather-temperature"
           >{{ this.weather.temperature }}°C</span>
         </div>
+        <div class="home-airquality-wrapper">
+          <v-chip :color="this.airQualityParams.color" class="mr-1">
+            <v-icon v-if="this.airQualityParams.level === 'VERY_LOW'" class="margin-air-icon">mdi-emoticon-happy-outline</v-icon>
+            <v-icon v-if="this.airQualityParams.level === 'MEDIUM'" class="margin-air-icon">mdi-emoticon-neutral-outline</v-icon>
+            <v-icon v-if="this.airQualityParams.level === 'HIGH'" class="margin-air-icon">mdi-emoticon-sad-outline</v-icon>
+            <span>{{this.airQualityParams.value}} </span>
+            <span class="font-size-caqi"> CAQI</span>
+          </v-chip>
+        </div>
+        <div class="home-airquality-message">
+          <span>{{this.airQualityParams.description}}</span>
+        </div>
         <div class="home-weather-empty-wrapper">
           <span
             v-if="!weather.icon || !weather.temperature"
@@ -479,7 +491,11 @@
 </template>
 
 <script>
+import Vue from "vue";
+import Axios from "axios";
+import VueAxios from "vue-axios";
 import firebase from "@/firebase";
+Vue.use(VueAxios, Axios);
 /* eslint-disable */
 export default {
   name: "Home",
@@ -495,6 +511,12 @@ export default {
       weather: {
         icon: null,
         temperature: null
+      },
+      airQualityParams: {
+        description: null,
+        value: null,
+        level: null,
+        color: null
       },
       profile: false,
       profileHover: false,
@@ -555,7 +577,8 @@ export default {
   },
 
   mounted() {
-    this.weatherLoad()
+    this.weatherLoad();
+    this.airQuality();
   },
 
   methods: {
@@ -728,6 +751,31 @@ export default {
       };
       vremea.send();
     },
+    airQuality() {
+      let subscriptionKey = "wJ4rphAqplH9dsGMIs0vpm7vHlB7wq7x";
+      let uriBase =
+        "https://airapi.airly.eu/v2/measurements/point?lat=44.4268006&lng=26.1025036";
+
+      Axios.get(
+        uriBase,
+        {
+          headers: {
+            "Accept": "application/json",
+            "apikey": subscriptionKey,
+          },
+        }
+      )
+        .then((response) => {
+          this.airQualityParams.description = response.data.current.indexes[0].description
+          this.airQualityParams.value = Math.round(response.data.current.indexes[0].value)
+          this.airQualityParams.level = response.data.current.indexes[0].level
+          this.airQualityParams.color = response.data.current.indexes[0].color
+          console.log(response)
+        })
+        .catch((error) => {
+          console.log(error.response);
+        });
+    },
     deleteNotification(notification) {
       firebase
         .database()
@@ -862,12 +910,50 @@ export default {
 .home-weather-wrapper {
   display: flex;
   position: absolute;
-  top: 10vh;
+  top: 7vh;
   right: 18vw;
 }
 
 .home-weather-wrapper span{
   align-self: center;
+}
+
+.home-airquality-wrapper {
+  display: flex;
+  position: absolute;
+  top: 24vh;
+  right: 18vw;
+}
+
+.home-airquality-wrapper span {
+  align-self: center;
+  font-size: 3vh;
+  font-weight: 500;
+  color: white;
+}
+
+.home-airquality-message {
+  display: flex;
+  position: absolute;
+  top: 18.5vh;
+  right: 16.1vw;
+}
+
+.home-airquality-message span{
+  align-self: center;
+  font-size: 3vh;
+  font-weight: 500;
+  color: white;
+}
+
+.font-size-caqi {
+  font-size: 2vh !important;
+  margin-top: 0.6vh;
+  margin-left: 0.3vw;
+}
+
+.margin-air-icon {
+  margin-right: 0.5vw;
 }
 
 .custom-navigation-buttons-wrapper {
@@ -1115,7 +1201,7 @@ export default {
 .home-user-welcome-message-wrapper {
   position: absolute;
   top: 12vh;
-  left: 19vw;
+  left: 15vw;
 }
 
 .home-user-welcome-message-wrapper span{
