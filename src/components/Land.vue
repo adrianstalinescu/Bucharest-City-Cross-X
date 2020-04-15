@@ -517,6 +517,7 @@
             <v-icon dark size="25">mdi-close</v-icon>
           </v-btn>
           <v-spacer></v-spacer>
+          <h4 style="display:none;">{{studentSubmitDisable}}</h4>
           <v-btn
             fab
             small
@@ -549,7 +550,11 @@
 </template>
 
 <script>
+import Vue from "vue";
+import Axios from "axios";
+import VueAxios from "vue-axios";
 import firebase from "@/firebase";
+Vue.use(VueAxios, Axios);
 /* eslint-disable */
 export default {
   name: "Land",
@@ -618,6 +623,11 @@ export default {
         back: null,
         selfie: null
       },
+      faceIDs: {
+        front: null,
+        selfie: null
+      },
+      confidence: null,
       studentCard: false,
       studentSubmitDisabled: true,
       studentNotification: false,
@@ -645,7 +655,6 @@ export default {
     this.plansRegular();
     this.plansDiscount();
     this.years();
-    this.studentSubmitDisable();
   },
 
   watch: {},
@@ -734,6 +743,31 @@ export default {
       this.imageUrl = selectedFile;
       this.studentPictures.front = this.imageUrl
       this.studentFront = URL.createObjectURL(selectedFile)
+
+      let subscriptionKey = "51fc2876d96a42e19d922c448dc19990"; //microsoft face api key
+      let uriBase =
+        "https://northeurope.api.cognitive.microsoft.com/face/v1.0/detect";
+
+      //Convert the format of the image added at the end of the array and assign it to the imgURL format
+      const imgURL1 = this.imageUrl;
+      Axios.post(
+        uriBase +
+          "?returnFaceId=true",
+        imgURL1,
+        {
+          headers: {
+            "Content-Type": "application/octet-stream",
+            "Ocp-Apim-Subscription-Key": subscriptionKey,
+          },
+        }
+      )
+        .then((response) => {
+          console.log(response.data[0].faceId);
+          this.faceIDs.front = response.data[0].faceId
+        })
+        .catch((error) => {
+          console.log(error.response);
+        });
     },
     studentUploadBack() {
       this.$refs.studentPicBack.click();
@@ -762,25 +796,80 @@ export default {
       this.imageUrl = selectedFile
       this.studentPictures.selfie= this.imageUrl
       this.studentSelfie = URL.createObjectURL(selectedFile)
+
+      let subscriptionKey = "51fc2876d96a42e19d922c448dc19990"; //microsoft face api key
+      let uriBase =
+        "https://northeurope.api.cognitive.microsoft.com/face/v1.0/detect";
+
+      //Convert the format of the image added at the end of the array and assign it to the imgURL format
+      const imgURL2 = this.imageUrl;
+      Axios.post(
+        uriBase +
+          "?returnFaceId=true",
+        imgURL2,
+        {
+          headers: {
+            "Content-Type": "application/octet-stream",
+            "Ocp-Apim-Subscription-Key": subscriptionKey,
+          },
+        }
+      )
+        .then((response) => {
+          console.log(response.data[0].faceId);
+          this.faceIDs.selfie = response.data[0].faceId
+        })
+        .catch((error) => {
+          console.log(error.response);
+        });
+
     },
     studentSubmit() {
-      firebase.storage().ref("/" + this.$store.getters.user.uid + "/studentID/front").put(this.studentPictures.front)
-      firebase.storage().ref("/" + this.$store.getters.user.uid + "/studentID/back").put(this.studentPictures.back)
-      firebase.storage().ref("/" + this.$store.getters.user.uid + "/studentID/selfie").put(this.studentPictures.selfie)
-      firebase
-        .database()
-        .ref("Users/" + this.$store.getters.user.uid + "/Student")
-        .set({
-          Status: "pending"
+      let subscriptionKey = "51fc2876d96a42e19d922c448dc19990"; //microsoft face api key
+      let uriBase =
+        "https://northeurope.api.cognitive.microsoft.com/face/v1.0/verify";
+
+      //Convert the format of the image added at the end of the array and assign it to the imgURL format
+      const faceId = {
+        faceId1: this.faceIDs.front,
+        faceId2: this.faceIDs.selfie
+        }
+
+      Axios.post(
+        uriBase,
+        faceId,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Ocp-Apim-Subscription-Key": subscriptionKey,
+          },
+        }
+      )
+        .then((response) => {
+          this.confidence = response.data;
+          firebase.storage().ref("/" + this.$store.getters.user.uid + "/studentID/front").put(this.studentPictures.front)
+          firebase.storage().ref("/" + this.$store.getters.user.uid + "/studentID/back").put(this.studentPictures.back)
+          firebase.storage().ref("/" + this.$store.getters.user.uid + "/studentID/selfie").put(this.studentPictures.selfie)
+          firebase
+            .database()
+            .ref("Users/" + this.$store.getters.user.uid + "/Student")
+            .set({
+              Status: "pending"
+          });
+
+          console.log(this.confidence)
+          firebase
+            .database()
+            .ref("StudentValidation/" + this.$store.getters.user.uid)
+            .set({
+              Name: this.$store.getters.userName,
+              Confidence: this.confidence
+            });
+          this.studentNotification = true;
+          this.studentCard = false;
+        })
+        .catch((error) => {
+          console.log(error.response);
         });
-      firebase
-        .database()
-        .ref("StudentValidation/" + this.$store.getters.user.uid)
-        .set({
-          Name: this.$store.getters.userName
-        });
-      this.studentNotification = true;
-      this.studentCard = false;
     },
     planPurchase(plan, cost) {
       let card = this.card;

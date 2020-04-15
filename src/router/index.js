@@ -18,6 +18,7 @@ import Wallet from '../components/Wallet'
 import History from '../components/History'
 import Lines from '../components/Lines'
 import Stations from '../components/Stations'
+import Face from '../components/Face'
 
 
 Vue.use(Router)
@@ -33,6 +34,11 @@ export default new Router({
             path: '/entrance',
             name: 'Entrance',
             component: Entrance
+        },
+        {
+            path: '/face',
+            name: 'Face',
+            component: Face
         },
         {
             path: '/home',

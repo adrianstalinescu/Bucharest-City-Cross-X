@@ -129,6 +129,9 @@
             />
             </v-carousel-item>
           </v-carousel>
+          <div class="display-flex justify-center">
+            <span class="confidence-score-text">Confidence score: {{studentConfidence}}<br>Identical face: {{studentIsIdentical}}</span>
+          </div>
           <div class="student-buttons-grid">
             <v-text-field
               single-line
@@ -297,13 +300,15 @@ export default {
         metroStatus: false,
         notificationSender: false,
         studentSelected: false,
+        studentConfidence: null,
+        studentIsIdentical: null,
         users: {
           keys: null,
           data: null
         },
         students: {
-            keys: null,
-            data: null
+          keys: null,
+          data: null
         },
         metro: {
           keys: null,
@@ -635,6 +640,14 @@ export default {
       this.studentPics.front = firebase.storage().ref("/" + id + "/studentID/front").getDownloadURL()
       this.studentPics.back = firebase.storage().ref("/" + id + "/studentID/back").getDownloadURL()
       this.studentPics.selfie = firebase.storage().ref("/" + id + "/studentID/selfie").getDownloadURL()
+      firebase
+        .database()
+        .ref("StudentValidation/" + id + "/Confidence")
+        .on("value", snap => {
+          let myObj = snap.val();
+          this.studentConfidence = myObj.confidence;
+          this.studentIsIdentical = myObj.isIdentical;
+        });
       this.studentSelected = id
     },
     curday(sp) {
@@ -654,6 +667,29 @@ export default {
       if (mm < 10) mm = "0" + mm;
       let time = hh + ":" + mm;
       return time;
+    },
+    studentReject() {
+      this.studentNotification = false
+      firebase
+        .database()
+        .ref("Users/" + this.studentSelected + "/Student")
+        .remove()
+      firebase
+        .database()
+        .ref("Users/" + this.studentSelected + "/Notifications")
+        .push({
+          Title: "Student ID was Rejected",
+          Type: "alert",
+          Content: this.studentApproval.notification,
+          Time: this.curtime(),
+          Date: this.curday('-')
+        })
+      firebase
+        .database()
+        .ref("StudentValidation/" + this.studentSelected).remove().then(() => {
+          this.studentSelected = false
+          this.studentNotification = true
+        })
     },
     studentApprove() {
       this.studentNotification = false
@@ -681,7 +717,6 @@ export default {
           this.studentSelected = false
           this.studentNotification = true
         })
-      
     },
     metroLoader() {
       firebase
@@ -940,5 +975,16 @@ export default {
   font-weight: 600;
   font-size: 1.2rem;
   color: inherit;
+}
+
+.confidence-score-text{
+  font-size: 2.5vh;
+  font-weight: 800;
+}
+
+.student-id-image{
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
 }
 </style>
