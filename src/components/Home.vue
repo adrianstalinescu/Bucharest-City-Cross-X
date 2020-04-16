@@ -1,5 +1,6 @@
 <template>
   <div class="home-wrapper">
+    <div class="home-background-wrapper"></div>
     <!-- profile button -->
     <div class="custom-profile-info-window-wrapper">
       <div class="custom-profile-wrapper">
@@ -1015,10 +1016,20 @@ export default {
   height: 100%;
   position: absolute;
   overflow-y: auto;
-  background: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(42,128,157,0.7399334733893557) 45%, rgba(30,109,135,1) 100%);
+  /* background: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(42,128,157,0.7399334733893557) 45%, rgba(30,109,135,1) 100%); */
   /* background: url('../assets/background/map-home.svg') no-repeat;
   background-size: 120% 210%;
   background-position: 50%; */
+}
+
+.home-background-wrapper {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  overflow-y: auto;
+  background: url('../assets/background/home-background.svg') no-repeat;
+  background-size: 100% 100%;
+  background-position: 0px 0px;
 }
 
 .custom-notification-card {

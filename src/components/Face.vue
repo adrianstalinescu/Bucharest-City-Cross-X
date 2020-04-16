@@ -155,7 +155,7 @@ export default {
   }
 };
 </script>
-<style scoped>
+<style>
 .display-flex {
     display: flex;
 }
