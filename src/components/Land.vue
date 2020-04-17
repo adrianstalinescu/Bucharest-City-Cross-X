@@ -534,6 +534,9 @@
     <v-snackbar v-model="studentNotification" :timeout="4000" color="success">
       <span class="card-modify">Your Student ID has been uploaded</span>
     </v-snackbar>
+    <v-snackbar v-model="studentNotificationRefuse" :timeout="4000" color="error">
+      <span class="card-modify">Your pictures are not clear enough or faces don't correspond. Please try again</span>
+    </v-snackbar>
     <v-snackbar v-model="purchaseNotification" :timeout="1500" color="success">
       <span class="card-modify">The plan was added to your wallet</span>
     </v-snackbar>
@@ -631,6 +634,7 @@ export default {
       studentCard: false,
       studentSubmitDisabled: true,
       studentNotification: false,
+      studentNotificationRefuse: false,
       studentPicFront: null,
       studentPicBack: null,
       studentPicSelfie: null,
@@ -846,26 +850,29 @@ export default {
       )
         .then((response) => {
           this.confidence = response.data;
-          firebase.storage().ref("/" + this.$store.getters.user.uid + "/studentID/front").put(this.studentPictures.front)
-          firebase.storage().ref("/" + this.$store.getters.user.uid + "/studentID/back").put(this.studentPictures.back)
-          firebase.storage().ref("/" + this.$store.getters.user.uid + "/studentID/selfie").put(this.studentPictures.selfie)
-          firebase
-            .database()
-            .ref("Users/" + this.$store.getters.user.uid + "/Student")
-            .set({
-              Status: "pending"
-          });
-
-          console.log(this.confidence)
-          firebase
-            .database()
-            .ref("StudentValidation/" + this.$store.getters.user.uid)
-            .set({
-              Name: this.$store.getters.userName,
-              Confidence: this.confidence
+          if(response.data.confidence > 0.5)
+          {
+            firebase.storage().ref("/" + this.$store.getters.user.uid + "/studentID/front").put(this.studentPictures.front)
+            firebase.storage().ref("/" + this.$store.getters.user.uid + "/studentID/back").put(this.studentPictures.back)
+            firebase.storage().ref("/" + this.$store.getters.user.uid + "/studentID/selfie").put(this.studentPictures.selfie)
+            firebase
+              .database()
+              .ref("Users/" + this.$store.getters.user.uid + "/Student")
+              .set({
+                Status: "pending"
             });
-          this.studentNotification = true;
-          this.studentCard = false;
+            firebase
+              .database()
+              .ref("StudentValidation/" + this.$store.getters.user.uid)
+              .set({
+                Name: this.$store.getters.userName,
+                Confidence: this.confidence
+              });
+            this.studentNotification = true;
+            this.studentCard = false;
+          } else {
+            this.studentNotificationRefuse = true;
+          }
         })
         .catch((error) => {
           console.log(error.response);
