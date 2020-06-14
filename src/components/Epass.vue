@@ -1,7 +1,7 @@
 <template>
-  <div class="transit-wrapper">
+  <div class="epass-wrapper">
     <!-- back home button -->
-    <router-link :to="'transit'" class="custom-router-link-transparency">
+    <router-link :to="'home'" class="custom-router-link-transparency">
         <v-btn
         rounded
         dark
@@ -14,7 +14,7 @@
     </router-link>
     <!-- component navigation -->
     <div class="custom-navigation-buttons-wrapper">
-      <router-link :to="'nearby'" class="custom-router-link-transparency">
+      <router-link :to="'wallet'" class="custom-router-link-transparency">
         <v-btn 
           fab
           elevation="0" 
@@ -23,12 +23,12 @@
           @mouseleave="buttonsHover.nearby = false"
         >
           <transition name="fade-home-buttons" mode="out-in">
-            <v-icon v-if="!buttonsHover.nearby" color="#D95033" size="60">mdi-map-marker-circle</v-icon>
-            <span v-if="buttonsHover.nearby" style="font-size: 1.3rem; color: #D95033;">NEARBY</span>
+            <v-icon v-if="!buttonsHover.nearby" color="#D95033" size="60">mdi-wallet</v-icon>
+            <span v-if="buttonsHover.nearby" style="font-size: 1.3rem; color: #D95033;">WALLET</span>
           </transition>
         </v-btn>
       </router-link>
-      <router-link :to="'route'" class="custom-router-link-transparency">
+      <router-link :to="'epass-scan'" class="custom-router-link-transparency">
         <v-btn 
           fab 
           elevation="0" 
@@ -37,12 +37,12 @@
           @mouseleave="buttonsHover.route = false"
         >
           <transition name="fade-home-buttons" mode="out-in">
-            <v-icon v-if="!buttonsHover.route" color="#D95033" size="60">mdi-map-marker-distance</v-icon>
-            <span v-if="buttonsHover.route" style="font-size: 1.3rem; color: #D95033;">ROUTE</span>
+            <v-icon v-if="!buttonsHover.route" color="#1976D2" size="60">mdi-qrcode-scan</v-icon>
+            <span v-if="buttonsHover.route" style="font-size: 1.3rem; color: #D95033;">ID SCAN</span>
           </transition>
         </v-btn>
       </router-link>
-      <router-link :to="'info'" class="custom-router-link-transparency">
+      <router-link :to="'history'" class="custom-router-link-transparency">
         <v-btn 
           fab 
           elevation="0" 
@@ -51,8 +51,8 @@
           @mouseleave="buttonsHover.info = false"
         >
           <transition name="fade-home-buttons" mode="out-in">
-            <v-icon v-if="!buttonsHover.info" color="#D95033" size="60">mdi-information-outline</v-icon>
-            <span v-if="buttonsHover.info" style="font-size: 1.3rem; color: #D95033;">INFO</span>
+            <v-icon v-if="!buttonsHover.info" color="#D95033" size="60">mdi-history</v-icon>
+            <span v-if="buttonsHover.info" style="font-size: 1.3rem; color: #D95033;">HISTORY</span>
           </transition>
         </v-btn>
       </router-link>
@@ -63,7 +63,7 @@
 <script>
 /* eslint-disable */
 export default {
-  name: "Transit",
+  name: "Epass",
   data() {
     return {
       buttonsHover: {
@@ -95,7 +95,7 @@ export default {
   position: absolute;
   bottom: 37.49vh;
   justify-content: space-around;
-  background: url("../../assets/background/connector-line.svg") no-repeat;
+  background: url("../assets/background/connector-line.svg") no-repeat;
   background-size: 100% 5vh;
   background-position: center;
 }
@@ -108,7 +108,7 @@ export default {
   border: solid 1.9vh #D95033;
 }
 
-.transit-wrapper {
+.epass-wrapper {
   width: 100%;
   height: 100%;
   position: absolute;

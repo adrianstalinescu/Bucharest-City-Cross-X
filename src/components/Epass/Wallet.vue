@@ -1,107 +1,109 @@
 <template>
     <div class="plans-wrapper">
-      <div class="custom-back-button">
-        <router-link :to="'home'" class="custom-router-link-transparency">
-          <v-btn class="ma-2" rounded dark color="#D95033" elevation="0">
-            <v-icon>mdi-arrow-left</v-icon>
-            <span class="mr-1">HOME</span>
-          </v-btn>
-        </router-link>
-      </div>
-      <v-card
-        v-for="pk in plansKeys"
-        :key="pk"
-        class="custom-card-wrapper"
-        width="53vw"
-        outlined
-        elevation="0"
-      >
-        <div class="custom-card-grid">
-          <v-icon v-if="pk !== 'Monthly Student'" size="36" color="deep-orange lighten-2">mdi-ticket</v-icon>
-          <v-icon
-            v-if="pk === 'Monthly Student'"
-            size="36"
-            color="deep-orange lighten-2"
-          >mdi-ticket-percent</v-icon>
-          <span class="card-info">{{pk}} Plan</span>
-          <span v-if="plansDetails[pk].Activated === 'true'" class="card-info">Valid untill {{plansDetails[pk].Valid}}</span>
-          <span v-if="plansDetails[pk].Activated === 'false'" class="card-info"></span>
+      <!-- Back button -->
+      <router-link :to="'epass'" class="custom-router-link-transparency">
           <v-btn
             rounded
-            :disabled="plansDetails[pk].Activated === 'true'"
-            color="teal darken-4"
+            dark
+            color="#D95033"
             elevation="0"
-            class="justify-center ma-1 mr-2 white--text"
-            @click="activatePlan(pk)"
+            class="custom-back-button"
           >
-            <span v-if="plansDetails[pk].Activated === 'true'">Active</span>
-            <v-icon
-              v-if="plansDetails[pk].Activated === 'true'"
-              dark
-              right
-              size="20"
-            >mdi-checkbox-marked-circle-outline</v-icon>
-            <span v-if="plansDetails[pk].Activated === 'false'">Activate</span>
-            <v-icon
-              v-if="plansDetails[pk].Activated === 'false'"
-              dark
-              right
-              size="20"
-            >mdi-plus-circle-outline</v-icon>
+            <v-icon>mdi-arrow-left</v-icon>
           </v-btn>
+      </router-link>
+      <!-- Plans -->
+      <div class="custom-wallet-card-wrapper">
+        <div class="custom-plan-rounded-wrapper-1">
+          <div>
+            <v-icon v-if="plansKeys[0] !== 'Monthly Student'" size="45" color="deep-orange lighten-2" class="custom-plan-icon">mdi-ticket</v-icon>
+            <v-icon
+              v-if="plansKeys[0] === 'Monthly Student'"
+              size="45"
+              color="deep-orange lighten-2"
+              class="custom-plan-icon"
+            >mdi-ticket-percent</v-icon>
+            <span v-if="plansKeys[0] !== 'Monthly Student'" class="plan-title-1">{{plansKeys[0]}}</span>
+            <span v-if="plansKeys[0] === 'Monthly Student'" class="plan-title-2">{{plansKeys[1]}}</span>
+          </div>
+          <div class="plan-status-1">
+            <v-chip color="rgb(117, 149, 166)" outlined>
+              <span v-if="plansDetails[plansKeys[0]].Activated === 'true'" class="card-info">Valid untill {{plansDetails[plansKeys[0]].Valid}}</span>
+              <span v-if="plansDetails[plansKeys[0]].Activated === 'false'" class="card-info">Inactive</span>
+            </v-chip>
+          </div>
+          <div class="plan-activate-1">
+            <v-btn
+              rounded
+              :disabled="plansDetails[plansKeys[0]].Activated === 'true'"
+              color="teal darken-4"
+              elevation="0"
+              class="justify-center plan-button-activate white--text"
+              @click="activatePlan(plansKeys[0])"
+            >
+              <span v-if="plansDetails[plansKeys[0]].Activated === 'true'">Active</span>
+              <v-icon
+                v-if="plansDetails[plansKeys[0]].Activated === 'true'"
+                dark
+                right
+                size="20"
+              >mdi-checkbox-marked-circle-outline</v-icon>
+              <span v-if="plansDetails[plansKeys[0]].Activated === 'false'">Activate</span>
+              <v-icon
+                v-if="plansDetails[plansKeys[0]].Activated === 'false'"
+                dark
+                right
+                size="20"
+              >mdi-plus-circle-outline</v-icon>
+            </v-btn>
+          </div>
         </div>
-      </v-card>
-      <div class="display-flex">
-        <v-card class="custom-history-card-wrapper ml-6" outlined elevation="0">
-          <div class="custom-history-title-wrap ma-2">
-            <v-card-title class="custom-history-title">
-              <v-icon left color="deep-orange lighten-2" size="30">mdi-ticket</v-icon>Single Use Ticket (SUT) history
-            </v-card-title>
+        <div class="custom-plan-rounded-wrapper-2">
+          <div>
+            <v-icon v-if="plansKeys[1] !== 'Monthly Student'" size="45" color="deep-orange lighten-2" class="custom-plan-icon">mdi-ticket</v-icon>
+            <v-icon
+              v-if="plansKeys[1] === 'Monthly Student'"
+              size="45"
+              color="deep-orange lighten-2"
+              class="custom-plan-icon"
+            >mdi-ticket-percent</v-icon>
+            <span v-if="plansKeys[1] !== 'Monthly Student'" class="plan-title-1">{{plansKeys[1]}}</span>
+            <span v-if="plansKeys[1] === 'Monthly Student'" class="plan-title-2">{{plansKeys[1]}}</span>
           </div>
-          <div class="custom-plan-card-wrap ma-3">
-            <v-data-table
-              :footer-props="footer_props"
-              :headers="headers"
-              :items="SUT"
-              :items-per-page="5"
-              class="custom-wallet-sut-table"
-              disable-sort
-            ></v-data-table>
+          <div class="plan-status-1">
+            <v-chip color="rgb(117, 149, 166)" outlined>
+              <span v-if="plansDetails[plansKeys[1]].Activated === 'true'" class="card-info">Valid untill {{plansDetails[plansKeys[1]].Valid}}</span>
+              <span v-if="plansDetails[plansKeys[1]].Activated === 'false'" class="card-info">Inactive</span>
+            </v-chip>
           </div>
-        </v-card>
-        <v-card class="custom-history-card-wrapper mx-6" outlined elevation="0">
-          <div class="custom-history-title-wrap ma-2">
-            <v-card-title class="custom-history-title">
-              <v-icon left color="rgb(117, 149, 166)" size="30">mdi-progress-clock</v-icon>Purchase History
-            </v-card-title>
+          <div class="plan-activate-1">
+            <v-btn
+              rounded
+              :disabled="plansDetails[plansKeys[1]].Activated === 'true'"
+              color="green darken-1"
+              elevation="0"
+              class="justify-center plan-button-activate white--text"
+              @click="activatePlan(plansKeys[1])"
+            >
+              <span v-if="plansDetails[plansKeys[1]].Activated === 'true'">Active</span>
+              <v-icon
+                v-if="plansDetails[plansKeys[1]].Activated === 'true'"
+                dark
+                right
+                size="20"
+              >mdi-checkbox-marked-circle-outline</v-icon>
+              <span v-if="plansDetails[plansKeys[1]].Activated === 'false'">Activate</span>
+              <v-icon
+                v-if="plansDetails[plansKeys[1]].Activated === 'false'"
+                dark
+                right
+                size="20"
+              >mdi-plus-circle-outline</v-icon>
+            </v-btn>
           </div>
-          <div class="custom-history-table-wrap ma-3">
-            <v-data-table
-              :footer-props="footer_props"
-              :headers="headerPurchased"
-              :items="purchased"
-              class="custom-history-table"
-              disable-sort
-            ></v-data-table>
-          </div>
-        </v-card>
-        <v-card class="custom-history-card-wrapper mr-6" outlined elevation="0">
-          <div class="custom-history-title-wrap ma-2">
-            <v-card-title class="custom-history-title">
-              <v-icon left color="rgb(117, 149, 166)" size="30">mdi-map-clock</v-icon>Search History
-            </v-card-title>
-          </div>
-          <div class="custom-history-table-wrap ma-3">
-            <v-data-table
-              :footer-props="footer_props"
-              :headers="headerSearched"
-              :items="searched"
-              class="custom-history-table"
-              disable-sort
-            ></v-data-table>
-          </div>
-        </v-card>
+        </div>
       </div>
+      <!-- Alerts -->
       <v-snackbar v-model="plansActivateSuccess" :timeout="1500" color="success">
         <span class="plan-activate">The plan was activated</span>
       </v-snackbar>
@@ -180,9 +182,7 @@ export default {
 
   mounted() {
     this.plansData()
-    this.purchasedData()
-    this.searchedData()
-    this.SUTData()
+    
   },
 
   methods: {
@@ -255,66 +255,7 @@ export default {
           }
         });
     },
-    SUTData() {
-      firebase
-        .database()
-        .ref("SUT/" + this.$store.getters.user.uid)
-        .on("value", snap => {
-          let myObj = snap.val();
-          if (myObj !== null) {
-            this.SUT = []
-            let keys = Object.keys(snap.val());
-            keys.forEach(key => {
-              this.SUT.push({
-                type: myObj[key].Type,
-                line: myObj[key].Line,
-                date: myObj[key].Date,
-                time: myObj[key].Time,
-                amount: myObj[key].Cost
-              })
-            });
-          }
-        });
-    },
-    purchasedData() {
-      firebase
-        .database()
-        .ref("History/Purchase/" + this.$store.getters.user.uid)
-        .on("value", snap => {
-          let myObj = snap.val();
-          if (myObj !== null) {
-            this.purchased = []
-            let keys = Object.keys(snap.val());
-            keys.forEach(key => {
-              this.purchased.unshift({
-                type: myObj[key].Type,
-                date: myObj[key].Date,
-                time: myObj[key].Time,
-                amount: myObj[key].Cost
-              })
-            });
-          }
-        });
-    },
-    searchedData() {
-      firebase
-        .database()
-        .ref("History/Search/" + this.$store.getters.user.uid)
-        .on("value", snap => {
-          let myObj = snap.val();
-          if (myObj !== null) {
-            this.searched = []
-            let keys = Object.keys(snap.val());
-            keys.forEach(key => {
-              this.searched.unshift({
-                title: myObj[key].Title,
-                date: myObj[key].Date,
-                time: myObj[key].Time
-              })
-            });
-          }
-        });
-    }
+    
   }
 };
 </script>
@@ -328,8 +269,8 @@ export default {
 
 .custom-back-button {
   position: absolute;
-  left: 0.5vw;
-  top: 0vh;
+  top: 2vh;
+  left: 1.5vw;
 }
 
 .plans-wrapper {
@@ -357,10 +298,9 @@ export default {
 }
 
 .custom-card-wrapper {
+  position: relative;
   margin-top: 2vh;
   margin-bottom: 2vh;
-  margin-left: auto;
-  margin-right: auto;
   height: auto;
 }
 
@@ -371,16 +311,89 @@ export default {
   height: auto;
 }
 
-.card-info {
+.plan-title-1 {
+  position: absolute;
+  left: 7.5vw;
+  top: 7vh;
+  text-overflow: ellipsis;
+  width: -webkit-fill-available;
+  font-size: 20px;
   font-weight: 600;
-  font-size: 1.2rem;
-  align-self: center;
-  justify-self: start;
 }
 
-.custom-plan-card-wrap {
+.plan-title-2 {
+  position: absolute;
+  left: 4.8vw;
+  top: 7vh;
+  text-overflow: ellipsis;
+  width: -webkit-fill-available;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.plan-status-1 {
+  position: absolute;
   display: flex;
-  height: auto;
+  top: 14vh;
+  text-overflow: ellipsis;
+  width: -webkit-fill-available;
+  font-size: 20px;
+  font-weight: 600;
+  justify-content: center;
+}
+
+.card-info {
+  font-size: 20px;
+}
+
+.plan-activate-1{
+  position: absolute;
+  left: 5.4vw;
+  top: 21vh;
+}
+
+.plan-button-activate{
+  height: 130px !important;
+  width: 130px;
+  border-radius: 1000px !important;
+}
+
+.custom-wallet-card-wrapper {
+  position:absolute;
+  width: 68vw;
+  height: 95vh;
+  top: 3vh;
+  left: 8vw;
+}
+
+.custom-plan-rounded-wrapper-1{
+  width: 300px;
+  height: 300px;
+  display: flex;
+  position: absolute;
+  left: 10vw;
+  top: 17vh;
+  border: 1.5vh solid #D95033;
+  background-color: white;
+  border-radius: 1000px;
+}
+
+.custom-plan-rounded-wrapper-2{
+  width: 300px;
+  height: 300px;
+  display: flex;
+  position: absolute;
+  left: 50vw;
+  top: 17vh;
+  border: 1.5vh solid #D95033;
+  background-color: white;
+  border-radius: 1000px;
+}
+
+.custom-plan-icon{
+  position: absolute;
+  left: 8.5vw;
+  top: 1vh;
 }
 
 .custom-plan-button {

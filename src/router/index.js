@@ -12,7 +12,7 @@ import Route from '../components/Transit/Land/Route'
 import Info from '../components/Transit/Land/Info'
 import Store from '../components/Store'
 import LandStore from '../components/Store/Land/Land'
-import Wallet from '../components/Wallet'
+import Wallet from '../components/Epass/Wallet'
 import History from '../components/History'
 import Lines from '../components/Lines'
 import Stations from '../components/Stations'
@@ -20,6 +20,7 @@ import Face from '../components/Face'
 import LandTransit from '../components/Transit/LandTransit'
 import AirTransit from '../components/Transit/AirTransit'
 import WaterTransit from '../components/Transit/WaterTransit'
+import Epass from '../components/Epass'
 
 
 Vue.use(Router)
@@ -105,6 +106,12 @@ export default new Router({
             path: '/land-store',
             name: 'Land Store',
             component: LandStore,
+            beforeEnter: AuthGuard
+        },
+        {
+            path: '/epass',
+            name: 'Epass',
+            component: Epass,
             beforeEnter: AuthGuard
         },
         {

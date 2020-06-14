@@ -36,7 +36,7 @@
             class="custom-weather-temperature"
           >{{ this.weather.temperature }}°C</span>
         </div>
-        <div class="home-airquality-wrapper">
+        <div v-if="this.airQualityParams.value" class="home-airquality-wrapper">
           <v-chip :color="this.airQualityParams.color" class="mr-1">
             <v-icon v-if="this.airQualityParams.icon === 1" class="margin-air-icon">mdi-emoticon-happy-outline</v-icon>
             <v-icon v-if="this.airQualityParams.icon === 2" class="margin-air-icon">mdi-emoticon-neutral-outline</v-icon>
@@ -45,7 +45,7 @@
             <span class="font-size-caqi"> CAQI</span>
           </v-chip>
         </div>
-        <div class="home-airquality-message">
+        <div v-if="this.airQualityParams.value" class="home-airquality-message">
           <span>{{this.airQualityParams.description}}</span>
         </div>
         <div class="home-weather-empty-wrapper">
@@ -129,7 +129,7 @@
           </transition>
         </v-btn>
       </router-link>
-      <router-link :to="'wallet'" class="custom-router-link-transparency">
+      <router-link :to="'epass'" class="custom-router-link-transparency">
         <v-btn 
           fab 
           elevation="0" 
