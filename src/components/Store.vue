@@ -28,7 +28,7 @@
           </transition>
         </v-btn>
       </router-link>
-      <router-link :to="'land'" class="custom-router-link-transparency">
+      <router-link :to="'land-store'" class="custom-router-link-transparency">
         <v-btn 
           fab 
           elevation="0" 
@@ -37,7 +37,7 @@
           @mouseleave="buttonsHover.route = false"
         >
           <transition name="fade-home-buttons" mode="out-in">
-            <v-icon v-if="!buttonsHover.route" color="#7CB342" size="60">mdi-image-filter-hdr</v-icon>
+            <v-icon v-if="!buttonsHover.route" color="#7CB342" size="60">mdi-bus-multiple</v-icon>
             <span v-if="buttonsHover.route" style="font-size: 1.3rem; color: #D95033;">LAND</span>
           </transition>
         </v-btn>
@@ -51,7 +51,7 @@
           @mouseleave="buttonsHover.info = false"
         >
           <transition name="fade-home-buttons" mode="out-in">
-            <v-icon v-if="!buttonsHover.info" color="#1976D2" size="60">mdi-waves</v-icon>
+            <v-icon v-if="!buttonsHover.info" color="#1976D2" size="60">mdi-ferry</v-icon>
             <span v-if="buttonsHover.info" style="font-size: 1.3rem; color: #D95033;">WATER</span>
           </transition>
         </v-btn>

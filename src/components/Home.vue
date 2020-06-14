@@ -1,6 +1,21 @@
 <template>
   <div class="home-wrapper">
-    <div class="home-background-wrapper"></div>
+    <section>
+      <div id="transit1" class="transit1"></div>
+      <div id="transit2" class="transit2"></div>
+      <div id="transit3" class="transit3"></div>
+      <div id="store1" class="store1"></div>
+      <div id="store2" class="store2"></div>
+      <div id="store3" class="store3"></div>
+      <div id="store4" class="store4"></div>
+      <div id="store5" class="store5"></div>
+      <div id="store6" class="store6"></div>
+      <div id="epass1" class="epass1"></div>
+      <div id="epass2" class="epass2"></div>
+      <div id="epass3" class="epass3"></div>
+      <div id="epass4" class="epass4"></div>
+      <div class="home-background-wrapper"></div>
+    </section>
     <!-- profile button -->
     <div class="custom-profile-info-window-wrapper">
       <div class="custom-profile-wrapper">
@@ -23,9 +38,9 @@
         </div>
         <div class="home-airquality-wrapper">
           <v-chip :color="this.airQualityParams.color" class="mr-1">
-            <v-icon v-if="this.airQualityParams.level === 'VERY_LOW'" class="margin-air-icon">mdi-emoticon-happy-outline</v-icon>
-            <v-icon v-if="this.airQualityParams.level === 'MEDIUM'" class="margin-air-icon">mdi-emoticon-neutral-outline</v-icon>
-            <v-icon v-if="this.airQualityParams.level === 'HIGH'" class="margin-air-icon">mdi-emoticon-sad-outline</v-icon>
+            <v-icon v-if="this.airQualityParams.icon === 1" class="margin-air-icon">mdi-emoticon-happy-outline</v-icon>
+            <v-icon v-if="this.airQualityParams.icon === 2" class="margin-air-icon">mdi-emoticon-neutral-outline</v-icon>
+            <v-icon v-if="this.airQualityParams.icon === 3" class="margin-air-icon">mdi-emoticon-sad-outline</v-icon>
             <span>{{this.airQualityParams.value}} </span>
             <span class="font-size-caqi"> CAQI</span>
           </v-chip>
@@ -91,8 +106,8 @@
           fab
           elevation="0" 
           class="custom-navigation-button"
-          @mouseover="buttonsHover.transit = true"
-          @mouseleave="buttonsHover.transit = false"
+          @mouseover="transitHoverON()"
+          @mouseleave="transitHoverOFF()"
         >
           <transition name="fade-home-buttons" mode="out-in">
             <v-icon v-if="!buttonsHover.transit" color="#D95033" size="60">mdi-map</v-icon>
@@ -105,8 +120,8 @@
           fab 
           elevation="0" 
           class="custom-navigation-button"
-          @mouseover="buttonsHover.store = true"
-          @mouseleave="buttonsHover.store = false"
+          @mouseover="storeHoverON()"
+          @mouseleave="storeHoverOFF()"
         >
           <transition name="fade-home-buttons" mode="out-in">
             <v-icon v-if="!buttonsHover.store" color="#D95033" size="60">mdi-cart-outline</v-icon>
@@ -119,8 +134,8 @@
           fab 
           elevation="0" 
           class="custom-navigation-button"
-          @mouseover="buttonsHover.epass = true"
-          @mouseleave="buttonsHover.epass = false"
+          @mouseover="epassHoverON()"
+          @mouseleave="epassHoverOFF()"
         >
           <transition name="fade-home-buttons" mode="out-in">
             <v-icon v-if="!buttonsHover.epass" color="#D95033" size="60">mdi-passport-biometric</v-icon>
@@ -517,7 +532,8 @@ export default {
         description: null,
         value: null,
         level: null,
-        color: null
+        color: null,
+        icon: null
       },
       profile: false,
       profileHover: false,
@@ -771,11 +787,110 @@ export default {
           this.airQualityParams.value = Math.round(response.data.current.indexes[0].value)
           this.airQualityParams.level = response.data.current.indexes[0].level
           this.airQualityParams.color = response.data.current.indexes[0].color
+          if(this.airQualityParams.value <= 30)
+          {
+            this.airQualityParams.icon = 1
+          } else {
+            if(this.airQualityParams.value < 70)
+            {
+              this.airQualityParams.icon = 3
+            } else {
+              this.airQualityParams.icon = 2
+            }
+          }
           console.log(response)
         })
         .catch((error) => {
           console.log(error.response);
         });
+    },
+    transitHoverON() {
+      this.buttonsHover.transit = true
+      clearTimeout(this.timeoutHoverOFF1)
+      this.timeoutHoverON1 = setTimeout((hoverON1) => {
+      document.getElementById("transit1").classList.remove("transit1-animation-OFF");
+      document.getElementById("transit2").classList.remove("transit2-animation-OFF");
+      document.getElementById("transit3").classList.remove("transit3-animation-OFF");
+      document.getElementById("transit1").classList.add("transit1-animation-ON");
+      document.getElementById("transit2").classList.add("transit2-animation-ON");
+      document.getElementById("transit3").classList.add("transit3-animation-ON");
+      }, 100)
+    },
+    transitHoverOFF() {
+      this.buttonsHover.transit = false
+      clearTimeout(this.timeoutHoverON1)
+      this.timeoutHoverOFF1 = setTimeout((hoverOFF1) => {
+      document.getElementById("transit1").classList.remove("transit1-animation-ON");
+      document.getElementById("transit2").classList.remove("transit2-animation-ON");
+      document.getElementById("transit3").classList.remove("transit3-animation-ON");
+      document.getElementById("transit1").classList.add("transit1-animation-OFF");
+      document.getElementById("transit2").classList.add("transit2-animation-OFF");
+      document.getElementById("transit3").classList.add("transit3-animation-OFF");
+      }, 100)
+    },
+    storeHoverON() {
+      this.buttonsHover.store = true
+      clearTimeout(this.timeoutHoverOFF2)
+      this.timeoutHoverON2 = setTimeout((hoverON2) => {
+      document.getElementById("store1").classList.remove("store1-animation-OFF");
+      document.getElementById("store2").classList.remove("store2-animation-OFF");
+      document.getElementById("store3").classList.remove("store3-animation-OFF");
+      document.getElementById("store4").classList.remove("store4-animation-OFF");
+      document.getElementById("store5").classList.remove("store5-animation-OFF");
+      document.getElementById("store6").classList.remove("store6-animation-OFF");
+      document.getElementById("store1").classList.add("store1-animation-ON");
+      document.getElementById("store2").classList.add("store2-animation-ON");
+      document.getElementById("store3").classList.add("store3-animation-ON");
+      document.getElementById("store4").classList.add("store4-animation-ON");
+      document.getElementById("store5").classList.add("store5-animation-ON");
+      document.getElementById("store6").classList.add("store6-animation-ON");
+      }, 100)
+    },
+    storeHoverOFF() {
+      this.buttonsHover.store = false
+      clearTimeout(this.timeoutHoverON2)
+      this.timeoutHoverOFF2 = setTimeout((hoverOFF2) => {
+      document.getElementById("store1").classList.remove("store1-animation-ON");
+      document.getElementById("store2").classList.remove("store2-animation-ON");
+      document.getElementById("store3").classList.remove("store3-animation-ON");
+      document.getElementById("store4").classList.remove("store4-animation-ON");
+      document.getElementById("store5").classList.remove("store5-animation-ON");
+      document.getElementById("store6").classList.remove("store6-animation-ON");
+      document.getElementById("store1").classList.add("store1-animation-OFF");
+      document.getElementById("store2").classList.add("store2-animation-OFF");
+      document.getElementById("store3").classList.add("store3-animation-OFF");
+      document.getElementById("store4").classList.add("store4-animation-OFF");
+      document.getElementById("store5").classList.add("store5-animation-OFF");
+      document.getElementById("store6").classList.add("store6-animation-OFF");
+      }, 100)
+    },
+    epassHoverON() {
+      this.buttonsHover.epass = true
+      clearTimeout(this.timeoutHoverOFF3)
+      this.timeoutHoverON3 = setTimeout((hoverON3) => {
+      document.getElementById("epass1").classList.remove("epass1-animation-OFF");
+      document.getElementById("epass2").classList.remove("epass2-animation-OFF");
+      document.getElementById("epass3").classList.remove("epass3-animation-OFF");
+      document.getElementById("epass4").classList.remove("epass4-animation-OFF");
+      document.getElementById("epass1").classList.add("epass1-animation-ON");
+      document.getElementById("epass2").classList.add("epass2-animation-ON");
+      document.getElementById("epass3").classList.add("epass3-animation-ON");
+      document.getElementById("epass4").classList.add("epass4-animation-ON");
+      }, 100)
+    },
+    epassHoverOFF() {
+      this.buttonsHover.epass = false
+      clearTimeout(this.timeoutHoverON3)
+      this.timeoutHoverOFF3 = setTimeout((hoverOFF3) => {
+      document.getElementById("epass1").classList.remove("epass1-animation-ON");
+      document.getElementById("epass2").classList.remove("epass2-animation-ON");
+      document.getElementById("epass3").classList.remove("epass3-animation-ON");
+      document.getElementById("epass4").classList.remove("epass4-animation-ON");
+      document.getElementById("epass1").classList.add("epass1-animation-OFF");
+      document.getElementById("epass2").classList.add("epass2-animation-OFF");
+      document.getElementById("epass3").classList.add("epass3-animation-OFF");
+      document.getElementById("epass4").classList.add("epass4-animation-OFF");
+      }, 100)
     },
     deleteNotification(notification) {
       firebase
@@ -1025,11 +1140,598 @@ export default {
 .home-background-wrapper {
   width: 100%;
   height: 100%;
-  position: absolute;
-  overflow-y: auto;
-  background: url('../assets/background/home-background.svg') no-repeat;
+  position: fixed;
+  top: 0;
+  display: flex;
+  background: url('../assets/background/home-background-1.svg') no-repeat;
   background-size: 100% 100%;
   background-position: 0px 0px;
+}
+
+section {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+section .transit1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width:100%;
+  height: 100%;
+  background: url('../assets/background/home/transport-icons.svg') no-repeat;
+  background-size: 58.2vw 9vh;
+  background-position: -169px 331px;
+}
+
+.transit1-animation-ON {
+  animation: transit1-on 0.3s linear;
+  animation-fill-mode: forwards;
+}
+
+.transit1-animation-OFF {
+  animation: transit1-off 0.3s linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes transit1-on {
+  from {
+    background-size: 58.2vw 9vh;
+    background-position: -169px 331px;
+  }
+  to {
+    background-size: 58.2vw 13vh;
+    background-position: -169px 290px;
+  }
+}
+
+@keyframes transit1-off {
+  from {
+    background-size: 58.2vw 13vh;
+    background-position: -169px 290px;
+  }
+  to {
+    background-size: 58.2vw 9vh;
+    background-position: -169px 331px;
+  }
+}
+
+section .transit2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width:100%;
+  height: 100%;
+  background: url('../assets/background/home/Search-magnify.svg') no-repeat;
+  background-size: 41.2vw 7vh;
+  background-position: 16px 439px;
+}
+
+.transit2-animation-ON {
+  animation: transit2-on 0.3s linear;
+  animation-fill-mode: both;
+  animation-delay: 0.1s;
+}
+
+.transit2-animation-OFF {
+  animation: transit2-off 0.3s linear;
+  animation-fill-mode: both;
+  animation-delay: 0.1s;
+}
+
+@keyframes transit2-on {
+  from {
+    background-size: 41.2vw 7vh;
+    background-position: 16px 439px;
+  }
+  to {
+    background-size: 41.2vw 9vh;
+    background-position: 61px 454px;
+  }
+}
+
+@keyframes transit2-off {
+  from {
+    background-size: 41.2vw 9vh;
+    background-position: 61px 454px;
+  }
+  to {
+    background-size: 41.2vw 7vh;
+    background-position: 16px 439px;
+  }
+}
+
+section .transit3 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width:100%;
+  height: 100%;
+  background: url('../assets/background/home/Map.svg') no-repeat;
+  background-size: 41.2vw 15vh;
+  background-position: -96px 441px;
+}
+
+.transit3-animation-ON {
+  animation: transit3-on 0.3s linear;
+  animation-fill-mode: both;
+  animation-delay: 0.1s;
+}
+
+.transit3-animation-OFF {
+  animation: transit3-off 0.3s linear;
+  animation-fill-mode: both;
+  animation-delay: 0.1s;
+}
+
+@keyframes transit3-on {
+  from {
+    background-size: 41.2vw 15vh;
+    background-position: -96px 441px;
+  }
+  to {
+    background-size: 41.2vw 26vh;
+    background-position: -130px 454px;
+  }
+}
+
+@keyframes transit3-off {
+  from {
+    background-size: 41.2vw 26vh;
+    background-position: -130px 454px;
+  }
+  to {
+    background-size: 41.2vw 15vh;
+    background-position: -96px 441px;
+  }
+}
+
+section .store1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width:100%;
+  height: 100%;
+  background: url('../assets/background/home/ID-Card.svg') no-repeat;
+  background-size: 41.2vw 8vh;
+  background-position: 379px 335px;
+}
+
+.store1-animation-ON {
+  animation: store1-on 0.3s linear;
+  animation-fill-mode: forwards;
+}
+
+.store1-animation-OFF {
+  animation: store1-off 0.3s linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes store1-on {
+  from {
+    background-size: 41.2vw 8vh;
+    background-position: 379px 335px;
+  }
+  to {
+    background-size: 41.2vw 10vh;
+    background-position: 358px 315px;
+  }
+}
+
+@keyframes store1-off {
+  from {
+    background-size: 41.2vw 10vh;
+    background-position: 358px 315px;
+  }
+  to {
+    background-size: 41.2vw 8vh;
+    background-position: 379px 335px;
+  }
+}
+
+section .store2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width:100%;
+  height: 100%;
+  background: url('../assets/background/home/plus.svg') no-repeat;
+  background-size: 41.2vw 8vh;
+  background-position: 449px 345px;
+}
+
+.store2-animation-ON {
+  animation: store2-on 0.3s linear;
+  animation-fill-mode: both;
+  animation-delay: 0.1s;
+}
+
+.store2-animation-OFF {
+  animation: store2-off 0.3s linear;
+  animation-fill-mode: both;
+  animation-delay: 0.1s;
+}
+
+@keyframes store2-on {
+  from {
+    background-size: 41.2vw 8vh;
+    background-position: 449px 345px;
+  }
+  to {
+    background-size: 41.2vw 11vh;
+    background-position: 490px 334px;
+  }
+}
+
+@keyframes store2-off {
+  from {
+    background-size: 41.2vw 11vh;
+    background-position: 490px 334px;
+  }
+  to {
+    background-size: 41.2vw 8vh;
+    background-position: 449px 345px;
+  }
+}
+
+section .store3 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width:100%;
+  height: 100%;
+  background: url('../assets/background/home/discount.svg') no-repeat;
+  background-size: 41.2vw 8vh;
+  background-position: 465px 440px;
+}
+
+.store3-animation-ON {
+  animation: store3-on 0.3s linear;
+  animation-fill-mode: both;
+  animation-delay: 0.1s;
+}
+
+.store3-animation-OFF {
+  animation: store3-off 0.3s linear;
+  animation-fill-mode: both;
+  animation-delay: 0.1s;
+}
+
+@keyframes store3-on {
+  from {
+    background-size: 41.2vw 8vh;
+    background-position: 465px 440px;
+  }
+  to {
+    background-size: 41.2vw 9vh;
+    background-position: 509px 448px;
+  }
+}
+
+@keyframes store3-off {
+  from {
+    background-size: 41.2vw 9vh;
+    background-position: 509px 448px;
+  }
+  to {
+    background-size: 41.2vw 8vh;
+    background-position: 465px 440px;
+  }
+}
+
+section .store4 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width:100%;
+  height: 100%;
+  background: url('../assets/background/home/Dollar-cash.svg') no-repeat;
+  background-size: 41.2vw 8vh;
+  background-position: 332px 438px;
+}
+
+.store4-animation-ON {
+  animation: store4-on 0.3s linear;
+  animation-fill-mode: both;
+  animation-delay: 0.1s;
+}
+
+.store4-animation-OFF {
+  animation: store4-off 0.3s linear;
+  animation-fill-mode: both;
+  animation-delay: 0.1s;
+}
+
+@keyframes store4-on {
+  from {
+    background-size: 41.2vw 8vh;
+    background-position: 332px 438px;
+  }
+  to {
+    background-size: 41.2vw 12vh;
+    background-position: 329px 459px;
+  }
+}
+
+@keyframes store4-off {
+  from {
+    background-size: 41.2vw 12vh;
+    background-position: 329px 459px;
+  }
+  to {
+    background-size: 41.2vw 8vh;
+    background-position: 332px 438px;
+  }
+}
+
+section .store5 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width:100%;
+  height: 100%;
+  background: url('../assets/background/home/Cash-money.svg') no-repeat;
+  background-size: 41.2vw 8vh;
+  background-position: 409px 470px;
+}
+
+.store5-animation-ON {
+  animation: store5-on 0.3s linear;
+  animation-fill-mode: both;
+  animation-delay: 0.1s;
+}
+
+.store5-animation-OFF {
+  animation: store5-off 0.3s linear;
+  animation-fill-mode: both;
+  animation-delay: 0.1s;
+}
+
+@keyframes store5-on {
+  from {
+    background-size: 41.2vw 8vh;
+    background-position: 409px 470px;
+  }
+  to {
+    background-size: 41.2vw 13vh;
+    background-position: 440px 481px;
+  }
+}
+
+@keyframes store5-off {
+  from {
+    background-size: 41.2vw 13vh;
+    background-position: 440px 481px;
+  }
+  to {
+    background-size: 41.2vw 8vh;
+    background-position: 409px 470px;
+  }
+}
+
+section .store6 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width:100%;
+  height: 100%;
+  background: url('../assets/background/home/shopping-cart.svg') no-repeat;
+  background-size: 41.2vw 8vh;
+  background-position: 414px 490px;
+}
+
+.store6-animation-ON {
+  animation: store6-on 0.3s linear;
+  animation-fill-mode: both;
+  animation-delay: 0.1s;
+}
+
+.store6-animation-OFF {
+  animation: store6-off 0.3s linear;
+  animation-fill-mode: both;
+  animation-delay: 0.1s;
+}
+
+@keyframes store6-on {
+  from {
+    background-size: 41.2vw 8vh;
+    background-position: 414px 490px;
+  }
+  to {
+    background-size: 41.2vw 14vh;
+    background-position: 438px 520px;
+  }
+}
+
+@keyframes store6-off {
+  from {
+    background-size: 41.2vw 14vh;
+    background-position: 438px 520px;
+  }
+  to {
+    background-size: 41.2vw 8vh;
+    background-position: 414px 490px;
+  }
+}
+
+section .epass1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width:100%;
+  height: 100%;
+  background: url('../assets/background/home/fingerprint.svg') no-repeat;
+  background-size: 41.2vw 8vh;
+  background-position: 798px 450px;
+}
+
+.epass1-animation-ON {
+  animation: epass1-on 0.3s linear;
+  animation-fill-mode: both;
+  animation-delay: 0.1s;
+}
+
+.epass1-animation-OFF {
+  animation: epass1-off 0.3s linear;
+  animation-fill-mode: both;
+  animation-delay: 0.1s;
+}
+
+@keyframes epass1-on {
+  from {
+    background-size: 41.2vw 8vh;
+    background-position: 798px 450px;
+  }
+  to {
+    background-size: 41.2vw 12vh;
+    background-position: 781px 460px;
+  }
+}
+
+@keyframes epass1-off {
+  from {
+    background-size: 41.2vw 12vh;
+    background-position: 781px 460px;
+  }
+  to {
+    background-size: 41.2vw 8vh;
+    background-position: 798px 450px;
+  }
+}
+
+section .epass2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width:100%;
+  height: 100%;
+  background: url('../assets/background/home/phone-verification.svg') no-repeat;
+  background-size: 41.2vw 10vh;
+  background-position: 793px 344px;
+}
+
+.epass2-animation-ON {
+  animation: epass2-on 0.3s linear;
+  animation-fill-mode: forwards;
+}
+
+.epass2-animation-OFF {
+  animation: epass2-off 0.3s linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes epass2-on {
+  from {
+    background-size: 41.2vw 10vh;
+    background-position: 793px 344px;
+  }
+  to {
+    background-size: 41.2vw 22vh;
+    background-position: 777px 274px;
+  }
+}
+
+@keyframes epass2-off {
+  from {
+    background-size: 41.2vw 22vh;
+    background-position: 777px 274px;
+  }
+  to {
+    background-size: 41.2vw 10vh;
+    background-position: 793px 344px;
+  }
+}
+
+section .epass3 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width:100%;
+  height: 100%;
+  background: url('../assets/background/home/wallet.svg') no-repeat;
+  background-size: 41.2vw 11vh;
+  background-position: 930px 337px;
+}
+
+.epass3-animation-ON {
+  animation: epass3-on 0.3s linear;
+  animation-fill-mode: both;
+  animation-delay: 0.1s;
+}
+
+.epass3-animation-OFF {
+  animation: epass3-off 0.3s linear;
+  animation-fill-mode: both;
+  animation-delay: 0.1s;
+}
+
+@keyframes epass3-on {
+  from {
+    background-size: 41.2vw 11vh;
+    background-position: 930px 337px;
+  }
+  to {
+    background-size: 41.2vw 22vh;
+    background-position: 958px 263px;
+  }
+}
+
+@keyframes epass3-off {
+  from {
+    background-size: 41.2vw 22vh;
+    background-position: 958px 263px;
+  }
+  to {
+    background-size: 41.2vw 11vh;
+    background-position: 930px 337px;
+  }
+}
+
+section .epass4 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width:100%;
+  height: 100%;
+  background: url('../assets/background/home/receipt.svg') no-repeat;
+  background-size: 41.2vw 8vh;
+  background-position: 921px 443px;
+}
+
+.epass4-animation-ON {
+  animation: epass4-on 0.3s linear;
+  animation-fill-mode: both;
+  animation-delay: 0.1s;
+}
+
+.epass4-animation-OFF {
+  animation: epass4-off 0.3s linear;
+  animation-fill-mode: both;
+  animation-delay: 0.1s;
+}
+
+@keyframes epass4-on {
+  from {
+    background-size: 41.2vw 8vh;
+    background-position: 921px 443px;
+  }
+  to {
+    background-size: 41.2vw 18vh;
+    background-position: 933px 448px;
+  }
+}
+
+@keyframes epass4-off {
+  from {
+    background-size: 41.2vw 18vh;
+    background-position: 933px 448px;
+  }
+  to {
+    background-size: 41.2vw 8vh;
+    background-position: 921px 443px;
+  }
 }
 
 .custom-notification-card {

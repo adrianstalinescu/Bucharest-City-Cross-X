@@ -27,7 +27,7 @@
         <v-icon color="blue lighten-1" style="transform: rotate(45deg);">mdi-navigation</v-icon>
       </v-btn>
     </div>
-    <router-link :to="'transit'" class="custom-router-link-transparency">
+    <router-link :to="'transit-land'" class="custom-router-link-transparency">
       <v-btn
       rounded
       dark

@@ -6,7 +6,7 @@
         <v-icon color="blue lighten-1" style="transform: rotate(45deg);">mdi-navigation</v-icon>
       </v-btn>
     </div>
-    <router-link :to="'transit'" class="custom-router-link-transparency">
+    <router-link :to="'transit-land'" class="custom-router-link-transparency">
         <v-btn
         rounded
         dark
@@ -34,7 +34,7 @@
                   size="38"
                   :color="stationSelected.lines.data[lk].color"
                 >mdi-bus</v-icon>
-                <img v-if="stationSelected.lines.data[lk].type === 'CABLE_CAR'" class="display-flex justify-self-center" width="34px" height="34px" src="../assets/vehicles/trolleybus.svg"/>
+                <img v-if="stationSelected.lines.data[lk].type === 'CABLE_CAR'" class="display-flex justify-self-center" width="34px" height="34px" src="@/assets/vehicles/trolleybus.svg"/>
                 <v-icon
                   v-if="stationSelected.lines.data[lk].type === 'TRAM'"
                   size="38"
@@ -104,17 +104,17 @@
                     <img
                       v-if="subway.data[stationSelected.name][stationSelected.lines.data[lk].direction_name].Capacity[c] === 'low'"
                       class="carriage low"
-                      src="../assets/capacityIndicator/capacity-low.svg"
+                      src="@/assets/capacityIndicator/capacity-low.svg"
                     />
                     <img
                       v-if="subway.data[stationSelected.name][stationSelected.lines.data[lk].direction_name].Capacity[c] === 'medium'"
                       class="carriage medium"
-                      src="../assets/capacityIndicator/capacity-medium.svg"
+                      src="@/assets/capacityIndicator/capacity-medium.svg"
                     />
                     <img
                       v-if="subway.data[stationSelected.name][stationSelected.lines.data[lk].direction_name].Capacity[c] === 'high'"
                       class="carriage high"
-                      src="../assets/capacityIndicator/capacity-high.svg"
+                      src="@/assets/capacityIndicator/capacity-high.svg"
                     />
                   </span>
                 </div>
@@ -796,7 +796,7 @@ export default {
 
 .capacity {
   height: 80%;
-  background: url("../assets/capacityIndicator/train.svg") -1px -1px no-repeat,
+  background: url("../../../assets/capacityIndicator/train.svg") -1px -1px no-repeat,
     #23282d;
   background-size: auto calc(100% + 2px);
   text-align: right;

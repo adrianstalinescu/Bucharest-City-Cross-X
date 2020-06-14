@@ -7,18 +7,19 @@ import Admin from '../components/Admin'
 import Check from '../components/Check'
 import Home from '../components/Home'
 import Transit from '../components/Transit'
-import Nearby from '../components/Nearby'
-import Route from '../components/Route'
-import Info from '../components/Info'
+import Nearby from '../components/Transit/Land/Nearby'
+import Route from '../components/Transit/Land/Route'
+import Info from '../components/Transit/Land/Info'
 import Store from '../components/Store'
-import Air from '../components/Air'
-import Land from '../components/Land'
-import Water from '../components/Water'
+import LandStore from '../components/Store/Land/Land'
 import Wallet from '../components/Wallet'
 import History from '../components/History'
 import Lines from '../components/Lines'
 import Stations from '../components/Stations'
 import Face from '../components/Face'
+import LandTransit from '../components/Transit/LandTransit'
+import AirTransit from '../components/Transit/AirTransit'
+import WaterTransit from '../components/Transit/WaterTransit'
 
 
 Vue.use(Router)
@@ -59,6 +60,24 @@ export default new Router({
             beforeEnter: AuthGuard
         },
         {
+            path: '/transit-land',
+            name: 'Transit Land',
+            component: LandTransit,
+            beforeEnter: AuthGuard
+        },
+        {
+            path: '/transit-air',
+            name: 'Transit Air',
+            component: AirTransit,
+            beforeEnter: AuthGuard
+        },
+        {
+            path: '/transit-water',
+            name: 'Transit Water',
+            component: WaterTransit,
+            beforeEnter: AuthGuard
+        },
+        {
             path: '/nearby',
             name: 'Nearby',
             component: Nearby,
@@ -83,21 +102,9 @@ export default new Router({
             beforeEnter: AuthGuard
         },
         {
-            path: '/air',
-            name: 'Air',
-            component: Air,
-            beforeEnter: AuthGuard
-        },
-        {
-            path: '/land',
-            name: 'Land',
-            component: Land,
-            beforeEnter: AuthGuard
-        },
-        {
-            path: '/water',
-            name: 'Water',
-            component: Water,
+            path: '/land-store',
+            name: 'Land Store',
+            component: LandStore,
             beforeEnter: AuthGuard
         },
         {

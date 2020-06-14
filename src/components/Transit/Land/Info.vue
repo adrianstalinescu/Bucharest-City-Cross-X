@@ -82,7 +82,7 @@
         </v-chip>
       </div>
     </div>
-    <router-link  v-if="this.linesReturn" :to="'transit'" class="custom-router-link-transparency">
+    <router-link  v-if="this.linesReturn" :to="'transit-land'" class="custom-router-link-transparency">
         <v-btn
         rounded
         dark

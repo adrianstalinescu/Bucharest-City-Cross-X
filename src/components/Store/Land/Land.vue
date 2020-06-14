@@ -13,26 +13,33 @@
       </v-btn>
     </router-link>
     <!-- SUT description -->
-    <v-expansion-panels class="custom-sut-wrapper">
+    <!-- <v-expansion-panels class="custom-sut-wrapper">
       <v-expansion-panel>
         <v-expansion-panel-header class="custom-sut-header">
           <v-card-title class="custom-sut-title" disabled>
             <v-icon left color="#039be5" size="35">mdi-information-outline</v-icon>
-            {{SUT.Title}}
-            <v-chip color="rgb(117, 149, 166)" outlined class="mx-3">Cost: {{SUT.Cost}}/validation</v-chip>
-          </v-card-title>
+            {{SUT.Title}} -->
+            <!-- <v-chip color="rgb(117, 149, 166)" outlined class="mx-3">Cost: {{SUT.Cost}}/validation</v-chip> -->
+          <!-- </v-card-title>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
           <span class="plan-info">{{ SUT.Description }}</span>
         </v-expansion-panel-content>
       </v-expansion-panel>
-    </v-expansion-panels>
+    </v-expansion-panels> -->
     <!-- Card details -->
-    <v-card v-if="card" class="custom-card-wrapper" width="53vw" outlined elevation="0">
-      <div class="custom-card-grid">
+    <v-card v-if="card" class="custom-credit-card-wrapper" outlined elevation="0">
+      <div class="display-flex justify-center">
         <v-icon color="rgb(117, 149, 166)" size="40">mdi-credit-card-outline</v-icon>
-        <span class="card-info">Card number **** **** **** {{cardLastDigits}}</span>
-        <span class="card-info">Exp {{cardExpiry}}</span>
+        <span class="card-info ml-1">Payment Details</span>
+      </div>
+      <div class="display-flex justify-center">
+        <span class="card-info mt-1">Card number **** **** **** {{cardLastDigits}}</span>
+      </div>
+      <div class="display-flex justify-center">
+        <span class="card-info">Expiry {{cardExpiry}}</span>
+      </div>
+      <div class="display-flex justify-center">
         <v-btn
           rounded
           dark
@@ -46,10 +53,15 @@
         </v-btn>
       </div>
     </v-card>
-    <v-card v-if="!card" class="custom-card-wrapper" width="53vw" outlined elevation="0">
-      <div class="custom-card-add-grid">
+    <v-card v-if="!card" class="custom-credit-card-wrapper" outlined elevation="0">
+      <div class="display-flex justify-center">
         <v-icon color="rgb(117, 149, 166)" size="40">mdi-credit-card-outline</v-icon>
-        <span class="card-info">To buy a plan you must first add a Debit/Credit Card</span>
+        <span class="card-info ml-1">Payment Details</span>
+      </div>
+      <div class="display-flex justify-center">
+        <span class="card-info mt-1">Add a Debit/Credit Card to buy <br> a plan</span>
+      </div>
+      <div class="display-flex justify-center">
         <v-btn
           rounded
           dark
@@ -66,16 +78,23 @@
     <!-- Student details -->
     <v-card
       v-if="isStudent === false"
-      class="custom-card-wrapper"
-      width="53vw"
+      class="custom-student-card-wrapper"
       outlined
       elevation="0"
     >
-      <div class="custom-student-card-grid">
+      <div class="display-flex justify-center mt-1">
         <v-avatar elevation="0" color="light-blue lighten-3" size="34" class="center-item">
           <v-icon color="light-blue darken-1" size="28">mdi-exclamation-thick</v-icon>
         </v-avatar>
-        <span class="student-card-info">No Student ID</span>
+        <span class="student-card-info ml-1">Student ID</span>
+      </div>
+      <div class="display-flex justify-center">
+        <span class="card-info mt-1">Add your Student ID to benefit of</span>
+      </div>
+      <div class="display-flex justify-center">
+        <span class="card-info">Discounted Prices</span>
+      </div>
+      <div class="display-flex justify-center"> 
         <v-btn
           rounded
           dark
@@ -84,19 +103,18 @@
           class="justify-center ma-1 mr-2"
           @click="studentCard = true"
         >
-          Add ID
+          Add Student ID
           <v-icon dark right size="20">mdi-plus</v-icon>
         </v-btn>
       </div>
     </v-card>
     <v-card
       v-if="isStudent === 'pending'"
-      class="custom-card-wrapper"
-      width="40vw"
+      class="custom-student-card-wrapper"
       outlined
       elevation="0"
     >
-      <div class="custom-student-card-pending-grid">
+      <div class="display-flex justify-center">
         <v-avatar
           elevation="0"
           color="light-blue lighten-3"
@@ -105,124 +123,173 @@
         >
           <v-icon color="light-blue darken-1" size="28">mdi-exclamation-thick</v-icon>
         </v-avatar>
+        <span class="student-card-info ml-1">Student ID</span>
+      </div>
+      <div class="display-flex justify-center mt-1">
         <span class="student-card-info">
           Your ID is being reviewed
-          <v-icon size="25" color="black" class="ml-1 mb-1">mdi-file-search-outline</v-icon>
         </span>
+      </div>
+      <div class="display-flex justify-center mt-1">
+        <v-icon size="40" color="light-blue" class="ml-1">mdi-card-account-details-outline</v-icon>
+        <v-icon size="40" color="light-blue" class="ml-1">mdi-chevron-right</v-icon>
+        <v-icon size="40" color="light-blue">mdi-file-search-outline</v-icon>
       </div>
     </v-card>
     <v-card
       v-if="isStudent === 'approved'"
-      class="custom-card-wrapper"
-      width="40vw"
+      class="custom-student-card-wrapper"
       outlined
       elevation="0"
     >
-      <div class="custom-student-card-approved-grid">
+      <div class="display-flex justify-center">
         <v-avatar elevation="0" color="rgb(117, 149, 166)" size="35" class="center-item ma-2">
           <v-icon color="white" size="25">mdi-account-check-outline</v-icon>
         </v-avatar>
-        <span class="student-card-details">Student ID: {{studentID}}</span>
+        <span class="student-card-info ml-1">Student ID</span>
+      </div>
+      <div class="display-flex justify-center mt-1">
+        <span class="student-card-details">ID Number: {{studentID}}</span>
+      </div>
+      <div class="display-flex justify-center mt-1">
         <span class="student-card-details">Valid until {{studentValid}}</span>
       </div>
     </v-card>
     <!-- Plans details -->
-    <v-expansion-panels v-for="pr in planRegularKeys" :key="pr" class="custom-card-wrapper">
-      <v-expansion-panel>
-        <v-expansion-panel-header class="custom-plan-header">
-          <div class="mt-1 mb-2">
-            <div class="custom-plan-title-wrap">
-              <v-card-title class="custom-plan-title" disabled>
-                <v-icon left color="deep-orange lighten-2" size="30">mdi-ticket</v-icon>
-                {{pr}} Plan
-              </v-card-title>
-            </div>
-            <div class="custom-plan-chip-wrap">
-              <v-chip color="rgb(117, 149, 166)" outlined>
-                <span class="plan-info">Cost: {{planRegularDetails[pr].Cost}}</span>
-              </v-chip>
-              <v-chip color="rgb(117, 149, 166)" outlined class="mx-2">
-                <span class="plan-info">Valid: {{planRegularDetails[pr].Validity}}</span>
-              </v-chip>
-            </div>
-          </div>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
-          <div>
-            <div>
-              <span class="plan-info">{{planRegularDetails[pr].Description}}</span>
-            </div>
-            <div class="custom-plan-purchase-wrap">
-              <v-btn
-                rounded
-                outlined
-                color="#168834ba"
-                elevation="0"
-                @click="planPurchase(pr, planRegularDetails[pr].Cost)"
-              >
-                <span v-if="!planRegularPurchaseDisabled">Purchase</span>
-                <v-icon v-if="!planRegularPurchaseDisabled" dark right size="20">mdi-cart-outline</v-icon>
-                <span v-if="planRegularPurchaseDisabled">Attention Required</span>
-                <v-icon
-                  v-if="planRegularPurchaseDisabled"
-                  dark
-                  right
-                  size="20"
-                >mdi-alert-circle-outline</v-icon>
-              </v-btn>
-            </div>
-          </div>
-        </v-expansion-panel-content>
-      </v-expansion-panel>
-    </v-expansion-panels>
-    <v-expansion-panels v-for="pd in planDiscountKeys" :key="pd" class="custom-card-wrapper">
-      <v-expansion-panel>
-        <v-expansion-panel-header class="custom-plan-header">
-          <div class="mt-1 mb-2">
-            <div class="custom-plan-title-wrap">
-              <v-card-title class="custom-plan-title" disabled>
-                <v-icon left color="deep-orange lighten-2" size="30">mdi-ticket-percent</v-icon>
-                {{pd}} Plan
-              </v-card-title>
-            </div>
-            <div class="custom-plan-chip-wrap">
-              <v-chip color="rgb(117, 149, 166)" outlined>
-                <span class="plan-info">Cost: {{planDiscountDetails[pd].Cost}}</span>
-              </v-chip>
-              <v-chip color="rgb(117, 149, 166)" outlined class="mx-2">
-                <span class="plan-info">Valid: {{planDiscountDetails[pd].Validity}}</span>
-              </v-chip>
-            </div>
-          </div>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
-          <div>
-            <div>
-              <span class="plan-info">{{planDiscountDetails[pd].Description}}</span>
-            </div>
-            <div class="custom-plan-purchase-wrap">
-              <v-btn
-                rounded
-                outlined
-                color="#168834ba"
-                elevation="0"
-                @click="planPurchase(pd, planDiscountDetails[pd].Cost)"
-              >
-                <span v-if="!planDiscountPurchaseDisabled">Purchase</span>
-                <v-icon v-if="!planDiscountPurchaseDisabled" dark right size="20">mdi-cart-outline</v-icon>
-                <span v-if="planDiscountPurchaseDisabled">Attention Required</span>
-                <v-icon
-                  v-if="planDiscountPurchaseDisabled"
-                  dark
-                  right
-                  size="20"
-                >mdi-alert-circle-outline</v-icon>
-              </v-btn>
-            </div>
-          </div>
-        </v-expansion-panel-content>
-      </v-expansion-panel>
-    </v-expansion-panels>
+    <div class="custom-plans-card-wrapper">
+      <div class="custom-plan-rounded-wrapper-1">
+        <v-icon class="custom-plan-icon" color="deep-orange lighten-2" size="45">mdi-ticket</v-icon>
+        <span class="custom-plan-title-1">{{planRegularKeys[0]}}</span>
+        <div class="custom-plan-chip-1-1">
+          <v-chip color="rgb(117, 149, 166)" outlined>
+            <span class="plan-info">Cost: {{planRegularDetails[planRegularKeys[0]].Cost}}</span>
+          </v-chip>
+        </div>
+        <div class="custom-plan-chip-1-2">
+          <v-chip color="rgb(117, 149, 166)" outlined class="mx-2">
+            <span class="plan-info">Valid: {{planRegularDetails[planRegularKeys[0]].Validity}}</span>
+          </v-chip>
+        </div>
+        <div class="custom-plan-button-1">
+          <v-btn
+            rounded
+            outlined
+            color="#168834ba"
+            elevation="0"
+            @click="planPurchase(planRegularKeys[0], planRegularDetails[planRegularKeys[0]].Cost)"
+          >
+            <span v-if="!planRegularPurchaseDisabled">Purchase</span>
+            <v-icon v-if="!planRegularPurchaseDisabled" dark right size="20">mdi-cart-outline</v-icon>
+            <span v-if="planRegularPurchaseDisabled">Attention Required</span>
+            <v-icon
+              v-if="planRegularPurchaseDisabled"
+              dark
+              right
+              size="20"
+            >mdi-alert-circle-outline</v-icon>
+          </v-btn>
+        </div>
+      </div>
+      <div class="custom-plan-rounded-wrapper-2">
+        <v-icon class="custom-plan-icon" color="deep-orange lighten-2" size="45">mdi-ticket</v-icon>
+        <span class="custom-plan-title-2">{{planRegularKeys[1]}}</span>
+        <div class="custom-plan-chip-2-1">
+          <v-chip color="rgb(117, 149, 166)" outlined>
+            <span class="plan-info">Cost: {{planRegularDetails[planRegularKeys[1]].Cost}}</span>
+          </v-chip>
+        </div>
+        <div class="custom-plan-chip-2-2">
+          <v-chip color="rgb(117, 149, 166)" outlined class="mx-2">
+            <span class="plan-info">Valid: {{planRegularDetails[planRegularKeys[1]].Validity}}</span>
+          </v-chip>
+        </div>
+        <div class="custom-plan-button-2">
+          <v-btn
+            rounded
+            outlined
+            color="#168834ba"
+            elevation="0"
+            @click="planPurchase(planRegularKeys[1], planRegularDetails[planRegularKeys[1]].Cost)"
+          >
+            <span v-if="!planRegularPurchaseDisabled">Purchase</span>
+            <v-icon v-if="!planRegularPurchaseDisabled" dark right size="20">mdi-cart-outline</v-icon>
+            <span v-if="planRegularPurchaseDisabled">Attention Required</span>
+            <v-icon
+              v-if="planRegularPurchaseDisabled"
+              dark
+              right
+              size="20"
+            >mdi-alert-circle-outline</v-icon>
+          </v-btn>
+        </div>
+      </div>
+      <div class="custom-plan-rounded-wrapper-3">
+        <v-icon class="custom-plan-icon" color="deep-orange lighten-2" size="45">mdi-ticket</v-icon>
+        <span class="custom-plan-title-3">{{planRegularKeys[2]}}</span>
+        <div class="custom-plan-chip-3-1">
+          <v-chip color="rgb(117, 149, 166)" outlined>
+            <span class="plan-info">Cost: {{planRegularDetails[planRegularKeys[2]].Cost}}</span>
+          </v-chip>
+        </div>
+        <div class="custom-plan-chip-3-2">
+          <v-chip color="rgb(117, 149, 166)" outlined class="mx-2">
+            <span class="plan-info">Valid: {{planRegularDetails[planRegularKeys[2]].Validity}}</span>
+          </v-chip>
+        </div>
+        <div class="custom-plan-button-3">
+          <v-btn
+            rounded
+            outlined
+            color="#168834ba"
+            elevation="0"
+            @click="planPurchase(planRegularKeys[2], planRegularDetails[planRegularKeys[2]].Cost)"
+          >
+            <span v-if="!planRegularPurchaseDisabled">Purchase</span>
+            <v-icon v-if="!planRegularPurchaseDisabled" dark right size="20">mdi-cart-outline</v-icon>
+            <span v-if="planRegularPurchaseDisabled">Attention Required</span>
+            <v-icon
+              v-if="planRegularPurchaseDisabled"
+              dark
+              right
+              size="20"
+            >mdi-alert-circle-outline</v-icon>
+          </v-btn>
+        </div>
+      </div>
+      <div class="custom-plan-rounded-wrapper-4">
+        <v-icon class="custom-plan-icon" color="deep-orange lighten-2" size="45">mdi-ticket-percent</v-icon>
+        <span class="custom-plan-title-4">{{planDiscountKeys[0]}}</span>
+         <div class="custom-plan-chip-4-1">
+          <v-chip color="rgb(117, 149, 166)" outlined>
+            <span class="plan-info">Cost: {{planDiscountDetails[planDiscountKeys[0]].Cost}}</span>
+          </v-chip>
+        </div>
+        <div class="custom-plan-chip-4-2">
+          <v-chip color="rgb(117, 149, 166)" outlined class="mx-2">
+            <span class="plan-info">Valid: {{planDiscountDetails[planDiscountKeys[0]].Validity}}</span>
+          </v-chip>
+        </div>
+        <div class="custom-plan-button-4">
+          <v-btn
+            rounded
+            outlined
+            color="#168834ba"
+            elevation="0"
+            @click="planPurchase(planDiscountKeys[0], planDiscountDetails[planDiscountKeys[0]].Cost)"
+          >
+            <span v-if="!planDiscountPurchaseDisabled">Purchase</span>
+            <v-icon v-if="!planDiscountPurchaseDisabled" dark right size="20">mdi-cart-outline</v-icon>
+            <span v-if="planDiscountPurchaseDisabled">Attention Required</span>
+            <v-icon
+              v-if="planDiscountPurchaseDisabled"
+              dark
+              right
+              size="20"
+            >mdi-alert-circle-outline</v-icon>
+          </v-btn>
+        </div>
+      </div>
+    </div>
     <v-dialog persistent scrollable v-model="cardAdd" width="40vw">
       <v-card>
         <v-card-text class="pb-10">
@@ -1113,6 +1180,9 @@ export default {
 </script>
 
 <style scoped>
+.display-flex {
+  display: flex;
+}
 .custom-router-link-transparency {
   color: transparent;
   height: 25vh !important;
@@ -1146,6 +1216,74 @@ export default {
   display: grid;
   grid-template-columns: 1fr 8fr 3.5fr;
 }
+.custom-credit-card-wrapper{
+  position: absolute;
+  top: 2vh;
+  right: 2vh;
+  width: 21vw;
+  height: 23vh;
+}
+.custom-student-card-wrapper{
+  position: absolute;
+  top: 27vh;
+  right: 2vh;
+  width: 21vw;
+  height: 23vh;
+}
+.custom-plans-card-wrapper{
+  position:absolute;
+  width: 68vw;
+  height: 95vh;
+  top: 3vh;
+  left: 8vw;
+}
+.custom-plan-rounded-wrapper-1{
+  width: 240px;
+  height: 240px;
+  display: flex;
+  position: absolute;
+  left: 5vw;
+  border: 1.5vh solid #D95033;
+  background-color: white;
+  border-radius: 1000px;
+}
+.custom-plan-rounded-wrapper-2{
+  width: 240px;
+  height: 240px;
+  display: flex;
+  position: absolute;
+  left: 42vw;
+  border: 1.5vh solid #D95033;
+  background-color: white;
+  border-radius: 1000px;
+}
+.custom-plan-rounded-wrapper-3{
+  width: 240px;
+  height: 240px;
+  display: flex;
+  position: absolute;
+  top: 47vh;
+  left: 5vw;
+  border: 1.5vh solid #D95033;
+  background-color: white;
+  border-radius: 1000px;
+}
+.custom-plan-rounded-wrapper-4{
+  width: 240px;
+  height: 240px;
+  display: flex;
+  position: absolute;
+  top: 47vh;
+  left: 42vw;
+  border: 1.5vh solid #D95033;
+  background-color: white;
+  border-radius: 1000px;
+}
+.custom-plan-icon{
+  position: absolute;
+  left: 6.5vw;
+  top: 1vh;
+}
 .custom-card-wrapper {
   width: 40vw;
   margin-top: 2vh;
@@ -1155,11 +1293,10 @@ export default {
   height: auto;
 }
 .custom-sut-wrapper {
-  margin-top: 2vh;
-  margin-bottom: 2vh;
-  margin-left: auto;
-  margin-right: auto;
-  width: 53vw;
+  position: absolute;
+  top: 10vh;
+  right: 2vh;
+  width: 35vw;
   height: auto;
 }
 .custom-sut-header {
@@ -1191,14 +1328,104 @@ export default {
 .custom-plan-button {
   align-self: center;
 }
-.custom-plan-title {
-  padding: 0px;
-  margin-bottom: 0px;
-  align-self: center;
-  justify-content: start;
+.custom-plan-title-1 {
+  position: absolute;
+  left: 6.4vw;
+  top: 7vh;
   text-overflow: ellipsis;
   width: -webkit-fill-available;
+  font-size: 20px;
   font-weight: 600;
+}
+.custom-plan-title-2 {
+  position: absolute;
+  left: 5.4vw;
+  top: 7vh;
+  text-overflow: ellipsis;
+  width: -webkit-fill-available;
+  font-size: 20px;
+  font-weight: 600;
+}
+.custom-plan-title-3 {
+  position: absolute;
+  left: 5.7vw;
+  top: 7vh;
+  text-overflow: ellipsis;
+  width: -webkit-fill-available;
+  font-size: 20px;
+  font-weight: 600;
+}
+.custom-plan-title-4 {
+  position: absolute;
+  left: 3vw;
+  top: 7vh;
+  text-overflow: ellipsis;
+  width: -webkit-fill-available;
+  font-size: 20px;
+  font-weight: 600;
+}
+.custom-plan-chip-1-1{
+  position:absolute;
+  top: 11.8vh;
+  left: 4.4vw;
+}
+.custom-plan-chip-1-2{
+  position:absolute;
+  top: 17.6vh;
+  left: 3.1vw;
+}
+.custom-plan-button-1{
+  position: absolute;
+  top: 24vh;
+  left: 3.1vw;
+}
+
+.custom-plan-chip-2-1{
+  position:absolute;
+  top: 11.8vh;
+  left: 4vw;
+}
+.custom-plan-chip-2-2{
+  position:absolute;
+  top: 17.6vh;
+  left: 3.2vw;
+}
+.custom-plan-button-2{
+  position: absolute;
+  top: 24vh;
+  left: 3.1vw;
+}
+
+.custom-plan-chip-3-1{
+  position:absolute;
+  top: 11.8vh;
+  left: 4vw;
+}
+.custom-plan-chip-3-2{
+  position:absolute;
+  top: 17.6vh;
+  left: 3.5vw;
+}
+.custom-plan-button-3{
+  position: absolute;
+  top: 24vh;
+  left: 3.1vw;
+}
+
+.custom-plan-chip-4-1{
+  position:absolute;
+  top: 11.8vh;
+  left: 4vw;
+}
+.custom-plan-chip-4-2{
+  position:absolute;
+  top: 17.6vh;
+  left: 3.25vw;
+}
+.custom-plan-button-4{
+  position: absolute;
+  top: 24vh;
+  left: 3.1vw;
 }
 .custom-sut-title {
   padding: 0px;
