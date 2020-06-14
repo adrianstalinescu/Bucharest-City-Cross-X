@@ -157,7 +157,7 @@
     </v-card>
     <!-- Plans details -->
     <div class="custom-plans-card-wrapper">
-      <div class="custom-plan-rounded-wrapper-1">
+      <div v-if="planRegularKeys.length > 0" class="custom-plan-rounded-wrapper-1">
         <v-icon class="custom-plan-icon" color="deep-orange lighten-2" size="45">mdi-ticket</v-icon>
         <span class="custom-plan-title-1">{{planRegularKeys[0]}}</span>
         <div class="custom-plan-chip-1-1">
@@ -190,7 +190,7 @@
           </v-btn>
         </div>
       </div>
-      <div class="custom-plan-rounded-wrapper-2">
+      <div v-if="planRegularKeys.length > 0" class="custom-plan-rounded-wrapper-2">
         <v-icon class="custom-plan-icon" color="deep-orange lighten-2" size="45">mdi-ticket</v-icon>
         <span class="custom-plan-title-2">{{planRegularKeys[1]}}</span>
         <div class="custom-plan-chip-2-1">
@@ -223,7 +223,7 @@
           </v-btn>
         </div>
       </div>
-      <div class="custom-plan-rounded-wrapper-3">
+      <div v-if="planRegularKeys.length > 0" class="custom-plan-rounded-wrapper-3">
         <v-icon class="custom-plan-icon" color="deep-orange lighten-2" size="45">mdi-ticket</v-icon>
         <span class="custom-plan-title-3">{{planRegularKeys[2]}}</span>
         <div class="custom-plan-chip-3-1">
@@ -256,7 +256,7 @@
           </v-btn>
         </div>
       </div>
-      <div class="custom-plan-rounded-wrapper-4">
+      <div v-if="planDiscountKeys.length > 0" class="custom-plan-rounded-wrapper-4">
         <v-icon class="custom-plan-icon" color="deep-orange lighten-2" size="45">mdi-ticket-percent</v-icon>
         <span class="custom-plan-title-4">{{planDiscountKeys[0]}}</span>
          <div class="custom-plan-chip-4-1">

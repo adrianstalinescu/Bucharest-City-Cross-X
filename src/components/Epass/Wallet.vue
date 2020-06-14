@@ -1,116 +1,114 @@
 <template>
-    <div class="plans-wrapper">
-      <!-- Back button -->
-      <router-link :to="'epass'" class="custom-router-link-transparency">
+  <div class="plans-wrapper">
+    <!-- Back button -->
+    <router-link :to="'epass'" class="custom-router-link-transparency">
+      <v-btn
+        rounded
+        dark
+        color="#D95033"
+        elevation="0"
+        class="custom-back-button"
+      >
+        <v-icon>mdi-arrow-left</v-icon>
+      </v-btn>
+    </router-link>
+    <!-- Plans -->
+    <div v-if="plansKeys.length > 0" class="custom-wallet-card-wrapper">
+      <div class="custom-plan-rounded-wrapper-1">
+        <div>
+          <v-icon v-if="plansKeys[0] !== 'Monthly Student'" size="45" color="deep-orange lighten-2" class="custom-plan-icon">mdi-ticket</v-icon>
+          <v-icon
+            v-if="plansKeys[0] === 'Monthly Student'"
+            size="45"
+            color="deep-orange lighten-2"
+            class="custom-plan-icon"
+          >mdi-ticket-percent</v-icon>
+          <span class="plan-title-1">{{plansKeys[0]}}</span>
+        </div>
+        <div class="plan-status-1">
+          <v-chip color="rgb(117, 149, 166)" outlined>
+            <span v-if="plansDetails[plansKeys[0]].Activated === 'true'" class="card-info">Valid untill {{plansDetails[plansKeys[0]].Valid}}</span>
+            <span v-if="plansDetails[plansKeys[0]].Activated === 'false'" class="card-info">Inactive</span>
+          </v-chip>
+        </div>
+        <div class="plan-activate-1">
           <v-btn
             rounded
-            dark
-            color="#D95033"
+            :disabled="plansDetails[plansKeys[0]].Activated === 'true'"
+            color="green darken-1"
             elevation="0"
-            class="custom-back-button"
+            class="justify-center plan-button-activate white--text"
+            @click="activatePlan(plansKeys[0])"
           >
-            <v-icon>mdi-arrow-left</v-icon>
+            <span v-if="plansDetails[plansKeys[0]].Activated === 'true'">Active</span>
+            <v-icon
+              v-if="plansDetails[plansKeys[0]].Activated === 'true'"
+              dark
+              right
+              size="20"
+            >mdi-checkbox-marked-circle-outline</v-icon>
+            <span v-if="plansDetails[plansKeys[0]].Activated === 'false'">Activate</span>
+            <v-icon
+              v-if="plansDetails[plansKeys[0]].Activated === 'false'"
+              dark
+              right
+              size="20"
+            >mdi-plus-circle-outline</v-icon>
           </v-btn>
-      </router-link>
-      <!-- Plans -->
-      <div class="custom-wallet-card-wrapper">
-        <div class="custom-plan-rounded-wrapper-1">
-          <div>
-            <v-icon v-if="plansKeys[0] !== 'Monthly Student'" size="45" color="deep-orange lighten-2" class="custom-plan-icon">mdi-ticket</v-icon>
-            <v-icon
-              v-if="plansKeys[0] === 'Monthly Student'"
-              size="45"
-              color="deep-orange lighten-2"
-              class="custom-plan-icon"
-            >mdi-ticket-percent</v-icon>
-            <span v-if="plansKeys[0] !== 'Monthly Student'" class="plan-title-1">{{plansKeys[0]}}</span>
-            <span v-if="plansKeys[0] === 'Monthly Student'" class="plan-title-2">{{plansKeys[1]}}</span>
-          </div>
-          <div class="plan-status-1">
-            <v-chip color="rgb(117, 149, 166)" outlined>
-              <span v-if="plansDetails[plansKeys[0]].Activated === 'true'" class="card-info">Valid untill {{plansDetails[plansKeys[0]].Valid}}</span>
-              <span v-if="plansDetails[plansKeys[0]].Activated === 'false'" class="card-info">Inactive</span>
-            </v-chip>
-          </div>
-          <div class="plan-activate-1">
-            <v-btn
-              rounded
-              :disabled="plansDetails[plansKeys[0]].Activated === 'true'"
-              color="teal darken-4"
-              elevation="0"
-              class="justify-center plan-button-activate white--text"
-              @click="activatePlan(plansKeys[0])"
-            >
-              <span v-if="plansDetails[plansKeys[0]].Activated === 'true'">Active</span>
-              <v-icon
-                v-if="plansDetails[plansKeys[0]].Activated === 'true'"
-                dark
-                right
-                size="20"
-              >mdi-checkbox-marked-circle-outline</v-icon>
-              <span v-if="plansDetails[plansKeys[0]].Activated === 'false'">Activate</span>
-              <v-icon
-                v-if="plansDetails[plansKeys[0]].Activated === 'false'"
-                dark
-                right
-                size="20"
-              >mdi-plus-circle-outline</v-icon>
-            </v-btn>
-          </div>
-        </div>
-        <div class="custom-plan-rounded-wrapper-2">
-          <div>
-            <v-icon v-if="plansKeys[1] !== 'Monthly Student'" size="45" color="deep-orange lighten-2" class="custom-plan-icon">mdi-ticket</v-icon>
-            <v-icon
-              v-if="plansKeys[1] === 'Monthly Student'"
-              size="45"
-              color="deep-orange lighten-2"
-              class="custom-plan-icon"
-            >mdi-ticket-percent</v-icon>
-            <span v-if="plansKeys[1] !== 'Monthly Student'" class="plan-title-1">{{plansKeys[1]}}</span>
-            <span v-if="plansKeys[1] === 'Monthly Student'" class="plan-title-2">{{plansKeys[1]}}</span>
-          </div>
-          <div class="plan-status-1">
-            <v-chip color="rgb(117, 149, 166)" outlined>
-              <span v-if="plansDetails[plansKeys[1]].Activated === 'true'" class="card-info">Valid untill {{plansDetails[plansKeys[1]].Valid}}</span>
-              <span v-if="plansDetails[plansKeys[1]].Activated === 'false'" class="card-info">Inactive</span>
-            </v-chip>
-          </div>
-          <div class="plan-activate-1">
-            <v-btn
-              rounded
-              :disabled="plansDetails[plansKeys[1]].Activated === 'true'"
-              color="green darken-1"
-              elevation="0"
-              class="justify-center plan-button-activate white--text"
-              @click="activatePlan(plansKeys[1])"
-            >
-              <span v-if="plansDetails[plansKeys[1]].Activated === 'true'">Active</span>
-              <v-icon
-                v-if="plansDetails[plansKeys[1]].Activated === 'true'"
-                dark
-                right
-                size="20"
-              >mdi-checkbox-marked-circle-outline</v-icon>
-              <span v-if="plansDetails[plansKeys[1]].Activated === 'false'">Activate</span>
-              <v-icon
-                v-if="plansDetails[plansKeys[1]].Activated === 'false'"
-                dark
-                right
-                size="20"
-              >mdi-plus-circle-outline</v-icon>
-            </v-btn>
-          </div>
         </div>
       </div>
-      <!-- Alerts -->
-      <v-snackbar v-model="plansActivateSuccess" :timeout="1500" color="success">
-        <span class="plan-activate">The plan was activated</span>
-      </v-snackbar>
-      <v-snackbar v-model="plansActivateError" :timeout="1500" color="error">
-        <span class="plan-activate">Only 1 plan can be Active</span>
-      </v-snackbar>
+      <div v-if="plansKeys.length > 1" class="custom-plan-rounded-wrapper-2">
+        <div>
+          <v-icon v-if="plansKeys[1] !== 'Monthly Student'" size="45" color="deep-orange lighten-2" class="custom-plan-icon">mdi-ticket</v-icon>
+          <v-icon
+            v-if="plansKeys[1] === 'Monthly Student'"
+            size="45"
+            color="deep-orange lighten-2"
+            class="custom-plan-icon"
+          >mdi-ticket-percent</v-icon>
+          <span class="plan-title-1">{{plansKeys[1]}}</span>
+        </div>
+        <div class="plan-status-1">
+          <v-chip color="rgb(117, 149, 166)" outlined>
+            <span v-if="plansDetails[plansKeys[1]].Activated === 'true'" class="card-info">Valid untill {{plansDetails[plansKeys[1]].Valid}}</span>
+            <span v-if="plansDetails[plansKeys[1]].Activated === 'false'" class="card-info">Inactive</span>
+          </v-chip>
+        </div>
+        <div class="plan-activate-1">
+          <v-btn
+            rounded
+            :disabled="plansDetails[plansKeys[1]].Activated === 'true'"
+            color="green darken-1"
+            elevation="0"
+            class="justify-center plan-button-activate white--text"
+            @click="activatePlan(plansKeys[1])"
+          >
+            <span v-if="plansDetails[plansKeys[1]].Activated === 'true'">Active</span>
+            <v-icon
+              v-if="plansDetails[plansKeys[1]].Activated === 'true'"
+              dark
+              right
+              size="20"
+            >mdi-checkbox-marked-circle-outline</v-icon>
+            <span v-if="plansDetails[plansKeys[1]].Activated === 'false'">Activate</span>
+            <v-icon
+              v-if="plansDetails[plansKeys[1]].Activated === 'false'"
+              dark
+              right
+              size="20"
+            >mdi-plus-circle-outline</v-icon>
+          </v-btn>
+        </div>
+      </div>
     </div>
+    <!-- Alerts -->
+    <v-snackbar v-model="plansActivateSuccess" :timeout="1500" color="success">
+      <span class="plan-activate">The plan was activated</span>
+    </v-snackbar>
+    <v-snackbar v-model="plansActivateError" :timeout="1500" color="error">
+      <span class="plan-activate">Only 1 plan can be Active</span>
+    </v-snackbar>
+  </div>
 </template>
 
 <script>
@@ -124,53 +122,6 @@ export default {
       plansDetails: null,
       plansActivateError: false,
       plansActivateSuccess: false,
-      footer_props: {
-        "items-per-page-options": [5],
-        "items-per-page-text": null,
-        "disable-items-per-page": true
-      },
-      headers: [
-        {
-          text: "Usage",
-          align: "left",
-          sortable: false,
-          value: "type"
-        },
-        {
-          text: "Line",
-          align: "left",
-          sortable: false,
-          value: "line"
-        },
-        { text: "Date", sortable: false, value: "date" },
-        { text: "Time", sortable: false, value: "time" },
-        { text: "Amount", sortable: false, value: "amount" }
-      ],
-      SUT: [
-      ],
-      headerPurchased: [
-        {
-          text: "Type",
-          align: "left",
-          sortable: false,
-          value: "type"
-        },
-        { text: "Date", sortable: false, value: "date" },
-        { text: "Time", sortable: true, value: "time" },
-        { text: "Amount", sortable: false, value: "amount" }
-      ],
-      purchased: [],
-      headerSearched: [
-        {
-          text: "Title",
-          align: "left",
-          sortable: false,
-          value: "title"
-        },
-        { text: "Date", sortable: false, value: "date" },
-        { text: "Time", sortable: true, value: "time" },
-      ],
-      searched: []
     };
   },
 
@@ -182,7 +133,6 @@ export default {
 
   mounted() {
     this.plansData()
-    
   },
 
   methods: {
@@ -313,12 +263,13 @@ export default {
 
 .plan-title-1 {
   position: absolute;
-  left: 7.5vw;
+  display:flex;
   top: 7vh;
   text-overflow: ellipsis;
   width: -webkit-fill-available;
   font-size: 20px;
   font-weight: 600;
+  justify-content: center;
 }
 
 .plan-title-2 {
