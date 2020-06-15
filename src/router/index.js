@@ -10,6 +10,7 @@ import Transit from '../components/Transit'
 import Nearby from '../components/Transit/Land/Nearby'
 import Route from '../components/Transit/Land/Route'
 import Info from '../components/Transit/Land/Info'
+import InfoAir from '../components/Transit/Air/Info'
 import Store from '../components/Store'
 import LandStore from '../components/Store/Land/Land'
 import Wallet from '../components/Epass/Wallet'
@@ -94,6 +95,12 @@ export default new Router({
             path: '/info',
             name: 'Info',
             component: Info,
+            beforeEnter: AuthGuard
+        },
+        {
+            path: '/info-air',
+            name: 'Info Air',
+            component: InfoAir,
             beforeEnter: AuthGuard
         },
         {

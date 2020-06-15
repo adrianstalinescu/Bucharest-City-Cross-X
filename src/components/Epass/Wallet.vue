@@ -272,16 +272,6 @@ export default {
   justify-content: center;
 }
 
-.plan-title-2 {
-  position: absolute;
-  left: 4.8vw;
-  top: 7vh;
-  text-overflow: ellipsis;
-  width: -webkit-fill-available;
-  font-size: 20px;
-  font-weight: 600;
-}
-
 .plan-status-1 {
   position: absolute;
   display: flex;
