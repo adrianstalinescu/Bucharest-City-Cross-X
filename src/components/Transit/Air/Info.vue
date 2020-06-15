@@ -114,9 +114,23 @@ export default {
 
   methods: {
     airportData() {
+        let today = new Date();
+        let dd = String(today.getDate()).padStart(2, '0');
+        let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        let yyyy = today.getFullYear();
+        let hs = today.getHours()-12;
+        let he = today.getHours();
+        let mi = today.getMinutes();
+        mi = this.checkTime(mi);
+        hs = this.checkTime(hs);
+        he = this.checkTime(he);
+      
+        let loadFrom =  yyyy + '-' + mm + '-' + dd + 'T' + hs + ':' + mi;
+        let loadTo =  yyyy + '-' + mm + '-' + dd + 'T' + he + ':' + mi;
+        console.log (loadFrom +"  --  " + loadTo)
       let subscriptionKey = "ad74b81838msh36523b284fdcd6ap1bc786jsnccf670756ad5"; //microsoft face api key
       let uriBase =
-        "https://aerodatabox.p.rapidapi.com/flights/airports/icao/LROP/2020-06-14T12:00/2020-06-15T00:00";
+        "https://aerodatabox.p.rapidapi.com/flights/airports/icao/LROP/" + loadFrom + "/" + loadTo;
 
       Axios.get(
         uriBase,

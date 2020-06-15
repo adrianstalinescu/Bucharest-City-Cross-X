@@ -6,7 +6,7 @@
         </div>
     </div>
     <!-- back button -->
-    <router-link :to="'transit'" class="custom-router-link-transparency">
+    <router-link :to="'store'" class="custom-router-link-transparency">
         <v-btn
         rounded
         dark
@@ -100,7 +100,7 @@ export default {
   position: absolute;
   bottom: 37.49vh;
   justify-content: space-around;
-  background: url("../../assets/background/connector-line.svg") no-repeat;
+  background: url("../../../assets/background/connector-line.svg") no-repeat;
   background-size: 100% 5vh;
   background-position: center;
 }

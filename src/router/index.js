@@ -12,6 +12,8 @@ import Route from '../components/Transit/Land/Route'
 import Info from '../components/Transit/Land/Info'
 import InfoAir from '../components/Transit/Air/Info'
 import Store from '../components/Store'
+import AirStore from '../components/Store/Air/Air'
+import WaterStore from '../components/Store/Water/Water'
 import LandStore from '../components/Store/Land/Land'
 import Wallet from '../components/Epass/Wallet'
 import History from '../components/History'
@@ -113,6 +115,18 @@ export default new Router({
             path: '/land-store',
             name: 'Land Store',
             component: LandStore,
+            beforeEnter: AuthGuard
+        },
+        {
+            path: '/water-store',
+            name: 'Water Store',
+            component: WaterStore,
+            beforeEnter: AuthGuard
+        },
+        {
+            path: '/air-store',
+            name: 'Air Store',
+            component: AirStore,
             beforeEnter: AuthGuard
         },
         {

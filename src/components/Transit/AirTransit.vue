@@ -1,6 +1,6 @@
 <template>
   <div class="air-wrapper">
-    <!-- back home button -->
+    <!-- back button -->
     <router-link :to="'transit'" class="custom-router-link-transparency">
         <v-btn
         rounded
@@ -108,7 +108,7 @@ export default {
   border: solid 1.9vh #D95033;
 }
 
-.transit-wrapper {
+.air-wrapper {
   width: 100%;
   height: 100%;
   position: absolute;

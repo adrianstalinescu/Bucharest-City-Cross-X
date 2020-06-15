@@ -14,7 +14,7 @@
     </router-link>
     <!-- component navigation -->
     <div class="custom-navigation-buttons-wrapper">
-      <router-link :to="'air'" class="custom-router-link-transparency">
+      <router-link :to="'air-store'" class="custom-router-link-transparency">
         <v-btn 
           fab
           elevation="0" 
@@ -42,7 +42,7 @@
           </transition>
         </v-btn>
       </router-link>
-      <router-link :to="'water'" class="custom-router-link-transparency">
+      <router-link :to="'water-store'" class="custom-router-link-transparency">
         <v-btn 
           fab 
           elevation="0" 
