@@ -118,16 +118,16 @@ export default {
         let dd = String(today.getDate()).padStart(2, '0');
         let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
         let yyyy = today.getFullYear();
-        let hs = today.getHours()-12;
-        let he = today.getHours();
+        let hs = today.getHours() - 5;
+        let he = today.getHours() + 5;
         let mi = today.getMinutes();
-        mi = this.checkTime(mi);
-        hs = this.checkTime(hs);
-        he = this.checkTime(he);
+        // WORK IN PROGRESS.. to add time change posibility
+        // mi = this.checkTime(mi);
+        // hs = this.checkTime(hs);
+        // he = this.checkTime(he);
       
-        let loadFrom =  yyyy + '-' + mm + '-' + dd + 'T' + hs + ':' + mi;
-        let loadTo =  yyyy + '-' + mm + '-' + dd + 'T' + he + ':' + mi;
-        console.log (loadFrom +"  --  " + loadTo)
+        let loadFrom =  yyyy + '-' + mm + '-' + dd + 'T' + "12" + ':' + "00";
+        let loadTo =  yyyy + '-' + mm + '-' + dd + 'T' + "20" + ':' + "00";
       let subscriptionKey = "ad74b81838msh36523b284fdcd6ap1bc786jsnccf670756ad5"; //microsoft face api key
       let uriBase =
         "https://aerodatabox.p.rapidapi.com/flights/airports/icao/LROP/" + loadFrom + "/" + loadTo;
@@ -144,7 +144,6 @@ export default {
         }
       )
         .then((response) => {
-            console.log(response)
             response.data.arrivals.forEach(key => {
                 this.arrivals.push({
                     flight: key.number,
@@ -189,7 +188,13 @@ export default {
         }, 1000);
     },
     checkTime(i) {
-        if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+        if (i < 10) {
+            if(i < 0)
+            {
+                i = 24 + i;
+                i = "0" + i
+            } else {
+            i = "0" + i}};  // add zero in front of numbers < 10
         return i;
     }
   },

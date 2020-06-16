@@ -24,7 +24,7 @@ import LandTransit from '../components/Transit/LandTransit'
 import AirTransit from '../components/Transit/AirTransit'
 import WaterTransit from '../components/Transit/WaterTransit'
 import Epass from '../components/Epass'
-
+import EpassScan from '../components/Epass/PassScan'
 
 Vue.use(Router)
 
@@ -133,6 +133,12 @@ export default new Router({
             path: '/epass',
             name: 'Epass',
             component: Epass,
+            beforeEnter: AuthGuard
+        },
+        {
+            path: '/epass-scan',
+            name: 'Epass Scan',
+            component: EpassScan,
             beforeEnter: AuthGuard
         },
         {

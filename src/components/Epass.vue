@@ -37,7 +37,7 @@
           @mouseleave="buttonsHover.route = false"
         >
           <transition name="fade-home-buttons" mode="out-in">
-            <v-icon v-if="!buttonsHover.route" color="#1976D2" size="60">mdi-qrcode-scan</v-icon>
+            <v-icon v-if="!buttonsHover.route" color="#039BE5" size="60">mdi-qrcode-scan</v-icon>
             <span v-if="buttonsHover.route" style="font-size: 1.3rem; color: #D95033;">ID SCAN</span>
           </transition>
         </v-btn>
