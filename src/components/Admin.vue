@@ -2,42 +2,46 @@
   <div class="admin-wrapper">
     <div class="custom-back-button">
       <router-link :to="'home'" class="custom-router-link-transparency">
-        <v-btn class="ma-2" rounded dark color="#D95033" elevation="0">
-          <span class="mr-1">HOME</span>
-          <v-icon>mdi-arrow-right</v-icon>
+        <v-btn
+          rounded
+          dark
+          color="#D95033"
+          elevation="0"
+          >
+            <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
       </router-link>
     </div>
     <v-card class="custom-menu-wrapper" outlined elevation="0">
-      <v-card color="blue-grey lighten-3" elevation="0" class="mt-2 mx-2 custom-card-grid">
+      <v-card color="#D95033" elevation="0" class="mt-2 mx-2 custom-card-grid">
           <v-icon class="menu-icon" dark size="30">mdi-chart-arc</v-icon>
           <span class="menu-title">Statistics</span>
           <v-btn fab class="menu-button" elevation="0" @click="statisticsWrapper()">
-              <v-icon>mdi-chevron-right</v-icon>
+              <v-icon color="#D95033">mdi-chevron-right</v-icon>
           </v-btn>
       </v-card>
       <v-divider class="mb-2 mt-2"></v-divider>
-      <v-card color="blue-grey lighten-3" elevation="0" class="mt-2 mx-2 custom-card-grid">
+      <v-card color="#D95033" elevation="0" class="mt-2 mx-2 custom-card-grid">
           <v-icon class="menu-icon" dark size="25">mdi-account-search-outline</v-icon>
           <span class="menu-title">Student Validation</span>
           <v-btn fab class="menu-button" elevation="0" @click="studentValidationWrapper()">
-              <v-icon>mdi-chevron-right</v-icon>
+              <v-icon color="#D95033">mdi-chevron-right</v-icon>
           </v-btn>
       </v-card>
       <v-divider class="mb-2 mt-2"></v-divider>
-      <v-card color="blue-grey lighten-3" elevation="0" class="mt-2 mx-2 custom-card-grid">
+      <v-card color="#D95033" elevation="0" class="mt-2 mx-2 custom-card-grid">
           <v-icon class="menu-icon" dark size="25">mdi-subway</v-icon>
           <span class="menu-title">Metro Status</span>
           <v-btn fab class="menu-button" elevation="0" @click="metroStatusWrapper()">
-              <v-icon>mdi-chevron-right</v-icon>
+              <v-icon color="#D95033">mdi-chevron-right</v-icon>
           </v-btn>
       </v-card>
       <v-divider class="mb-2 mt-2"></v-divider>
-      <v-card color="blue-grey lighten-3" elevation="0" class="mt-2 mx-2 custom-card-grid">
+      <v-card color="#D95033" elevation="0" class="mt-2 mx-2 custom-card-grid">
           <v-icon class="menu-icon" dark size="25">mdi-message-text-clock-outline</v-icon>
           <span class="menu-title">Notifications</span>
           <v-btn fab class="menu-button" elevation="0" @click="notificationSenderWrapper()">
-              <v-icon>mdi-chevron-right</v-icon>
+              <v-icon color="#D95033">mdi-chevron-right</v-icon>
           </v-btn>
       </v-card>
       <v-divider class="mb-2 mt-2"></v-divider>
@@ -71,6 +75,54 @@
         <div class="statistics-grid-full-line">
           <div id="ageChart"></div>
         </div>
+        <div class="statistics-grid-full-line">
+            <v-divider></v-divider>
+            <v-chip class="custom-users-created-title" dark color="#7CB342">
+              <v-icon>mdi-account-multiple-plus-outline</v-icon>
+              <span class="ml-1 mr-2">Users Created</span>
+            </v-chip>
+        </div>
+        <div class="statistics-grid">
+          <div class="ml-8 calendar-created-users">
+            <v-date-picker v-model="userCreatedRange" range color="#7CB342"></v-date-picker>
+          </div>
+          <div class="mr-8">
+            <v-data-table
+              :headers="headerUserCreatedRange"
+              :items="usersCreatedTable"
+              :items-per-page="9"
+              :footer-props="footer_props"
+              class="elevation-3 table-width"
+            ></v-data-table>
+          </div>
+        </div>
+        <div class="statistics-grid-full-line">
+            <v-divider class="mt-5"></v-divider>
+            <v-chip class="custom-users-created-title" dark color="#00B0FF">
+              <v-icon>mdi-cart-outline</v-icon>
+              <span class="ml-1 mr-2">Purchases Made</span>
+            </v-chip>
+        </div>
+        <div class="statistics-grid">
+          <div class="ml-8 calendar-created-users">
+            <v-date-picker v-model="purchasesRange" range color="#00B0FF"></v-date-picker>
+          </div>
+          <div class="mr-8">
+            <v-data-table
+              :headers="headerPurchasesRange"
+              :items="purchasesTable"
+              :items-per-page="9"
+              :footer-props="footer_props"
+              class="elevation-3 table-width"
+            ></v-data-table>
+          </div>
+        </div>
+        <div class="purchase-total-amount">
+            <v-chip class="custom-total-amount-title" dark color="#00B0FF">
+              <v-icon>mdi-cash-usd-outline</v-icon>
+              <span class="ml-1 mr-2">Total Amount: {{this.purchasedTotalAmount}}</span>
+            </v-chip>
+          </div>
     </div>
     <div v-if="studentValidation" class="custom-content-wrapper display-flex">
       <v-card v-if="students.keys" class="custom-student-wrapper" outlined elevation="0">
@@ -233,6 +285,23 @@
             <span>Update</span>
           </v-btn>
         </div>
+        <div class="custom-subway-wrapper">
+          <div class="custom-subway-card">
+            <v-chip
+            v-for="m in subway.keys"
+            :key="m"
+            class="ma-2 custom-subway-chip"
+            :color="subway.data[m].Color"
+            outlined
+            >
+              <div class="custom-chip-content-wrapper">
+                  <span class="custom-subway-text">{{m}}</span>
+                  <v-icon class="custom-subway-text">mdi-chevron-right</v-icon>
+                  <span class="custom-subway-text-status">{{subway.data[m].Status}}</span>
+              </div>
+            </v-chip>
+          </div>
+        </div>
       </v-card>
     </div>
     <div v-if="notificationSender" class="custom-content-wrapper">
@@ -318,6 +387,10 @@ export default {
           status: null,
           notification: false
         },
+        subway: {
+            keys: [],
+            data: null
+        },
         notification:{
           title: null,
           options: ["alert","info"],
@@ -335,13 +408,59 @@ export default {
           valid: null,
           notification: null
         },
-        studentNotification: false
+        studentNotification: false,
+        userCreatedRange: [],
+        purchasesRange: [],
+        footer_props: {
+            "items-per-page-options": [9],
+            "items-per-page-text": null,
+            "disable-items-per-page": true
+        },
+        headerUserCreatedRange: [
+            {
+            text: 'User ID',
+            align: 'start',
+            sortable: false,
+            value: 'id',
+            },
+            { text: 'Name', value: 'name' },
+            { text: 'Created At', value: 'created' },
+        ],
+        usersCreatedTable: [],
+        headerPurchasesRange: [
+            {
+            text: 'Purchase ID',
+            align: 'start',
+            sortable: false,
+            value: 'id',
+            },
+            { text: 'Name', value: 'name' },
+            { text: 'Date', value: 'date' },
+            { text: 'Time', value: 'time' },
+            { text: 'Cost', value: 'cost' },
+        ],
+        purchasesTable: [],
+        purchasedTotalAmount: null
     };
   },
 
   created() {},
 
   watch: {
+    userCreatedRange: {
+      handler(userCreatedRange) {
+        if(userCreatedRange.length === 2){
+          this.userCreatedTableGenerate();
+        }
+      }
+    },
+    purchasesRange: {
+      handler(purchasesRange) {
+        if(purchasesRange.length === 2){
+          this.purchasesTableGenerate();
+        }
+      }
+    }
   },
 
   mounted() {
@@ -373,6 +492,7 @@ export default {
       this.notificationSender = false
       this.metroStatus = true
       this.metroLoader()
+      this.metroStatusLoad()
     },
     notificationSenderWrapper() {
       this.emptyWrap = false
@@ -738,6 +858,17 @@ export default {
           Status: this.metro.status
         }).then(()=>{this.metro.notification = true})
     },
+    metroStatusLoad() {
+      firebase
+        .database()
+        .ref("MetroLine")
+        .on("value", snap => {
+          let myObj = snap.val();
+          let keys = Object.keys(snap.val());
+          this.subway.keys = keys;
+          this.subway.data = myObj;
+        });
+    },
     notificationSend() {
       this.notification.notif = false
       firebase
@@ -772,6 +903,125 @@ export default {
               }).then(()=>{this.notification.notif = true})
         })
       });
+    },
+    userCreatedTableGenerate() {
+      let startDate = this.userCreatedRange[0].replace(/-/g,"/")
+      let startyear = startDate.slice(0,4)
+      let startmonth = startDate.slice(5,7)
+      let startday = startDate.slice(8,10)
+      let dateBegin = new Date(startyear, startmonth, startday)
+
+      let endDate = this.userCreatedRange[1].replace(/-/g,"/")
+      let endyear = endDate.slice(0,4)
+      let endmonth = endDate.slice(5,7)
+      let endday = endDate.slice(8,10)
+      let dateFinish = new Date(endyear, endmonth, endday)
+
+      this.usersCreatedTable = []
+      firebase
+        .database()
+        .ref("Users")
+        .on("value", snap => {
+          let myObj = snap.val();
+          let keys = Object.keys(snap.val());
+          keys.forEach(user => {
+            let fireday = myObj[user].Created.slice(0,2)
+            let firemonth = myObj[user].Created.slice(3,5)
+            let fireyear = myObj[user].Created.slice(6,10)
+            let dateCreated = new Date(fireyear, firemonth, fireday)
+            if(dateCreated < dateFinish && dateCreated > dateBegin){
+              this.usersCreatedTable.push({
+                id:user,
+                name:myObj[user].Name,
+                created:myObj[user].Created
+                })
+            } else if (dateCreated > dateFinish && dateCreated < dateBegin){
+              this.usersCreatedTable.push({
+                id:user,
+                name:myObj[user].Name,
+                created:myObj[user].Created
+                })
+            }
+          });
+        });
+    },
+    purchasesTableGenerate() {
+      let startDate = this.purchasesRange[0].replace(/-/g,"/")
+      let startyear = startDate.slice(0,4)
+      let startmonth = startDate.slice(5,7)
+      let startday = startDate.slice(8,10)
+      let dateBegin = new Date(startyear, startmonth, startday)
+
+      let endDate = this.purchasesRange[1].replace(/-/g,"/")
+      let endyear = endDate.slice(0,4)
+      let endmonth = endDate.slice(5,7)
+      let endday = endDate.slice(8,10)
+      let dateFinish = new Date(endyear, endmonth, endday)
+
+      this.purchasesTable = []
+      let purchaseAmount = 0
+      firebase
+        .database()
+        .ref("History/Purchase")
+        .on("value", snap => {
+          let myObj = snap.val();
+          let keys = Object.keys(snap.val());
+          keys.forEach(key => {
+            let keys2 = Object.keys(myObj[key])
+            keys2.forEach(purchase => {
+              let fireday = myObj[key][purchase].Date.slice(0,2)
+              let firemonth = myObj[key][purchase].Date.slice(3,5)
+              let fireyear = myObj[key][purchase].Date.slice(6,10)
+              let dateCreated = new Date(fireyear, firemonth, fireday)
+
+              if(dateCreated < dateFinish && dateCreated > dateBegin){
+                this.purchasedTotalAmount=null
+                purchaseAmount += parseInt(myObj[key][purchase].Cost.replace(/ RON/g,""))
+                this.purchasedTotalAmount = purchaseAmount
+                this.purchasesTable.push({
+                  id:purchase,
+                  name:myObj[key][purchase].Type,
+                  date:myObj[key][purchase].Date,
+                  time:myObj[key][purchase].Time,
+                  cost:myObj[key][purchase].Cost
+                  })
+              } else if (dateCreated > dateFinish && dateCreated < dateBegin){
+                this.purchasedTotalAmount=null
+                purchaseAmount += parseInt(myObj[key][purchase].Cost.replace(/ RON/g,""))
+                console.log(purchaseAmount)
+                this.purchasedTotalAmount = purchaseAmount
+                this.purchasesTable.push({
+                  id:purchase,
+                  name:myObj[key][purchase].Type,
+                  date:myObj[key][purchase].Date,
+                  time:myObj[key][purchase].Time,
+                  cost:myObj[key][purchase].Cost
+                  })
+              }
+            });
+          });
+          // console.log(keys)
+          // console.log(myObj[keys[1]])
+          // keys.forEach(user => {
+            // let fireday = myObj[user].Created.slice(0,2)
+            // let firemonth = myObj[user].Created.slice(3,5)
+            // let fireyear = myObj[user].Created.slice(6,10)
+            // let dateCreated = new Date(fireyear, firemonth, fireday)
+            // if(dateCreated < dateFinish && dateCreated > dateBegin){
+            //   this.usersCreatedTable.push({
+            //     id:user,
+            //     name:myObj[user].Name,
+            //     created:myObj[user].Created
+            //     })
+            // } else if (dateCreated > dateFinish && dateCreated < dateBegin){
+            //   this.usersCreatedTable.push({
+            //     id:user,
+            //     name:myObj[user].Name,
+            //     created:myObj[user].Created
+            //     })
+            // }
+          // });
+        });
     }
   },
 
@@ -789,8 +1039,8 @@ export default {
 .custom-back-button {
   z-index: 1000;
   position: absolute;
-  left: 6vw;
-  bottom: 0vh;
+  left: 8vw;
+  bottom: 1vh;
 }
 
 .custom-content-wrapper {
@@ -921,7 +1171,7 @@ export default {
 }
 
 .custom-metro-line-info {
-  width: 40vw;
+  width: 50vw;
   margin-left: auto;
   margin-right: auto;
   margin-top: 2vh;
@@ -934,6 +1184,40 @@ export default {
   height: 100%;
   display: grid;
   grid-template-columns: 1.8fr 4fr 1.3fr;
+}
+
+
+.custom-subway-card {
+  align-self: flex-end;
+  height: auto;
+  display: flex;
+  font-weight: 800;
+  background: rgba(255,255,255, 0.9);
+  padding-left: 0.5vw;
+  padding-right: 0.5vw;
+  border-radius: 50px;
+}
+
+.custom-subway-chip {
+  height: 5vh !important;
+  width: 13.5vw !important;
+  padding: 0px !important;
+}
+
+.custom-chip-content-wrapper {
+  width: 13vw;
+  justify-content: center;
+  display: flex;
+}
+
+.custom-subway-text {
+  font-size: 2.5vh;
+}
+
+.custom-subway-text-status {
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.87) !important;
+  font-size: 2.5vh;
 }
 
 .display-flex {
@@ -986,5 +1270,41 @@ export default {
   display: flex;
   margin-left: auto;
   margin-right: auto;
+}
+
+.custom-users-created-title{
+  display: flex;
+  font-size: 21px;
+  font-weight: 400;
+  justify-self: center;
+  margin-top: 1.5vh;
+  margin-bottom: 2.5vh;
+}
+
+.table-width {
+    width: 46vw;
+    height: 83vh;
+    border-radius: 30px;
+}
+
+.calendar-created-users{
+  margin-top: 10vh;
+}
+
+.purchase-total-amount{
+  width: 100%;
+  display: flex;
+  margin-top: 1vh;
+  justify-content: center;
+}
+
+.custom-total-amount-title{
+  display: flex;
+  font-size: 21px;
+  font-weight: 400;
+  position: absolute;
+  right: 17vw;
+  margin-top: 1.5vh;
+  margin-bottom: 2.5vh;
 }
 </style>
