@@ -115,14 +115,96 @@
               :footer-props="footer_props"
               class="elevation-3 table-width"
             ></v-data-table>
+            <div class="custom-total-amount-title-wrapper">
+              <v-chip class="custom-total-amount-title" dark color="#00B0FF">
+                <v-icon>mdi-cash-usd-outline</v-icon>
+                <span class="ml-1 mr-2">Total Amount: {{this.purchasedTotalAmount}}</span>
+              </v-chip>
+            </div>
           </div>
         </div>
-        <div class="purchase-total-amount">
-            <v-chip class="custom-total-amount-title" dark color="#00B0FF">
-              <v-icon>mdi-cash-usd-outline</v-icon>
-              <span class="ml-1 mr-2">Total Amount: {{this.purchasedTotalAmount}}</span>
+        <div class="statistics-grid-full-line">
+            <v-divider class="mt-5"></v-divider>
+            <v-chip class="custom-users-created-title" dark color="#FF8A80">
+              <v-icon>mdi-magnify</v-icon>
+              <span class="ml-1 mr-2">Searched Places</span>
             </v-chip>
+        </div>
+        <div class="statistics-grid-full-line">
+          <div class="justify-center mb-2 custom-search-input-wrapper">
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              hide-details
+              color="#FF8A80"
+              class="custom-search-input"
+            ></v-text-field>
           </div>
+        </div>
+        <div class="statistics-grid">
+          <div class="ml-8 calendar-searches">
+            <v-date-picker v-model="searchesRange" range color="#FF8A80"></v-date-picker>
+          </div>
+          <div class="mr-8">
+            <v-data-table
+              :headers="headerSearchesRange"
+              :items="searchesTable"
+              :items-per-page="9"
+              :search="search"
+              :footer-props="footer_props"
+              class="elevation-3 table-width table-searches"
+            ></v-data-table>
+            <div class="custom-total-amount-title-wrapper">
+              <v-chip class="custom-total-amount-title" dark color="#FF8A80">
+                <v-icon>mdi-magnify</v-icon>
+                <span class="ml-1 mr-2">Total Searches: {{this.searchesTotalAmount}}</span>
+              </v-chip>
+            </div>
+          </div>
+        </div>
+        <div class="statistics-grid-full-line">
+            <v-divider class="mt-5"></v-divider>
+            <v-chip class="custom-users-created-title" dark color="#FFCA28">
+              <v-icon>mdi-bell-outline</v-icon>
+              <span class="ml-1 mr-2">Sent Notifications</span>
+            </v-chip>
+        </div>
+        <div class="statistics-grid-full-line">
+          <div class="justify-center mb-2 custom-search-input-wrapper">
+            <v-text-field
+              v-model="searchNotifications"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              hide-details
+              color="#FFCA28"
+              class="custom-search-input"
+            ></v-text-field>
+          </div>
+        </div>
+        <div class="statistics-grid">
+          <div class="ml-8 calendar-searches">
+            <v-date-picker v-model="notificationsRange" range color="#FFCA28"></v-date-picker>
+          </div>
+          <div class="mr-8">
+            <v-data-table
+              :headers="headerNotificationsRange"
+              :items="notificationsTable"
+              :items-per-page="9"
+              :search="searchNotifications"
+              :footer-props="footer_props"
+              class="elevation-3 table-width table-searches"
+            ></v-data-table>
+            <div class="custom-total-amount-title-wrapper">
+              <v-chip class="custom-total-amount-title" dark color="#FFCA28">
+                <v-icon>mdi-bell-outline</v-icon>
+                <span class="ml-1 mr-2">Total Notifications: {{this.notificationsTotalAmount}}</span>
+              </v-chip>
+            </div>
+          </div>
+        </div>
     </div>
     <div v-if="studentValidation" class="custom-content-wrapper display-flex">
       <v-card v-if="students.keys" class="custom-student-wrapper" outlined elevation="0">
@@ -411,6 +493,8 @@ export default {
         studentNotification: false,
         userCreatedRange: [],
         purchasesRange: [],
+        searchesRange: [],
+        notificationsRange: [],
         footer_props: {
             "items-per-page-options": [9],
             "items-per-page-text": null,
@@ -440,7 +524,34 @@ export default {
             { text: 'Cost', value: 'cost' },
         ],
         purchasesTable: [],
-        purchasedTotalAmount: null
+        purchasedTotalAmount: null,
+        search: '',
+        searchNotifications: '',
+        headerSearchesRange: [
+            {
+            text: 'Search ID',
+            align: 'start',
+            sortable: false,
+            value: 'id',
+            },
+            { text: 'Title', value: 'title' },
+            { text: 'Date', value: 'date' },
+        ],
+        searchesTable: [],
+        searchesTotalAmount: null,
+        headerNotificationsRange: [
+            {
+            text: 'Notification ID',
+            align: 'start',
+            sortable: false,
+            value: 'id',
+            },
+            { text: 'Title', value: 'title' },
+            { text: 'Date', value: 'date' },
+            { text: 'Time', value: 'time' },
+        ],
+        notificationsTable: [],
+        notificationsTotalAmount: null,
     };
   },
 
@@ -458,6 +569,20 @@ export default {
       handler(purchasesRange) {
         if(purchasesRange.length === 2){
           this.purchasesTableGenerate();
+        }
+      }
+    },
+    searchesRange: {
+      handler(searchesRange) {
+        if(searchesRange.length === 2){
+          this.searchesTableGenerate();
+        }
+      }
+    },
+    notificationsRange: {
+      handler(notificationsRange) {
+        if(notificationsRange.length === 2){
+          this.notificationsTableGenerate();
         }
       }
     }
@@ -988,7 +1113,6 @@ export default {
               } else if (dateCreated > dateFinish && dateCreated < dateBegin){
                 this.purchasedTotalAmount=null
                 purchaseAmount += parseInt(myObj[key][purchase].Cost.replace(/ RON/g,""))
-                console.log(purchaseAmount)
                 this.purchasedTotalAmount = purchaseAmount
                 this.purchasesTable.push({
                   id:purchase,
@@ -1000,27 +1124,109 @@ export default {
               }
             });
           });
-          // console.log(keys)
-          // console.log(myObj[keys[1]])
-          // keys.forEach(user => {
-            // let fireday = myObj[user].Created.slice(0,2)
-            // let firemonth = myObj[user].Created.slice(3,5)
-            // let fireyear = myObj[user].Created.slice(6,10)
-            // let dateCreated = new Date(fireyear, firemonth, fireday)
-            // if(dateCreated < dateFinish && dateCreated > dateBegin){
-            //   this.usersCreatedTable.push({
-            //     id:user,
-            //     name:myObj[user].Name,
-            //     created:myObj[user].Created
-            //     })
-            // } else if (dateCreated > dateFinish && dateCreated < dateBegin){
-            //   this.usersCreatedTable.push({
-            //     id:user,
-            //     name:myObj[user].Name,
-            //     created:myObj[user].Created
-            //     })
-            // }
-          // });
+        });
+    },
+    searchesTableGenerate() {
+      let startDate = this.searchesRange[0].replace(/-/g,"/")
+      let startyear = startDate.slice(0,4)
+      let startmonth = startDate.slice(5,7)
+      let startday = startDate.slice(8,10)
+      let dateBegin = new Date(startyear, startmonth, startday)
+
+      let endDate = this.searchesRange[1].replace(/-/g,"/")
+      let endyear = endDate.slice(0,4)
+      let endmonth = endDate.slice(5,7)
+      let endday = endDate.slice(8,10)
+      let dateFinish = new Date(endyear, endmonth, endday)
+
+      this.searchesTable = []
+      let searchesAmount = 0
+      firebase
+        .database()
+        .ref("History/Search")
+        .on("value", snap => {
+          let myObj = snap.val();
+          let keys = Object.keys(snap.val());
+          keys.forEach(key => {
+            let keys2 = Object.keys(myObj[key])
+            keys2.forEach(search => {
+              let fireday = myObj[key][search].Date.slice(0,2)
+              let firemonth = myObj[key][search].Date.slice(3,5)
+              let fireyear = myObj[key][search].Date.slice(6,10)
+              let dateCreated = new Date(fireyear, firemonth, fireday)
+
+              if(dateCreated < dateFinish && dateCreated > dateBegin){
+                this.searchesTotalAmount=null
+                searchesAmount ++
+                this.searchesTotalAmount = searchesAmount
+                this.searchesTable.push({
+                  id:search,
+                  title:myObj[key][search].Title,
+                  date:myObj[key][search].Date,
+                  })
+              } else if (dateCreated > dateFinish && dateCreated < dateBegin){
+                this.searchesTotalAmount=null
+                searchesAmount ++
+                this.searchesTotalAmount = searchesAmount
+                this.searchesTable.push({
+                  id:search,
+                  title:myObj[key][search].Title,
+                  date:myObj[key][search].Date,
+                  })
+              }
+            });
+          });
+        });
+    },
+    notificationsTableGenerate() {
+      let startDate = this.notificationsRange[0].replace(/-/g,"/")
+      let startyear = startDate.slice(0,4)
+      let startmonth = startDate.slice(5,7)
+      let startday = startDate.slice(8,10)
+      let dateBegin = new Date(startyear, startmonth, startday)
+
+      let endDate = this.notificationsRange[1].replace(/-/g,"/")
+      let endyear = endDate.slice(0,4)
+      let endmonth = endDate.slice(5,7)
+      let endday = endDate.slice(8,10)
+      let dateFinish = new Date(endyear, endmonth, endday)
+
+      this.notificationsTable = []
+      let notificationsAmount = 0
+      firebase
+        .database()
+        .ref("News")
+        .on("value", snap => {
+          let myObj = snap.val();
+          let keys = Object.keys(snap.val());
+          keys.forEach(key => {
+            let fireday = myObj[key].Date.slice(0,2)
+            let firemonth = myObj[key].Date.slice(3,5)
+            let fireyear = myObj[key].Date.slice(6,10)
+            let dateCreated = new Date(fireyear, firemonth, fireday)
+
+            if(dateCreated < dateFinish && dateCreated > dateBegin){
+              this.notificationsTotalAmount=null
+              notificationsAmount ++
+              this.notificationsTotalAmount = notificationsAmount
+              this.notificationsTable.push({
+                id:key,
+                title:myObj[key].Title,
+                date:myObj[key].Date,
+                time:myObj[key].Time,
+                })
+            } else if (dateCreated > dateFinish && dateCreated < dateBegin){
+              this.notificationsTotalAmount=null
+              notificationsAmount ++
+              this.notificationsTotalAmount = notificationsAmount
+              this.notificationsTable.push({
+                id:key,
+                title:myObj[key].Title,
+                date:myObj[key].Date,
+                time:myObj[key].Time,
+                })
+            }
+          });
         });
     }
   },
@@ -1298,13 +1504,32 @@ export default {
   justify-content: center;
 }
 
-.custom-total-amount-title{
+.custom-total-amount-title-wrapper{
   display: flex;
+  justify-content: center;
+}
+
+.custom-total-amount-title{
   font-size: 21px;
   font-weight: 400;
-  position: absolute;
-  right: 17vw;
   margin-top: 1.5vh;
   margin-bottom: 2.5vh;
+}
+
+.custom-search-input{
+  width: 20vw;
+}
+
+.custom-search-input-wrapper{
+  position: absolute;
+  right: 5vw;
+}
+
+.calendar-searches{
+  margin-top: 23vh;
+}
+
+.table-searches{
+  margin-top: 10vh;
 }
 </style>
